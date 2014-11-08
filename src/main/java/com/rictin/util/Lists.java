@@ -10,6 +10,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.rictin.util.lists.Collect;
+import com.rictin.util.lists.FlatCollect;
+import com.rictin.util.lists.GroupBy;
+import com.rictin.util.lists.ListAggregator;
+import com.rictin.util.lists.ListFilter;
+import com.rictin.util.lists.ListFinder;
+import com.rictin.util.lists.ListSorter;
+import com.rictin.util.lists.ListUpdater;
+
 /**
  * {@link com.rictin.util.Lists} has static methods to simplify common
  * collection operations such as:

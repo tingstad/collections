@@ -243,8 +243,8 @@ public class ProxyFactory<T> {
 	}
 
 }
-/*
+
 class CountAndDepth {
 	public long count = 0;
 	public long depth = 0;
-}*/
+}

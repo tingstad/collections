@@ -11,6 +11,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.rictin.util.chain.ChainFilter;
+import com.rictin.util.chain.ChainFromIterator;
+import com.rictin.util.chain.ChainLimit;
+import com.rictin.util.chain.ChainSorter;
+import com.rictin.util.chain.ChainSum;
+import com.rictin.util.chain.Chained;
+
 public class Chain<T> implements Iterator<T> {
 
 	private ProxyFactory<T> proxyFactory;
@@ -18,7 +25,7 @@ public class Chain<T> implements Iterator<T> {
 
 	private Chain(Iterator<T> input) {
 		ChainFromIterator<T> initial = addInitial(input);
-		proxyFactory = initial.proxyFactory;
+		proxyFactory = initial.getProxyFactory();
 	}
 
 	private Chain(Collection<T> collection) {
