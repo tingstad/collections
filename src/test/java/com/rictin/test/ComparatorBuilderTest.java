@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.util.lists.ComparatorBuilder;
+import com.rictin.util.ComparatorBuilder;
 
 public class ComparatorBuilderTest {
 
