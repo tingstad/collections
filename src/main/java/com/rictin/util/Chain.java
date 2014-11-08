@@ -17,6 +17,7 @@ import com.rictin.util.chain.ChainLimit;
 import com.rictin.util.chain.ChainSorter;
 import com.rictin.util.chain.ChainSum;
 import com.rictin.util.chain.Chained;
+import com.rictin.util.proxy.ProxyFactory;
 
 public class Chain<T> implements Iterator<T> {
 

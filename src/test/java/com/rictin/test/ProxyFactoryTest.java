@@ -17,7 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.util.ProxyFactory;
+import com.rictin.util.proxy.ProxyFactory;
 
 public class ProxyFactoryTest {
 

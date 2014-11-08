@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.rictin.util.ProxyFactory;
+import com.rictin.util.proxy.ProxyFactory;
 
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;

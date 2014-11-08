@@ -8,7 +8,7 @@ package com.rictin.util.chain;
 
 import java.util.Iterator;
 
-import com.rictin.util.ProxyFactory;
+import com.rictin.util.proxy.ProxyFactory;
 
 public class ChainFromIterator<T> extends Chained<T> {
 

@@ -9,7 +9,7 @@ package com.rictin.util.chain;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.rictin.util.ProxyFactory;
+import com.rictin.util.proxy.ProxyFactory;
 
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
