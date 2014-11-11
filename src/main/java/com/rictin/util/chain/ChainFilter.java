@@ -11,10 +11,9 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 public class ChainFilter<T> extends Chained<T> {
 
@@ -42,14 +41,14 @@ public class ChainFilter<T> extends Chained<T> {
 
 	public ChainFilter(Chained<T> input, ProxyFactory<T> proxyFactory) {
 		this.input = input;
-		this.proxy = proxyFactory.newProxy(new MethodInterceptor() {
-			
-			public Object intercept(Object arg0, Method arg1, Object[] arg2,
-					MethodProxy arg3) throws Throwable {
-				method = arg1;
-				args = arg2;
+		this.proxy = proxyFactory.getProxy(new Callback<T>() {
+
+			public Object intercept(Invocation<T> invocation) {
+				method = invocation.getMethod();
+				args = invocation.getArgs();
 				return null;
 			}
+			
 		});
 	}
 

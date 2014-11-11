@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
 
 abstract class ListHandler<T> {
@@ -39,7 +40,7 @@ abstract class ListHandler<T> {
 	public T createProxy() {
 		Callback<T> callback = new Callback<T>() {
 
-			public Object intercept(ProxyFactory<T> proxy) {
+			public Object intercept(Invocation<T> invocation) {
 				return handleList();
 			}
 
