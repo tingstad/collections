@@ -21,11 +21,7 @@ public class ListUpdater<T> extends ListHandler<T> {
 			if (element == null) {
 				continue;
 			}
-			try {
-				method.invoke(element, args);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+			proxyFactory.invoke(element);
 		}
 		return null;
 	}

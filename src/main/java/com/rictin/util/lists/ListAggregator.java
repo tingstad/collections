@@ -33,7 +33,7 @@ public class ListAggregator<T> extends ListHandler<T> {
 		long count = 0;
 		BigDecimal d = BigDecimal.valueOf(0);
 		for (T element : list) {
-			String value =  "" + getValueOfElement(element);
+			String value =  "" + proxyFactory.invoke(element);
 			if (!"null".equals(value)) {
 				count++;
 				d = d.add(new BigDecimal(value));
@@ -43,6 +43,7 @@ public class ListAggregator<T> extends ListHandler<T> {
 			d = d.divide(new BigDecimal(count), d.scale() + 2,
 					BigDecimal.ROUND_HALF_UP);
 		}
+		Class<?> returnType = proxyFactory.getReturnType();
 		if (BigDecimal.class.equals(returnType)) {
 			return d;
 		}

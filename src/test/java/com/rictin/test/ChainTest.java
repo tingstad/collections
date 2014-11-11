@@ -62,7 +62,7 @@ public class ChainTest {
 	}
 
 	@Test
-	public void testChainSortAndSum() {
+	public void testChainSortAndLimitAndSum() {
 		Chain<Person> c = Chain.from(list.iterator());
 		c.filter().acceptLessThan(40).getAge();
 		c.sort().ascendingBy().getName();

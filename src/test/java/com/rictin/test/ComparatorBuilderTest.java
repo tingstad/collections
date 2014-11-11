@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.util.ComparatorBuilder;
@@ -33,6 +34,7 @@ public class ComparatorBuilderTest {
 	}
 
 	@Test
+	@Ignore
 	public void test() {
 		
 		ComparatorBuilder<Person> builder = ComparatorBuilder.from(list);

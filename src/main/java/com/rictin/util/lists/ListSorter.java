@@ -58,24 +58,24 @@ public class ListSorter<T> extends ListHandler<T> {
 	}
 
 	protected Comparator<T> createComparator() {
-		if (Void.TYPE.equals(returnType)) {
+		if (Void.TYPE.equals(proxyFactory.getReturnType())) {
 			throw new RuntimeException("Method must return a value!");
 		}
-		if (!returnType.isPrimitive()
+/*		if (!returnType.isPrimitive()
 				&& !Arrays.asList(returnType.getInterfaces()).contains(
 						Comparable.class)) {
 			throw new RuntimeException("Must be comparable!");
-		}
+		}*/
 		final boolean descending = this.decending;
 		return new Comparator<T>() {
 			public int compare(T o1, T o2) {
 				Object v1 = null, v2 = null;
-				try {
-					v1 = (o1 == null ? null : getValueOfElement(o1));
-					v2 = (o2 == null ? null : getValueOfElement(o2));
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+			//	try {
+					v1 = (o1 == null ? null : proxyFactory.invoke(o1));
+					v2 = (o2 == null ? null : proxyFactory.invoke(o2));
+			//	} catch (Exception e) {
+			//		throw new RuntimeException(e);
+			//	}
 				if (o1 == null && o2 == null) {
 					return 0;
 				} else if (o1 == null) {
