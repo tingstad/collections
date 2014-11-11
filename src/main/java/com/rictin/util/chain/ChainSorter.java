@@ -63,14 +63,14 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 	}
 
 	protected Comparator<T> createComparator() {
-		if (Void.TYPE.equals(method.getReturnType())) {
+/*		if (Void.TYPE.equals(method.getReturnType())) {
 			throw new RuntimeException("Method must return a value!");
 		}
 		if (!method.getReturnType().isPrimitive()
 				&& !Arrays.asList(method.getReturnType().getInterfaces()).contains(
 						Comparable.class)) {
 			throw new RuntimeException("Must be comparable!");
-		}
+		}*/
 		final boolean descending = this.decending;
 		return new Comparator<T>() {
 			public int compare(T o1, T o2) {

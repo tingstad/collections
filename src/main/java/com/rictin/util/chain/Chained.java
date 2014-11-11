@@ -6,50 +6,34 @@
  */
 package com.rictin.util.chain;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 public abstract class Chained<T> {
 
 	protected ProxyFactory<T> proxyFactory;
 	protected T proxy;
-	protected Method method;
-	protected Object[] args;
+	private Invocation<T> invocation;
 
 	public Chained() {
 	}
 
 	public Chained(ProxyFactory<T> proxyFactory) {
 		this.proxyFactory = proxyFactory;
-		this.proxy = proxyFactory.newProxy(new MethodInterceptor() {
-			
-			public Object intercept(Object arg0, Method arg1, Object[] arg2,
-					MethodProxy arg3) throws Throwable {
-				method = arg1;
-				args = arg2;
+		final Chained<T> t = this;
+		this.proxy = proxyFactory.getProxy(new Callback<T>() {
+
+			public Object intercept(Invocation<T> invocation) {
+				t.invocation = invocation;
 				return null;
 			}
+			
 		});
 	}
 
 	protected Object getValueOfElement(T element) {
-		if (element == null) {
-			return null;
-		}
-		try {
-			return method.invoke(element, args);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
+		return invocation.invoke(element);
 	}
 
 	public abstract boolean hasNext();

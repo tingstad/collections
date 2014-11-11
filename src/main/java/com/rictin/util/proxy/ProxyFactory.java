@@ -74,7 +74,7 @@ public class ProxyFactory<T> {
 			T returnValue = (T) callback.intercept(new Invocation<T>());
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
 		}
-		if (proxy == null) {
+//		if (proxy == null) {
 			proxy = newProxy(new MethodInterceptor() {
 				
 				public Object intercept(Object arg0, Method arg1, Object[] arg2,
@@ -90,7 +90,7 @@ public class ProxyFactory<T> {
 					return r;
 				}
 			});
-		}
+//		}
 		return proxy;
 	}
 
@@ -114,7 +114,7 @@ public class ProxyFactory<T> {
 		}
 	}
 
-	public T newProxy(MethodInterceptor interceptor) {
+	private T newProxy(MethodInterceptor interceptor) {
 		if (identity != null) {
 			return identity;
 		}

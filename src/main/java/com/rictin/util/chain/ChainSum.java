@@ -10,10 +10,9 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 public class ChainSum<T> extends Chained<T> {
 
@@ -33,15 +32,14 @@ public class ChainSum<T> extends Chained<T> {
 	@Override
 	public T next() {
 		done = true;
-		return proxyFactory.newProxy(new MethodInterceptor() {
-			
-			public Object intercept(Object arg0, Method arg1, Object[] arg2,
-					MethodProxy arg3) throws Throwable {
-				method = arg1;
+		return proxyFactory.getProxy(new Callback<T>() {
+
+			public Object intercept(Invocation<T> invocation) {
+				Method method = invocation.getMethod();
 				BigDecimal d = BigDecimal.valueOf(0);
 				while (input.hasNext()) {
 					T element = input.next();
-					String value =  "" + getValueOfElement(element);
+					String value =  "" + invocation.invoke(element);
 					if (!"null".equals(value)) {
 						d = d.add(new BigDecimal(value));
 					}
@@ -64,6 +62,8 @@ public class ChainSum<T> extends Chained<T> {
 				}
 				return d.longValue();
 			}
+			
+			
 		});
 	}
 
