@@ -32,16 +32,16 @@ public class ProxyFactory<T> {
 	private List<Object[]> args = new ArrayList<Object[]>();
 	private T proxy;
 	
-	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
+/*	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
 		List<T> list = new ArrayList<T>(1);
 		list.add(element);
 		return createProxy(list, interceptor);
 	}
 
 	public static <T> T createProxy(Collection<T> collection, 
-			MethodInterceptor interceptor) {
-		return new ProxyFactory<T>(collection).newProxy(interceptor);
-	}
+			Callback<T> callback) {
+		return new ProxyFactory<T>(collection).getProxy(callback);
+	}*/
 
 	public ProxyFactory(T element) {
 		List<T> list = new ArrayList<T>(1);

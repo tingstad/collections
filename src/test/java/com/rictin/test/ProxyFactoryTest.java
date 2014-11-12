@@ -6,17 +6,15 @@
  */
 package com.rictin.test;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
 
 public class ProxyFactoryTest {
@@ -33,11 +31,10 @@ public class ProxyFactoryTest {
 	@Test
 	public void test() {
 		final String testString = "Hello";
-		Person proxy = ProxyFactory.createProxy(list, new MethodInterceptor() {
-			
-			public Object intercept(Object arg0, Method arg1, Object[] arg2,
-					MethodProxy arg3) throws Throwable {
-				Assert.assertEquals("getName", arg1.getName());
+		Person proxy = (Person) new ProxyFactory(list).getProxy(new Callback<Person>() {
+
+			public Object intercept(Invocation<Person> invocation) {
+				Assert.assertEquals("getName", invocation.getMethod().getName());
 				return testString;
 			}
 		});

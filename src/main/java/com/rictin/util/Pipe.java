@@ -15,22 +15,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rictin.util.proxy.Callback;
+import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
 
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
-public class Pipe<T> implements MethodInterceptor {
+public class Pipe<T> {
 
 	private T proxy;
 	private Collection<T> input;
-	private Object object;
 	private Method method;
 	private Object[] args;
-	private MethodProxy methodProxy;
 
 	private Pipe(Collection<T> input) {
-		proxy = ProxyFactory.createProxy(input, this);
+		proxy = (T) new ProxyFactory(input).getProxy(new Callback() {
+
+			public Object intercept(Invocation invocation) {
+				method = invocation.getMethod();
+				args = invocation.getArgs();
+				return null;
+			}
+			
+		});
 		this.input = input;
 	}
 
@@ -99,15 +104,6 @@ public class Pipe<T> implements MethodInterceptor {
 
 	public List<T> toList() {
 		return new ArrayList<T>(this.input);
-	}
-
-	public Object intercept(Object object, Method method, Object[] args,
-			MethodProxy methodProxy) throws Throwable {
-		this.object = object;
-		this.method = method;
-		this.args = args;
-		this.methodProxy = methodProxy;
-		return null;
 	}
 
 }
