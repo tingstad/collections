@@ -34,7 +34,7 @@ public class ChainFromIterator<T> extends Chained<T> {
 		return hasNext;
 	}
 
-	public T next() {
+	protected T getNext() {
 		if (!hasNext()) {
 			throw new IllegalStateException("No more elements.");
 		}

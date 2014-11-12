@@ -6,13 +6,9 @@
  */
 package com.rictin.util.chain;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.rictin.util.proxy.Callback;
-import com.rictin.util.proxy.Invocation;
 import com.rictin.util.proxy.ProxyFactory;
 
 public class ChainFilter<T> extends Chained<T> {
@@ -31,25 +27,14 @@ public class ChainFilter<T> extends Chained<T> {
 	private Operation operation;
 	private Object testValue;
 	private Number number;
-	private T proxy;
-	private Method method;
-	private Object[] args;
 
 	private Chained<T> input;
 	private Boolean hasNext;
 	private T element;
 
 	public ChainFilter(Chained<T> input, ProxyFactory<T> proxyFactory) {
+		super(proxyFactory);
 		this.input = input;
-		this.proxy = proxyFactory.getProxy(new Callback<T>() {
-
-			public Object intercept(Invocation<T> invocation) {
-				method = invocation.getMethod();
-				args = invocation.getArgs();
-				return null;
-			}
-			
-		});
 	}
 
 	public T accept(Object value) {
@@ -145,15 +130,7 @@ public class ChainFilter<T> extends Chained<T> {
 	private boolean isAccepted(T element) {
 		Object value = null;
 		if (element != null) {
-			try {
-				value = method.invoke(element, args);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e);
-			}
+			value = getInvocation().invoke(element);
 		}
 		Set<Object> exists = new HashSet<Object>();
 		boolean test = false;
@@ -191,17 +168,14 @@ public class ChainFilter<T> extends Chained<T> {
 		return hasNext;
 	}
 
-	public T next() {
-		if (!hasNext()) {
-			throw new IllegalStateException("No more elements.");
-		}
+	protected T getNext() {
 		hasNext = null;
 		return element;
 	}
 
 	private void prepareNext() {
 		while (input.hasNext()) {
-			T in = input.next();
+			T in = input.getNext();
 			if (isAccepted(in)) {
 				element = in;
 				hasNext = true;

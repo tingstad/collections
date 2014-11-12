@@ -24,10 +24,9 @@ public class ChainLimit<T> extends Chained<T> {
 	}
 
 	@Override
-	public T next() {
-		validateHasNext();
+	protected T getNext() {
 		count++;
-		return input.next();
+		return input.getNext();
 	}
 
 }

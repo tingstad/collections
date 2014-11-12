@@ -6,6 +6,7 @@
  */
 package com.rictin.util.chain;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,15 +63,16 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 		return proxy;
 	}
 
-	protected Comparator<T> createComparator() {
-/*		if (Void.TYPE.equals(method.getReturnType())) {
+	private Comparator<T> createComparator() {
+		Method method = getInvocation().getMethod();
+		if (Void.TYPE.equals(method.getReturnType())) {
 			throw new RuntimeException("Method must return a value!");
 		}
 		if (!method.getReturnType().isPrimitive()
 				&& !Arrays.asList(method.getReturnType().getInterfaces()).contains(
 						Comparable.class)) {
 			throw new RuntimeException("Must be comparable!");
-		}*/
+		}
 		final boolean descending = this.decending;
 		return new Comparator<T>() {
 			public int compare(T o1, T o2) {
@@ -110,12 +112,11 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 	}
 
 	@Override
-	public T next() {
-		validateHasNext();
+	protected T getNext() {
 		if (list == null) {
 			list = new ArrayList<T>();
 			while (input.hasNext()) {
-				list.add(input.next());
+				list.add(input.getNext());
 			}
 			Collections.sort(list, createComparator());
 		}

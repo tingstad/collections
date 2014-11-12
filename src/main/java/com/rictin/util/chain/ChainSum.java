@@ -30,7 +30,7 @@ public class ChainSum<T> extends Chained<T> {
 	}
 
 	@Override
-	public T next() {
+	protected T getNext() {
 		done = true;
 		return proxyFactory.getProxy(new Callback<T>() {
 
@@ -38,7 +38,7 @@ public class ChainSum<T> extends Chained<T> {
 				Method method = invocation.getMethod();
 				BigDecimal d = BigDecimal.valueOf(0);
 				while (input.hasNext()) {
-					T element = input.next();
+					T element = input.getNext();
 					String value =  "" + invocation.invoke(element);
 					if (!"null".equals(value)) {
 						d = d.add(new BigDecimal(value));

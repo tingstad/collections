@@ -21,11 +21,10 @@ public abstract class Chained<T> {
 
 	public Chained(ProxyFactory<T> proxyFactory) {
 		this.proxyFactory = proxyFactory;
-		final Chained<T> t = this;
 		this.proxy = proxyFactory.getProxy(new Callback<T>() {
 
-			public Object intercept(Invocation<T> invocation) {
-				t.invocation = invocation;
+			public Object intercept(Invocation<T> i) {
+				invocation = i;
 				return null;
 			}
 			
@@ -38,12 +37,21 @@ public abstract class Chained<T> {
 
 	public abstract boolean hasNext();
 
-	public abstract T next();
+	protected abstract T getNext();
 
-	protected void validateHasNext() {
+	public T next() {
+		validateHasNext();
+		return getNext();
+	}
+	
+	private void validateHasNext() {
 		if (!hasNext()) {
 			throw new IllegalStateException("No more elements.");
 		}
+	}
+
+	protected Invocation<T> getInvocation() {
+		return invocation;
 	}
 
 }

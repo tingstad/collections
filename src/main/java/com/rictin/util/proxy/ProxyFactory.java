@@ -30,7 +30,6 @@ public class ProxyFactory<T> {
 	//private List<Object> object;
 	private List<Method> method = new ArrayList<Method>();
 	private List<Object[]> args = new ArrayList<Object[]>();
-	private T proxy;
 	
 /*	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
 		List<T> list = new ArrayList<T>(1);
@@ -74,23 +73,21 @@ public class ProxyFactory<T> {
 			T returnValue = (T) callback.intercept(new Invocation<T>());
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
 		}
-//		if (proxy == null) {
-			proxy = newProxy(new MethodInterceptor() {
+		T proxy = newProxy(new MethodInterceptor() {
 				
-				public Object intercept(Object arg0, Method arg1, Object[] arg2,
-						MethodProxy arg3) throws Throwable {
-					p.method.add(arg1);
-					p.args.add(arg2);
-					Invocation<T> invocation = new Invocation<T>();
-					invocation.setMethod(arg1);
-					invocation.setArgs(arg2);
-					Object r = callback.intercept(invocation);
-					p.method.remove(0);
-					p.args.remove(0);
-					return r;
-				}
-			});
-//		}
+			public Object intercept(Object arg0, Method arg1, Object[] arg2,
+					MethodProxy arg3) throws Throwable {
+				p.method.add(arg1);
+				p.args.add(arg2);
+				Invocation<T> invocation = new Invocation<T>();
+				invocation.setMethod(arg1);
+				invocation.setArgs(arg2);
+				Object r = callback.intercept(invocation);
+				p.method.remove(0);
+				p.args.remove(0);
+				return r;
+			}
+		});
 		return proxy;
 	}
 
@@ -137,17 +134,6 @@ public class ProxyFactory<T> {
 	public Method getMethod() {
 		return method.get(0);
 	}
-
-/*	protected Object getValueOfElement(T element) {
-		if (method == null) {
-			return element; // identity function
-		}
-		try {
-			return element == null ? null : method.invoke(element);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}*/
 
 	/**
 	 * Final classes cannot be proxied (sub classed), but we support certain
