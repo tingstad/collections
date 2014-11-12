@@ -16,9 +16,7 @@ import com.rictin.util.proxy.ProxyFactory;
 abstract class ListHandler<T> {
 
 	protected Collection<T> list;
-	protected Object[] args;
-	protected Method method;
-	protected Class<?> returnType;
+	protected Invocation<T> invocation;
 
 	protected ProxyFactory<T> proxyFactory;
 
@@ -29,18 +27,11 @@ abstract class ListHandler<T> {
 
 	protected abstract Object handleList();
 
-	protected Object intercept() {
-		Object returnValue = this.handleList();
-		if (!returnType.isPrimitive() || returnValue != null) {
-			return returnValue;
-		}
-		return newInstance(returnType);
-	}
-
 	public T createProxy() {
 		Callback<T> callback = new Callback<T>() {
 
-			public Object intercept(Invocation<T> invocation) {
+			public Object intercept(Invocation<T> i) {
+				invocation = i;
 				return handleList();
 			}
 
@@ -51,41 +42,7 @@ abstract class ListHandler<T> {
 	}
 
 	protected Object getValueOfElement(T element) {
-		return proxyFactory.invoke(element);
-	}
-
-	protected Object getValueOfElement2(T element) {
-		if (method == null) {
-			return element; // identity function
-		}
-		try {
-			return element == null ? null : method.invoke(element);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private Object newInstance(Class<?> klass) {
-		if (klass.isPrimitive()) {
-			if (Boolean.TYPE.equals(klass)) {
-				return false;
-			} else if (Float.TYPE.equals(klass)) {
-				return 0f;
-			} else if (Double.TYPE.equals(klass)) {
-				return 0d;
-			} else if (Character.TYPE.equals(klass)) {
-				return (char) 0;
-			} else if (Byte.TYPE.equals(klass)) {
-				return (byte) 0;
-			} else if (Long.TYPE.equals(klass)) {
-				return 0l;
-			} else if (Short.TYPE.equals(klass)) {
-				return (short) 0;
-			} else {
-				return 0;
-			}
-		}
-		return null;
+		return invocation.invoke(element);
 	}
 
 	protected boolean preserveReturnedNull() {

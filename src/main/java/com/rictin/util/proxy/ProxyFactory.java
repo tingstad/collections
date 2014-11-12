@@ -7,7 +7,6 @@
 package com.rictin.util.proxy;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -89,26 +88,6 @@ public class ProxyFactory<T> {
 			}
 		});
 		return proxy;
-	}
-
-	public Object invoke(T object) {
-		if (object == null) {
-			return null;
-		}
-		if (Modifier.isFinal(clazz.getModifiers())) {
-			return object;
-		}
-		Method method = this.method.get(0);
-		Object[] args = this.args.get(0);
-		try {
-			return method.invoke(object, args);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private T newProxy(MethodInterceptor interceptor) {

@@ -52,7 +52,7 @@ public class ComparatorBuilder<T> extends ListSorter<T> {
 				int i = 0;
 				int c = 0;
 				while (c == 0 && i < comparators.size()) {
-					method = methods.get(i);
+//					method = methods.get(i);
 					c = comparators.get(i++).compare(o1, o2);
 				}
 				return c;

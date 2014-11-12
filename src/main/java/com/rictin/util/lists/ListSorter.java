@@ -71,8 +71,8 @@ public class ListSorter<T> extends ListHandler<T> {
 			public int compare(T o1, T o2) {
 				Object v1 = null, v2 = null;
 			//	try {
-					v1 = (o1 == null ? null : proxyFactory.invoke(o1));
-					v2 = (o2 == null ? null : proxyFactory.invoke(o2));
+					v1 = (o1 == null ? null : invocation.invoke(o1));
+					v2 = (o2 == null ? null : invocation.invoke(o2));
 			//	} catch (Exception e) {
 			//		throw new RuntimeException(e);
 			//	}
