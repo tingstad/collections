@@ -6,13 +6,11 @@
  */
 package com.rictin.util.internal.chain;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
 public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
@@ -63,49 +61,6 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 		return proxy;
 	}
 
-	private Comparator<T> createComparator() {
-		Method method = getInvocation().getMethod();
-		if (Void.TYPE.equals(method.getReturnType())) {
-			throw new RuntimeException("Method must return a value!");
-		}
-		if (!method.getReturnType().isPrimitive()
-				&& !Arrays.asList(method.getReturnType().getInterfaces()).contains(
-						Comparable.class)) {
-			throw new RuntimeException("Must be comparable!");
-		}
-		final boolean descending = this.decending;
-		return new Comparator<T>() {
-			public int compare(T o1, T o2) {
-				Object v1 = null, v2 = null;
-				try {
-					v1 = (o1 == null ? null : getValueOfElement(o1));
-					v2 = (o2 == null ? null : getValueOfElement(o2));
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				if (o1 == null && o2 == null) {
-					return 0;
-				} else if (o1 == null) {
-					return nullFirst ? -1 : 1;
-				} else if (o2 == null) {
-					return nullFirst ? 1 : -1;
-				} else if (v1 == null && v1 == v2) {
-					return 0;
-				} else if (v1 == null) {
-					return nullFirst ? -1 : 1;
-				} else if (v2 == null) {
-					return nullFirst ? 1 : -1;
-				}
-				if (descending) {
-					Object t = v1;
-					v1 = v2;
-					v2 = t;
-				}
-				return ((Comparable) v1).compareTo(v2);
-			}
-		};
-	}
-
 	@Override
 	public boolean hasNext() {
 		return list == null && input.hasNext() || index < list.size();
@@ -118,7 +73,8 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 			while (input.hasNext()) {
 				list.add(input.getNext());
 			}
-			Collections.sort(list, createComparator());
+			Collections.sort(list, 
+					ComparatorUtil.createComparator(decending, nullFirst, getInvocation()));
 		}
 		return list.get(index++);
 	}
