@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import com.rictin.util.lists.ListSorter;
+import com.rictin.util.internal.lists.ListSorter;
 
 
 public class ComparatorBuilder<T> extends ListSorter<T> {

@@ -10,14 +10,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.rictin.util.lists.Collect;
-import com.rictin.util.lists.FlatCollect;
-import com.rictin.util.lists.GroupBy;
-import com.rictin.util.lists.ListAggregator;
-import com.rictin.util.lists.ListFilter;
-import com.rictin.util.lists.ListFinder;
-import com.rictin.util.lists.ListSorter;
-import com.rictin.util.lists.ListUpdater;
+import com.rictin.util.internal.lists.Collect;
+import com.rictin.util.internal.lists.FlatCollect;
+import com.rictin.util.internal.lists.GroupBy;
+import com.rictin.util.internal.lists.ListAggregator;
+import com.rictin.util.internal.lists.ListFilter;
+import com.rictin.util.internal.lists.ListFinder;
+import com.rictin.util.internal.lists.ListSorter;
+import com.rictin.util.internal.lists.ListUpdater;
 
 /**
  * {@link com.rictin.util.Lists} has static methods to simplify common

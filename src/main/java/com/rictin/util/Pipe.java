@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.rictin.util.proxy.Callback;
-import com.rictin.util.proxy.Invocation;
-import com.rictin.util.proxy.ProxyFactory;
+import com.rictin.util.internal.proxy.Callback;
+import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.internal.proxy.ProxyFactory;
 
 public class Pipe<T> {
 

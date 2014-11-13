@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.rictin.util.chain.ChainFilter;
-import com.rictin.util.chain.ChainFromIterator;
-import com.rictin.util.chain.ChainLimit;
-import com.rictin.util.chain.ChainSorter;
-import com.rictin.util.chain.ChainSum;
-import com.rictin.util.chain.Chained;
-import com.rictin.util.proxy.ProxyFactory;
+import com.rictin.util.internal.chain.ChainFilter;
+import com.rictin.util.internal.chain.ChainFromIterator;
+import com.rictin.util.internal.chain.ChainLimit;
+import com.rictin.util.internal.chain.ChainSorter;
+import com.rictin.util.internal.chain.ChainSum;
+import com.rictin.util.internal.chain.Chained;
+import com.rictin.util.internal.proxy.ProxyFactory;
 
 public class Chain<T> implements Iterator<T> {
 
