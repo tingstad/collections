@@ -6,7 +6,6 @@
  */
 package com.rictin.util.lists;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,7 +57,7 @@ public class ListSorter<T> extends ListHandler<T> {
 	}
 
 	protected Comparator<T> createComparator() {
-		if (Void.TYPE.equals(proxyFactory.getReturnType())) {
+		if (Void.TYPE.equals(invocation.getReturnType())) {
 			throw new RuntimeException("Method must return a value!");
 		}
 /*		if (!returnType.isPrimitive()
@@ -70,12 +69,8 @@ public class ListSorter<T> extends ListHandler<T> {
 		return new Comparator<T>() {
 			public int compare(T o1, T o2) {
 				Object v1 = null, v2 = null;
-			//	try {
-					v1 = (o1 == null ? null : invocation.invoke(o1));
-					v2 = (o2 == null ? null : invocation.invoke(o2));
-			//	} catch (Exception e) {
-			//		throw new RuntimeException(e);
-			//	}
+				v1 = invocation.invoke(o1);
+				v2 = invocation.invoke(o2);
 				if (o1 == null && o2 == null) {
 					return 0;
 				} else if (o1 == null) {

@@ -35,7 +35,7 @@ public class ComparatorBuilder<T> extends ListSorter<T> {
 	@Override
 	protected Object handleList() {
 		comparators.add(createComparator());
-		methods.add(proxyFactory.getMethod());
+		methods.add(invocation.getMethod());
 		return null;
 	}
 

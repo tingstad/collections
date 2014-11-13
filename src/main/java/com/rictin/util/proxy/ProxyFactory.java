@@ -25,10 +25,6 @@ public class ProxyFactory<T> {
 	public Class<T> clazz;
 	private Class<?>[] argumentTypes;
 	private T identity;
-
-	//private List<Object> object;
-	private List<Method> method = new ArrayList<Method>();
-	private List<Object[]> args = new ArrayList<Object[]>();
 	
 /*	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
 		List<T> list = new ArrayList<T>(1);
@@ -69,21 +65,17 @@ public class ProxyFactory<T> {
 	private T getProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
 		final ProxyFactory<T> p = this;
 		if (Modifier.isFinal(clazz.getModifiers())) {
-			T returnValue = (T) callback.intercept(new Invocation<T>());
+			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
 		}
 		T proxy = newProxy(new MethodInterceptor() {
 				
 			public Object intercept(Object arg0, Method arg1, Object[] arg2,
 					MethodProxy arg3) throws Throwable {
-				p.method.add(arg1);
-				p.args.add(arg2);
-				Invocation<T> invocation = new Invocation<T>();
+				Invocation<T> invocation = new Invocation<T>(clazz);
 				invocation.setMethod(arg1);
 				invocation.setArgs(arg2);
 				Object r = callback.intercept(invocation);
-				p.method.remove(0);
-				p.args.remove(0);
 				return r;
 			}
 		});
@@ -101,17 +93,6 @@ public class ProxyFactory<T> {
 		Object proxy = enhancer.create(argumentTypes,
 				getArguments(argumentTypes));
 		return (T) proxy;
-	}
-
-	public Class<?> getReturnType() {
-		if (Modifier.isFinal(clazz.getModifiers())) {
-			return clazz;
-		}
-		return method.get(0).getReturnType();
-	}
-
-	public Method getMethod() {
-		return method.get(0);
 	}
 
 	/**

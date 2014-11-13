@@ -7,6 +7,11 @@ public class Invocation<T>{
 
 	private Method method;
 	private Object[] args;
+	private Class<?> clazz;
+
+	public Invocation(Class<?> clazz) {
+		this.clazz = clazz;
+	}
 
 	public Object invoke(T object) {
 		if (object == null) {
@@ -26,6 +31,13 @@ public class Invocation<T>{
 		}
 	}
 
+	public Class<?> getReturnType() {
+		if (method == null) {
+			return clazz;
+		}
+		return method.getReturnType();
+	}
+	
 	public Method getMethod() {
 		return method;
 	}
@@ -42,4 +54,8 @@ public class Invocation<T>{
 		this.args = args;
 	}
 
+	public void setClass(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+	
 }
