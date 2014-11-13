@@ -6,7 +6,6 @@
  */
 package com.rictin.util;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,7 +17,6 @@ import com.rictin.util.internal.lists.ListSorter;
 public class ComparatorBuilder<T> extends ListSorter<T> {
 
 	private List<Comparator<T>> comparators = new ArrayList<Comparator<T>>();
-	private List<Method> methods = new ArrayList<Method>();
 	
 	private ComparatorBuilder(List<T> collection) {
 		super(collection);
@@ -35,7 +33,6 @@ public class ComparatorBuilder<T> extends ListSorter<T> {
 	@Override
 	protected Object handleList() {
 		comparators.add(createComparator());
-		methods.add(invocation.getMethod());
 		return null;
 	}
 
@@ -52,7 +49,6 @@ public class ComparatorBuilder<T> extends ListSorter<T> {
 				int i = 0;
 				int c = 0;
 				while (c == 0 && i < comparators.size()) {
-//					method = methods.get(i);
 					c = comparators.get(i++).compare(o1, o2);
 				}
 				return c;

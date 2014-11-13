@@ -34,7 +34,7 @@ public class ComparatorBuilderTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void test() {
 		
 		ComparatorBuilder<Person> builder = ComparatorBuilder.from(list);
