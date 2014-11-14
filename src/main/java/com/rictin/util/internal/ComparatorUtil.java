@@ -2,6 +2,7 @@ package com.rictin.util.internal;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import com.rictin.util.internal.proxy.Invocation;
 
@@ -45,6 +46,24 @@ public class ComparatorUtil {
 				}
 				return ((Comparable) v1).compareTo(v2);
 			}
+		};
+	}
+
+	public static <T> Comparator<T> join(final List<Comparator<T>> comparators) {
+		if (comparators.size() == 1) {
+			return comparators.get(0);
+		}
+		return new Comparator<T>() {
+
+			public int compare(T o1, T o2) {
+				int i = 0;
+				int c = 0;
+				while (c == 0 && i < comparators.size()) {
+					c = comparators.get(i++).compare(o1, o2);
+				}
+				return c;
+			}
+			
 		};
 	}
 

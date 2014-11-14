@@ -27,13 +27,15 @@ public class ChainFromIterator<T> extends Chained<T> {
 		proxyFactory = new ProxyFactory<T>(first);
 	}
 
-	public boolean hasNext() {
+	@Override
+	protected boolean hasNext() {
 		if (hasNext == null) {
 			prepareNext();
 		}
 		return hasNext;
 	}
 
+	@Override
 	protected T getNext() {
 		if (!hasNext()) {
 			throw new IllegalStateException("No more elements.");

@@ -30,16 +30,16 @@ public abstract class Chained<T> {
 			
 		});
 	}
-
+	
 	protected Object getValueOfElement(T element) {
 		return invocation.invoke(element);
 	}
 
-	public abstract boolean hasNext();
+	protected abstract boolean hasNext();
 
 	protected abstract T getNext();
 
-	public T next() {
+	protected T next() {
 		validateHasNext();
 		return getNext();
 	}

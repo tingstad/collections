@@ -7,6 +7,7 @@
 package com.rictin.test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -73,4 +74,25 @@ public class ChainTest {
 		Assert.assertEquals(61, sum);
 	}
 
+	@Test
+	public void testSortByTwoFields() {
+		Chain<Person> chain = Chain.from(Arrays.asList(
+				new Person("Richard", 31),
+				new Person("Richard", 30),
+				new Person("Kirsti", 31)));
+		chain.sort().descendingBy().getAge();
+		chain.sort().ascendingBy().getName();
+		
+		Person person = chain.next();
+		Assert.assertEquals(31, person.getAge());
+		Assert.assertEquals("Kirsti", person.getName());
+		person = chain.next();
+		Assert.assertEquals(31, person.getAge());
+		Assert.assertEquals("Richard", person.getName());
+		person = chain.next();
+		Assert.assertEquals(30, person.getAge());
+		Assert.assertEquals("Richard", person.getName());		
+		Assert.assertFalse(chain.hasNext());
+	}
+	
 }

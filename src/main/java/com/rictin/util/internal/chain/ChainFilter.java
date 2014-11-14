@@ -161,13 +161,15 @@ public class ChainFilter<T> extends Chained<T> {
 		return accept == test;
 	}
 
-	public boolean hasNext() {
+	@Override
+	protected boolean hasNext() {
 		if (hasNext == null) {
 			prepareNext();
 		}
 		return hasNext;
 	}
 
+	@Override
 	protected T getNext() {
 		hasNext = null;
 		return element;

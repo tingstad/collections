@@ -17,12 +17,12 @@ import com.rictin.util.internal.chain.ChainLimit;
 import com.rictin.util.internal.chain.ChainSorter;
 import com.rictin.util.internal.chain.ChainSum;
 import com.rictin.util.internal.chain.Chained;
+import com.rictin.util.internal.chain.InternalChain;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
-public class Chain<T> implements Iterator<T> {
+public class Chain<T> extends InternalChain<T> implements Iterator<T> {
 
 	private ProxyFactory<T> proxyFactory;
-	private List<Chained<T>> operations = new ArrayList<Chained<T>>();
 
 	private Chain(Iterator<T> input) {
 		ChainFromIterator<T> initial = addInitial(input);
@@ -104,18 +104,9 @@ public class Chain<T> implements Iterator<T> {
 		return list;
 	}
 
-	private Chained<T> getLastOperation() {
-		return operations.get(operations.size() - 1);
-	}
-	
-	public boolean hasNext() {
-		return getLastOperation().hasNext();
-	}
-
-	public T next() {
-		return getLastOperation().next();
-	}
-
+	/**
+	 * Unsupported operation.
+	 */
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

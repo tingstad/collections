@@ -25,7 +25,7 @@ public class ChainSum<T> extends Chained<T> {
 	}
 
 	@Override
-	public boolean hasNext() {
+	protected boolean hasNext() {
 		return !done;
 	}
 

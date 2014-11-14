@@ -8,12 +8,13 @@ package com.rictin.util.internal.chain;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
-public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
+public class ChainSorter<T> extends Chained<T> {
 
 	private boolean decending;
 	private boolean nullFirst = false;
@@ -21,6 +22,7 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 	private Chained<T> input;
 	private List<T> list;
 	private int index = 0;
+	private Comparator<T> comparator;
 
 	public ChainSorter(Chained<T> input, ProxyFactory<T> proxyFactory) {
 		super(proxyFactory);
@@ -62,7 +64,7 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 	}
 
 	@Override
-	public boolean hasNext() {
+	protected boolean hasNext() {
 		return list == null && input.hasNext() || index < list.size();
 	}
 
@@ -73,10 +75,20 @@ public class ChainSorter<T> extends Chained<T> {//Iterator<T> {
 			while (input.hasNext()) {
 				list.add(input.getNext());
 			}
-			Collections.sort(list, 
-					ComparatorUtil.createComparator(decending, nullFirst, getInvocation()));
+			Collections.sort(list, getComparator());
 		}
 		return list.get(index++);
+	}
+
+	Comparator<T> getComparator() {
+		if (comparator == null) {
+			comparator = ComparatorUtil.createComparator(decending, nullFirst, getInvocation());
+		}
+		return comparator;
+	}
+
+	void setComparator(Comparator<T> comparator) {
+		this.comparator = comparator;
 	}
 
 }
