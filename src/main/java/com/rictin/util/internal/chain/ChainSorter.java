@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.rictin.util.OptionalArgument;
 import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
@@ -23,10 +24,13 @@ public class ChainSorter<T> extends Chained<T> {
 	private List<T> list;
 	private int index = 0;
 	private Comparator<T> comparator;
+	private Integer limit;
+	private OptionalArgument[] options;
 
-	public ChainSorter(Chained<T> input, ProxyFactory<T> proxyFactory) {
+	public ChainSorter(Chained<T> input, ProxyFactory<T> proxyFactory, OptionalArgument... options) {
 		super(proxyFactory);
 		this.input = input;
+		this.options = options;
 	}
 
 	/**
@@ -71,13 +75,43 @@ public class ChainSorter<T> extends Chained<T> {
 	@Override
 	protected T getNext() {
 		if (list == null) {
-			list = new ArrayList<T>();
-			while (input.hasNext()) {
-				list.add(input.getNext());
+			if (limit == null || !optimize()) {
+				list = new ArrayList<T>();
+				while (input.hasNext()) {
+					list.add(input.getNext());
+				}
+				Collections.sort(list, getComparator());
+			} else {
+				list = new ArrayList<T>(limit);
+				populateSortedListWithLimit();
 			}
-			Collections.sort(list, getComparator());
 		}
 		return list.get(index++);
+	}
+
+	private void populateSortedListWithLimit() {
+		while (input.hasNext()) {
+			T element = input.getNext();
+			if (list.isEmpty()) {
+				list.add(element);
+				continue;
+			}
+			int i = list.size() - 1;
+			boolean hit = false;
+			while (i >= 0 && comparator.compare(element, list.get(i)) <= 0) {
+				i--;
+				hit = true;
+			}
+			if (hit) {
+				i++;
+				if (list.size() == limit) {
+					list.remove(i);
+				}
+				list.add(i, element);
+			} else if (list.size() < limit) {
+				list.add(element);
+			}
+		}
 	}
 
 	Comparator<T> getComparator() {
@@ -89,6 +123,17 @@ public class ChainSorter<T> extends Chained<T> {
 
 	void setComparator(Comparator<T> comparator) {
 		this.comparator = comparator;
+	}
+
+	void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	private <T> boolean optimize() {
+		for (OptionalArgument option : options)
+			if (OptionalArgument.NO_OPTIMIZATION.equals(option))
+				return false;
+		return true;
 	}
 
 }

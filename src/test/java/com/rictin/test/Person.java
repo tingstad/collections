@@ -55,5 +55,10 @@ public class Person implements HasName {
 	public AtomicInteger getAtomicInteger() {
 		return new AtomicInteger(4);
 	}
-	
+
+	@Override
+	public String toString() {
+		return name + "(" + age + ")";
+	}
+
 }

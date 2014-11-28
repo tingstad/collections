@@ -57,8 +57,8 @@ public class Chain<T> extends InternalChain<T> implements Iterator<T> {
 	 * 
 	 * @return
 	 */
-	public ChainSorter<T> sort() {
-		return add(new ChainSorter<T>(getLastOperation(), proxyFactory));
+	public ChainSorter<T> sort(OptionalArgument... options) {
+		return add(new ChainSorter<T>(getLastOperation(), proxyFactory, options));
 	}
 
 	public void limit(int n) {

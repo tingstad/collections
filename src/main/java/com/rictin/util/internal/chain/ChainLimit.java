@@ -29,4 +29,8 @@ public class ChainLimit<T> extends Chained<T> {
 		return input.getNext();
 	}
 
+	int getLimit() {
+		return limit;
+	}
+	
 }
