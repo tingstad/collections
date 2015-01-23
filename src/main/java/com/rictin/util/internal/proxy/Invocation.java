@@ -8,6 +8,7 @@ public class Invocation<T>{
 	private Method method;
 	private Object[] args;
 	private Class<?> clazz;
+	private Invocation<Object> transitiveInvocation;
 
 	public Invocation(Class<?> clazz) {
 		this.clazz = clazz;
@@ -21,7 +22,11 @@ public class Invocation<T>{
 			return object; // identity
 		}
 		try {
-			return method.invoke(object, args);
+			Object result = method.invoke(object, args);
+			if (transitiveInvocation != null) {
+				return transitiveInvocation.invoke(result);
+			}
+			return result;
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
@@ -31,6 +36,10 @@ public class Invocation<T>{
 		}
 	}
 
+	public void setTransitiveInvocation(Invocation<Object> invocation) {
+		transitiveInvocation = invocation;
+	}
+	
 	public Class<?> getReturnType() {
 		if (method == null) {
 			return clazz;

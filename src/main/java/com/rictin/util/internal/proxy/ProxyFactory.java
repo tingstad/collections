@@ -47,6 +47,13 @@ public class ProxyFactory<T> {
 		load(collection);
 	}
 
+	public ProxyFactory(Class<T> c) {
+		interfaces = new ArrayList<Class<?>>();
+		clazz = c;
+		identity = createIdentityProxy(clazz);
+		argumentTypes = getArgumentTypesOfShortestConstructor(clazz);
+	}
+
 	private final void load(Collection<T> collection) {
 		interfaces = new ArrayList<Class<?>>();
 		clazz = (Class<T>) getClassOfElements(collection, interfaces);
@@ -63,13 +70,24 @@ public class ProxyFactory<T> {
 	}
 	
 	private T getProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
-		final ProxyFactory<T> p = this;
+//		final ProxyFactory<T> p = this;
 		if (Modifier.isFinal(clazz.getModifiers())) {
 			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
 		}
-		T proxy = newProxy(new MethodInterceptor() {
-				
+		T proxy = newProxy(callback);
+		return proxy;
+	}
+
+	private T newProxy(final Callback<T> callback) {
+		if (identity != null) {
+			return identity;
+		}
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(clazz);
+		enhancer.setInterfaces(interfaces.toArray(new Class[0]));
+		enhancer.setCallback(new MethodInterceptor() {
+
 			public Object intercept(Object arg0, Method arg1, Object[] arg2,
 					MethodProxy arg3) throws Throwable {
 				Invocation<T> invocation = new Invocation<T>(clazz);
@@ -79,17 +97,6 @@ public class ProxyFactory<T> {
 				return r;
 			}
 		});
-		return proxy;
-	}
-
-	private T newProxy(MethodInterceptor interceptor) {
-		if (identity != null) {
-			return identity;
-		}
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(clazz);
-		enhancer.setInterfaces(interfaces.toArray(new Class[0]));
-		enhancer.setCallback(interceptor);
 		Object proxy = enhancer.create(argumentTypes,
 				getArguments(argumentTypes));
 		return (T) proxy;
