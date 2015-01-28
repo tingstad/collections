@@ -31,17 +31,7 @@ public class Pipe<T> {
 			public Object intercept(Invocation invocation) {
 				invocations.add(invocation);
 				
-				Class returnType = invocation.getReturnType();
-				ProxyFactory subFactory = new ProxyFactory(returnType);
-				final Invocation parentInvocation = invocation;
-				Object subProxy = subFactory.getProxy(new Callback() {
-					public Object intercept(Invocation invocation) {
-						parentInvocation.setTransitiveInvocation(invocation);
-						return null;
-					}
-				});
-				
-				return subProxy;
+				return null;
 			}
 		});
 		this.input = input;

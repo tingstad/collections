@@ -19,6 +19,7 @@ public class TransitivityTest {
 				new Human("Charles", 1791)));
 		
 		Pipe<Human> pipe = Pipe.from(persons);
+		
 		pipe.filterKeepLessThan(1800, pipe.item().getDates().getYearOfBirth());
 		List<Human> result = pipe.toList();
 		

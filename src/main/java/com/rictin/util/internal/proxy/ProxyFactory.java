@@ -21,7 +21,8 @@ import net.sf.cglib.proxy.MethodProxy;
 
 public class ProxyFactory<T> {
 
-	private List<Class<?>> interfaces;
+	private List<Class<?>> interfaces = new ArrayList<Class<?>>();
+
 	public Class<T> clazz;
 	private Class<?>[] argumentTypes;
 	private T identity;
@@ -55,8 +56,12 @@ public class ProxyFactory<T> {
 	}
 
 	private final void load(Collection<T> collection) {
-		interfaces = new ArrayList<Class<?>>();
-		clazz = (Class<T>) getClassOfElements(collection, interfaces);
+		Class<T> c = (Class<T>) getClassOfElements(collection, interfaces);
+		load(c);
+	}
+	
+	private final void load(Class<T> c) {
+		clazz = c;
 		identity = createIdentityProxy(clazz);
 		argumentTypes = getArgumentTypesOfShortestConstructor(clazz);
 	}
@@ -75,11 +80,11 @@ public class ProxyFactory<T> {
 			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
 		}
-		T proxy = newProxy(callback);
+		T proxy = newProxy(callback, preserveReturnedNull);
 		return proxy;
 	}
 
-	private T newProxy(final Callback<T> callback) {
+	private T newProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
 		if (identity != null) {
 			return identity;
 		}
@@ -93,13 +98,30 @@ public class ProxyFactory<T> {
 				Invocation<T> invocation = new Invocation<T>(clazz);
 				invocation.setMethod(arg1);
 				invocation.setArgs(arg2);
-				Object r = callback.intercept(invocation);
-				return r;
+				Object a = transitiveInterception(callback, invocation);
+				Object b = callback.intercept(invocation);
+				return b == null && !preserveReturnedNull ? a : b;
 			}
 		});
 		Object proxy = enhancer.create(argumentTypes,
 				getArguments(argumentTypes));
 		return (T) proxy;
+	}
+
+	private Object transitiveInterception(Callback<T> callback, final Invocation<T> invocation) {
+
+		Class returnType = invocation.getReturnType();
+		final ProxyFactory subFactory = new ProxyFactory(returnType);
+		Object subProxy = subFactory.getProxy(new Callback() {
+			public Object intercept(Invocation subInvocation) {
+				invocation.setTransitiveInvocation(subInvocation);
+				if (subFactory.identity != null)
+					return null;
+				return transitiveInterception(null, subInvocation);
+			}
+		});
+		
+		return subProxy;
 	}
 
 	/**
@@ -120,6 +142,8 @@ public class ProxyFactory<T> {
 			identity = (T) Long.valueOf(0);
 		} else if (Double.class.equals(c)) {
 			identity = (T) Double.valueOf(0);
+		} else if (c.isPrimitive()) {
+			return (T) Integer.valueOf(0);
 		} else {
 			return null;
 		}
