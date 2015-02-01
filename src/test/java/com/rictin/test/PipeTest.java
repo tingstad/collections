@@ -83,4 +83,16 @@ public class PipeTest {
 		Assert.assertEquals(2, output.get(0).intValue());
 	}
 
+	@Test
+	public void testOneLinePipe() {
+		List<String> output = Pipe.from(list)
+				.filterKeepLessThan(25, Pipe.item(list).getAge())
+				.mapTo(Pipe.item(list).getName())
+				.toList();
+		
+		Assert.assertEquals(1, output.size());
+		Assert.assertEquals(TORSTEIN, output.get(0));
+	}
+
+
 }

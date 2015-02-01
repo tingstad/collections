@@ -20,11 +20,13 @@ import com.rictin.util.internal.proxy.ProxyFactory;
 
 public class Pipe<T> {
 
+	private static Map<Collection, Pipe> pipes = new HashMap<Collection, Pipe>();
 	private T proxy;
 	private Collection<T> input;
 	private List<Invocation<T>> invocations;
 
 	private Pipe(Collection<T> input) {
+		pipes.put(input, this);
 		invocations = new ArrayList<Invocation<T>>();
 		proxy = (T) new ProxyFactory(input).getProxy(new Callback() {
 
@@ -34,7 +36,7 @@ public class Pipe<T> {
 				return null;
 			}
 		});
-		this.input = input;
+		this.input = new ArrayList<T>(input);
 	}
 
 	public static <T> Pipe<T> from(Collection<T> input) {
@@ -43,6 +45,14 @@ public class Pipe<T> {
 
 	public T item() {
 		return proxy;
+	}
+
+	public static <T> T item(Collection<T> collection) {
+		if (!pipes.containsKey(collection)) {
+			throw new IllegalStateException("No pipe exists for collection " + collection);
+		}
+		Pipe<T> pipe = pipes.get(collection);
+		return pipe.item();
 	}
 
 	public Pipe<T> filterKeepLessThan(Number value, Object item) {
