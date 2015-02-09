@@ -14,6 +14,7 @@ public class Person implements HasName {
 	private int age;
 	private Long points;
 	private Double score;
+	private Document document;
 
 	public Person(String name, int age) {
 		this.name = name;
@@ -59,6 +60,14 @@ public class Person implements HasName {
 	@Override
 	public String toString() {
 		return name + "(" + age + ")";
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 
 }

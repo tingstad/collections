@@ -94,5 +94,20 @@ public class ChainTest {
 		Assert.assertEquals("Richard", person.getName());		
 		Assert.assertFalse(chain.hasNext());
 	}
-	
+
+	@Test
+	public void testSubProxy() {
+		Person richard = new Person("Richard", 31);
+		richard.setDocument(new Document("Richard's document"));
+		Person ned = new Person("Ned", 45);
+		ned.setDocument(new Document("Ned's document"));
+		Chain<Person> chain = Chain.from(Arrays.asList(
+				richard, ned));
+		chain.filter().accept("Ned's document").getDocument().getTitle();
+		List<Person> havingNedsDocument = chain.toList();
+		
+		Assert.assertEquals(1, havingNedsDocument.size());
+		Assert.assertEquals("Ned", havingNedsDocument.get(0).getName());
+	}
+
 }
