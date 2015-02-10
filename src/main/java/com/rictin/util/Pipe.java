@@ -69,6 +69,20 @@ public class Pipe<T> {
 		return this;
 	}
 
+	public Pipe<T> select(Condition condition) {
+		List<T> list = new ArrayList<T>();
+		Invocation<T> invocation = invocations.remove(0);
+		for (T element : input) {
+			Object v = invocation.invoke(element);
+			if (condition.where(v)) {
+				list.add(element);
+			}
+		}
+		input.clear();
+		input.addAll(list);
+		return this;
+	}
+
 	public Pipe<T> sortBy(Object... item) {
 		List<Comparator<T>> comparators = new ArrayList<Comparator<T>>(item.length);
 		for (int i = 0; i < item.length; i++) {
