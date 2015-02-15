@@ -7,28 +7,31 @@
 package com.rictin.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.rictin.util.internal.ComparatorUtil;
+import com.rictin.util.internal.pipe.PipeFilter;
+import com.rictin.util.internal.pipe.PipeFromIterable;
+import com.rictin.util.internal.pipe.PipeMap;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
-import com.rictin.util.internal.proxy.ProxyFactory;
 
 public class Pipe<T> {
 
-	private static Map<Collection, Pipe> pipes = new HashMap<Collection, Pipe>();
+	private static Map<String, Pipe> pipes = new ConcurrentHashMap<String, Pipe>();
 	private T proxy;
-	private Collection<T> input;
+	private Iterable<T> stream;
 	private List<Invocation<T>> invocations;
 
-	private Pipe(Collection<T> input) {
-		pipes.put(input, this);
+	protected Pipe(Iterable<T> input) {
+		addPipe(input);
 		invocations = new ArrayList<Invocation<T>>();
-		proxy = (T) new ProxyFactory(input).getProxy(new Callback() {
+		PipeFromIterable<T> adapter = new PipeFromIterable<T>(input);
+		proxy = adapter.getProxyFactory().getProxy(new Callback() {
 
 			public Object intercept(Invocation invocation) {
 				invocations.add(invocation);
@@ -36,10 +39,10 @@ public class Pipe<T> {
 				return null;
 			}
 		});
-		this.input = new ArrayList<T>(input);
+		stream = adapter;
 	}
 
-	public static <T> Pipe<T> from(Collection<T> input) {
+	public static <T> Pipe<T> from(Iterable<T> input) {
 		return new Pipe<T>(input);
 	}
 
@@ -47,25 +50,17 @@ public class Pipe<T> {
 		return proxy;
 	}
 
-	public static <T> T item(Collection<T> collection) {
-		if (!pipes.containsKey(collection)) {
-			throw new IllegalStateException("No pipe exists for collection " + collection);
+	public static <T> T item(Iterable<T> source) {
+		String key = getPipeId(source);
+		if (!pipes.containsKey(key)) {
+			throw new IllegalStateException("No pipe exists for source " + source);
 		}
-		Pipe<T> pipe = pipes.get(collection);
+		Pipe<T> pipe = pipes.get(key);
 		return pipe.item();
 	}
 
 	public Pipe<T> filterKeepLessThan(Number value, Object item) {
-		List<T> list = new ArrayList<T>();
-		Invocation<T> invocation = invocations.remove(0);
-		for (T element : input) {
-			Object v = invocation.invoke(element);
-			if (v != null && ((Number)v).doubleValue() < value.doubleValue()) {
-				list.add(element);
-			}
-		}
-		input.clear();
-		input.addAll(list);
+		stream = new PipeFilter<T>(stream, invocations, value);
 		return this;
 	}
 
@@ -93,21 +88,14 @@ public class Pipe<T> {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <U> Pipe<U> mapTo(U item) {
-		List<U> list = new ArrayList<U>();
-		Invocation<T> invocation = invocations.remove(0);
-		for (T element : input) {
-			list.add((U) invocation.invoke(element));
-		}
-		Pipe<U> pipe = new Pipe<U>(list);
-		return pipe;
+		return Pipe.from(new PipeMap<T, U>(stream, invocations, item));
 	}
 
 	public <U> Map<U, List<T>> groupBy(U item) {
 		Map<U, List<T>> map = new HashMap<U, List<T>>();
 		Invocation<T> invocation = invocations.remove(0);
-		for (T element : input) {
+		for (T element : stream) {
 			@SuppressWarnings("unchecked")
 			U key = (U) invocation.invoke(element);
 			if (!map.containsKey(key)) {
@@ -119,7 +107,18 @@ public class Pipe<T> {
 	}
 
 	public List<T> toList() {
-		return new ArrayList<T>(this.input);
+		List<T> list = new ArrayList<T>();
+		for (T element : stream)
+			list.add(element);
+		return list;
+	}
+
+	private void addPipe(Iterable<T> source) {
+		pipes.put(getPipeId(source), this);
+	}
+
+	private static <T> String getPipeId(Iterable<T> source) {
+		return System.identityHashCode(source) + "-" + Thread.currentThread().getId();
 	}
 
 }
