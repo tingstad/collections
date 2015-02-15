@@ -14,17 +14,17 @@ public class PipeFromIterable<T> implements Iterator<T>, Iterable<T> {
 
 	private Iterator<T> input;
 	private T next;
-	private T first;
 	private Boolean hasNext;
 	private ProxyFactory<T> proxyFactory;
 
 	public PipeFromIterable(Iterable<T> input) {
 		this.input = input.iterator();
-		if (!input.iterator().hasNext()) {
+		if (!this.input.hasNext()) {
 			throw new RuntimeException("Input cannot be empty.");
 		}
-		first = input.iterator().next();
-		proxyFactory = new ProxyFactory<T>(first);
+		hasNext = true;
+		next = this.input.next();
+		proxyFactory = new ProxyFactory<T>(next);
 	}
 
 	public boolean hasNext() {
@@ -42,26 +42,9 @@ public class PipeFromIterable<T> implements Iterator<T>, Iterable<T> {
 		return next;
 	}
 
-	private boolean inputHasNext() {
-		if (first != null) {
-			return true;
-		}
-		return input.hasNext();
-	}
-
-	private T nextInput() {
-		if (first != null) {
-			T ret = first;
-			first = null;
-			return ret;
-		}
-		return input.next();
-	}
-
 	private void prepareNext() {
-		while (inputHasNext()) {
-			T in = nextInput();
-			next = in;
+		if (input.hasNext()) {
+			next = input.next();
 			hasNext = true;
 			return;
 		}

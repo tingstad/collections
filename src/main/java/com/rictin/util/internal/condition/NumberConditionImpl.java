@@ -8,19 +8,29 @@ import condition.NumberCondition;
 
 public class NumberConditionImpl implements NumberCondition {
 
-	private Number number;
-
 	public NumberConditionImpl(Number number) {
-		this.number = number;
 	}
 
 	public Condition<Number> isGreaterThan(final Number number) {
 		return new Condition<Number>() {
 			
 			public boolean where(Number value) {
-				return new BigDecimal(value.toString()).compareTo(new BigDecimal(number.toString())) > 0;
+				return compare(value, number) > 0;
 			}
 		};
 	}
 
+	public Condition<Number> isLessThan(final Number number) {
+		return new Condition<Number>() {
+			
+			public boolean where(Number value) {
+				return compare(value, number) < 0;
+			}
+		};
+	}
+
+	private int compare(Number a, Number b) {
+		return new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
+	}
+	
 }

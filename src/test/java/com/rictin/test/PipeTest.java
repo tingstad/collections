@@ -6,6 +6,8 @@
  */
 package com.rictin.test;
 
+import static com.rictin.util.Conditions.where;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class PipeTest {
 	public void test() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<Person> output = pipe
-				.filterKeepLessThan(25, pipe.item().getAge())
+				.select(where(pipe.item().getAge()).isLessThan(25))
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -46,7 +48,7 @@ public class PipeTest {
 	public void test2() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
-				.filterKeepLessThan(25, pipe.item().getAge())
+				.select(where(pipe.item().getAge()).isLessThan(25))
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -58,7 +60,7 @@ public class PipeTest {
 	public void test3() {
 		Pipe<Person> pipe = Pipe.from(list);
 		Pipe<Integer> ages = pipe
-				.filterKeepLessThan(31, pipe.item().getAge())
+				.select(where(pipe.item().getAge()).isLessThan(31))
 				.mapTo(pipe.item().getAge());
 		List<Integer> output = ages
 				.filterKeepLessThan(25, ages.item().toString())
@@ -73,7 +75,7 @@ public class PipeTest {
 //		List<HasName> 
 		Pipe<Person> pipe = Pipe.from(list);
 		Pipe<Integer> ages = pipe
-				.filterKeepLessThan(31, pipe.item().getAge())
+				.select(where(pipe.item().getAge()).isLessThan(31))
 				.mapTo(pipe.item().getAge());
 		List<Integer> output = ages
 				.filterKeepLessThan(25, ages.item().toString())
@@ -86,7 +88,7 @@ public class PipeTest {
 	@Test
 	public void testOneLinePipe() {
 		List<Person> output = Pipe.from(list)
-				.filterKeepLessThan(25, Pipe.item(list).getAge())
+				.select(where(Pipe.item(list).getAge()).isLessThan(25))
 				.toList();
 		
 		Assert.assertEquals(1, output.size());

@@ -59,22 +59,26 @@ public class Pipe<T> {
 		return pipe.item();
 	}
 
+	@Deprecated
 	public Pipe<T> filterKeepLessThan(Number value, Object item) {
 		stream = new PipeFilter<T>(stream, invocations, value);
 		return this;
 	}
 
 	public Pipe<T> select(Condition condition) {
-		List<T> list = new ArrayList<T>();
-		Invocation<T> invocation = invocations.remove(0);
-		for (T element : input) {
-			Object v = invocation.invoke(element);
-			if (condition.where(v)) {
-				list.add(element);
-			}
+		if (!invocations.isEmpty()) {
+			final Invocation<T> invocation = invocations.remove(0);
+			final Condition c = condition;
+			condition = new Condition<T>() {
+
+				public boolean where(T element) {
+					Object v = invocation.invoke(element);
+					return c.where(v);
+				}
+
+			};
 		}
-		input.clear();
-		input.addAll(list);
+		stream = new PipeFilter<T>(stream, invocations, (Condition<T>) condition);
 		return this;
 	}
 

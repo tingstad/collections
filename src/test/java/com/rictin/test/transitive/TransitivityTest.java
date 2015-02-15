@@ -1,5 +1,6 @@
 package com.rictin.test.transitive;
 
+import static com.rictin.util.Conditions.where;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class TransitivityTest {
 		
 		Pipe<Human> pipe = Pipe.from(persons);
 		
-		pipe.filterKeepLessThan(1800, pipe.item().getDates().getYearOfBirth());
+		pipe.select(
+				where( pipe.item().getDates().getYearOfBirth() ).isLessThan(1800));
 		List<Human> result = pipe.toList();
 		
 		assertEquals(1, result.size());

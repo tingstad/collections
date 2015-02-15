@@ -9,6 +9,7 @@ package com.rictin.util.internal.pipe;
 import java.util.Iterator;
 import java.util.List;
 
+import com.rictin.util.Condition;
 import com.rictin.util.internal.proxy.Invocation;
 
 public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
@@ -19,6 +20,13 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 	private Boolean hasNext;
 	private T element;
 	private Number value;
+	private Condition<T> condition;
+
+	public PipeFilter(Iterable<T> input, List<Invocation<T>> invocationList, Condition<T> condition) {
+		this.input = input.iterator();
+		this.invocationList = invocationList;
+		this.condition = condition;
+	}
 
 	public PipeFilter(Iterable<T> input, List<Invocation<T>> invocationList, Number value) {
 		this.input = input.iterator();
@@ -43,6 +51,9 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	private boolean isAccepted(T element, Invocation<T> invocation) {
+		if (condition != null) {
+			return condition.where(element);
+		}
 		Object v = invocation.invoke(element);
 		if (v != null && ((Number)v).doubleValue() < value.doubleValue()) {
 			return true;
@@ -64,7 +75,7 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	private Invocation<T> getInvocation() {
-		if (invocation == null) {
+		if (invocation == null && condition == null) {
 			invocation = invocationList.remove(invocationList.size() - 1);
 		}
 		return invocation;
