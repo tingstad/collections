@@ -66,5 +66,14 @@ public class Invocation<T>{
 	public void setClass(Class<?> clazz) {
 		this.clazz = clazz;
 	}
+
+	@Override
+	public String toString() {
+		String string = clazz.toString() + "." + method.getName() + "(";
+		for (int i = 0; i < args.length; i++)
+			string += args[i].toString()
+					+ (i < args.length - 1 ? ", " : "");
+		return string + ")";
+	}
 	
 }
