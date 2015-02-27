@@ -8,6 +8,7 @@ package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.rictin.util.Condition;
 import com.rictin.util.internal.proxy.Invocation;
@@ -46,6 +47,9 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	public T next() {
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
 		hasNext = null;
 		return element;
 	}

@@ -50,6 +50,8 @@ import com.rictin.util.internal.lists.ListUpdater;
  */
 public class Lists {
 
+	private Lists() {}
+	
 	/**
 	 * Sorts list by specified value. Example:
 	 * <p/>

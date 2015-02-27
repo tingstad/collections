@@ -8,6 +8,8 @@ import com.rictin.util.internal.proxy.Invocation;
 
 public class ComparatorUtil {
 
+	private ComparatorUtil() { }
+
 	public static <T> Comparator<T> createComparator(
 			final boolean descending,
 			final boolean nullFirst,

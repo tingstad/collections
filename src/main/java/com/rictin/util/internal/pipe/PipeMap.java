@@ -8,6 +8,7 @@ package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.rictin.util.internal.proxy.Invocation;
 
@@ -36,6 +37,9 @@ public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
 	}
 
 	public U next() {
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
 		hasNext = null;
 		return element;
 	}

@@ -23,21 +23,10 @@ public class ProxyFactory<T> {
 
 	private List<Class<?>> interfaces = new ArrayList<Class<?>>();
 
-	public Class<T> clazz;
+	private Class<T> clazz;
 	private Class<?>[] argumentTypes;
 	private T identity;
 	
-/*	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
-		List<T> list = new ArrayList<T>(1);
-		list.add(element);
-		return createProxy(list, interceptor);
-	}
-
-	public static <T> T createProxy(Collection<T> collection, 
-			Callback<T> callback) {
-		return new ProxyFactory<T>(collection).getProxy(callback);
-	}*/
-
 	public ProxyFactory(T element) {
 		List<T> list = new ArrayList<T>(1);
 		list.add(element);
@@ -75,7 +64,6 @@ public class ProxyFactory<T> {
 	}
 	
 	private T getProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
-//		final ProxyFactory<T> p = this;
 		if (Modifier.isFinal(clazz.getModifiers())) {
 			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
@@ -98,7 +86,7 @@ public class ProxyFactory<T> {
 				Invocation<T> invocation = new Invocation<T>(clazz);
 				invocation.setMethod(arg1);
 				invocation.setArgs(arg2);
-				Object a = transitiveInterception(callback, invocation);
+				Object a = transitiveInterception(invocation);
 				Object b = callback.intercept(invocation);
 				return b == null && !preserveReturnedNull ? a : b;
 			}
@@ -108,7 +96,7 @@ public class ProxyFactory<T> {
 		return (T) proxy;
 	}
 
-	private Object transitiveInterception(Callback<T> callback, final Invocation<T> invocation) {
+	private Object transitiveInterception(final Invocation<T> invocation) {
 
 		Class returnType = invocation.getReturnType();
 		final ProxyFactory subFactory = new ProxyFactory(returnType);
@@ -117,7 +105,7 @@ public class ProxyFactory<T> {
 				invocation.setTransitiveInvocation(subInvocation);
 				if (subFactory.identity != null)
 					return null;
-				return transitiveInterception(null, subInvocation);
+				return transitiveInterception(subInvocation);
 			}
 		});
 		
@@ -191,7 +179,7 @@ public class ProxyFactory<T> {
 			} else if (Byte.TYPE.equals(klass)) {
 				return (byte) 0;
 			} else if (Long.TYPE.equals(klass)) {
-				return 0l;
+				return 0L;
 			} else if (Short.TYPE.equals(klass)) {
 				return (short) 0;
 			} else {

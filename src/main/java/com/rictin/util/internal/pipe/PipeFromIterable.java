@@ -7,6 +7,7 @@
 package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.rictin.util.internal.proxy.ProxyFactory;
 
@@ -36,7 +37,7 @@ public class PipeFromIterable<T> implements Iterator<T>, Iterable<T> {
 
 	public T next() {
 		if (!hasNext()) {
-			throw new IllegalStateException("No more elements.");
+			throw new NoSuchElementException();
 		}
 		hasNext = null;
 		return next;

@@ -21,7 +21,7 @@ public class ChainFilter<T> extends Chained<T> {
 		LESS_THAN,
 		LESS_THAN_OR_EQUAL,
 		DUPLICATE
-	};
+	}
 
 	private boolean accept;
 	private Operation operation;
@@ -157,6 +157,8 @@ public class ChainFilter<T> extends Chained<T> {
 			test = exists.contains(value);
 			exists.add(value);
 			break;
+		default:
+			throw new IllegalStateException();
 		}
 		return accept == test;
 	}

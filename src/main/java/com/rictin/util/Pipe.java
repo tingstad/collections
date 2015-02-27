@@ -59,6 +59,10 @@ public class Pipe<T> {
 		return pipe.item();
 	}
 
+	/**
+	 * 
+	 * @deprecated
+	 */
 	@Deprecated
 	public Pipe<T> filterKeepLessThan(Number value, Object item) {
 		stream = new PipeFilter<T>(stream, invocations, value);
