@@ -7,6 +7,7 @@
 package com.rictin.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.rictin.util.internal.ComparatorUtil;
+import com.rictin.util.internal.condition.OrCondition;
 import com.rictin.util.internal.pipe.PipeFilter;
 import com.rictin.util.internal.pipe.PipeFromIterable;
 import com.rictin.util.internal.pipe.PipeMap;
@@ -69,20 +71,30 @@ public class Pipe<T> {
 		return this;
 	}
 
-	public Pipe<T> select(Condition condition) {
-		if (!invocations.isEmpty()) {
+	public Pipe<T> select(final Condition condition) {
+		Condition cond;
+		if (invocations.isEmpty()) {
+			cond = condition;
+		} else if (OrCondition.class.equals(condition.getClass())) {
+			((OrCondition) condition).setInvocations(new ArrayList<Invocation<?>>(invocations));
+			cond = new Condition<T>() {
+
+				public boolean where(T element) {
+					return ((OrCondition) condition).compute(element);
+				}
+			};
+		} else {
 			final Invocation<T> invocation = invocations.remove(0);
-			final Condition c = condition;
-			condition = new Condition<T>() {
+			cond = new Condition<T>() {
 
 				public boolean where(T element) {
 					Object v = invocation.invoke(element);
-					return c.where(v);
+					return condition.where(v);
 				}
 
 			};
 		}
-		stream = new PipeFilter<T>(stream, invocations, (Condition<T>) condition);
+		stream = new PipeFilter<T>(stream, invocations, (Condition<T>) cond);
 		return this;
 	}
 

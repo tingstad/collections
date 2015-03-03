@@ -16,10 +16,10 @@ import com.rictin.test.Person;
 import com.rictin.util.Conditions;
 import com.rictin.util.Pipe;
 
-public class NumberConditionTest {
+public class ConditionTest {
 
 	@Test
-	public void test() {
+	public void testOr() {
 		List<Person> list = Arrays.asList(
 				new Person("RICHARD", 30),
 				new Person("KIRSTI", 31),
@@ -27,12 +27,14 @@ public class NumberConditionTest {
 		Pipe<Person> pipe = Pipe.from(list);
 
 		List<Person> adults = pipe.select(
-				Conditions.where( pipe.item().getAge() ).isGreaterThan(17)
+				Conditions.or(
+						Conditions.where( pipe.item().getAge() ).isGreaterThan(30),
+						Conditions.where( pipe.item().getAge() ).isLessThan(30))
 				).toList();
 
 		Assert.assertEquals(2, adults.size());
-		Assert.assertEquals(30, adults.get(0).getAge());
-		Assert.assertEquals(31, adults.get(1).getAge());
+		Assert.assertEquals(31, adults.get(0).getAge());
+		Assert.assertEquals(2, adults.get(1).getAge());
 	}
-
+	
 }

@@ -20,6 +20,10 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 	private Invocation<T> invocation;
 	private Boolean hasNext;
 	private T element;
+	/**
+	 * @deprecated Use Condition
+	 */
+	@Deprecated
 	private Number value;
 	private Condition<T> condition;
 
@@ -29,6 +33,11 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 		this.condition = condition;
 	}
 
+	/**
+	 * 
+	 * @deprecated Use Condition
+	 */
+	@Deprecated
 	public PipeFilter(Iterable<T> input, List<Invocation<T>> invocationList, Number value) {
 		this.input = input.iterator();
 		this.invocationList = invocationList;
@@ -58,6 +67,7 @@ public class PipeFilter<T> implements Iterator<T>, Iterable<T> {
 		if (condition != null) {
 			return condition.where(element);
 		}
+		//TODO: Remove rest of this method later:
 		Object v = invocation.invoke(element);
 		if (v != null && ((Number)v).doubleValue() < value.doubleValue()) {
 			return true;

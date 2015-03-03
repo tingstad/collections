@@ -4,10 +4,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.rictin.util;
+package com.rictin.util.condition;
 
-public interface Condition<T> {
+import com.rictin.util.Condition;
 
-	boolean where(T value);
+public interface NumberCondition {
+
+	Condition<Number> isGreaterThan(Number number);
+	Condition<Number> isLessThan(Number number);
 
 }
