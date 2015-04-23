@@ -7,7 +7,6 @@
 package com.rictin.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -76,13 +75,9 @@ public class Pipe<T> {
 		if (invocations.isEmpty()) {
 			cond = condition;
 		} else if (OrCondition.class.equals(condition.getClass())) {
-			((OrCondition) condition).setInvocations(new ArrayList<Invocation<?>>(invocations));
-			cond = new Condition<T>() {
-
-				public boolean where(T element) {
-					return ((OrCondition) condition).compute(element);
-				}
-			};
+			OrCondition or = (OrCondition) condition;
+			or.setInvocations(new ArrayList<Invocation<?>>(invocations));
+			cond = or;
 		} else {
 			final Invocation<T> invocation = invocations.remove(0);
 			cond = new Condition<T>() {

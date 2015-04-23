@@ -18,7 +18,6 @@ import com.rictin.util.internal.proxy.Invocation;
 public class OrCondition implements Condition<Object> {
 
 	private Collection<Condition<?>> conditions;
-	private List<Invocation<?>> invocations;
 	private Map<Condition<?>, Invocation<?>> map;
 
 	public OrCondition(final Condition<?>... conditions) {
@@ -28,20 +27,18 @@ public class OrCondition implements Condition<Object> {
 			this.conditions.add(condition);
 	}
 
+	/*
+	 * Assumes that every Condition given to or() uses one invocation.
+	 */
 	public void setInvocations(List<Invocation<?>> invocations) {
-		this.invocations = invocations;
-	}
-
-	public boolean where(Object value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean compute(Object element) {
-		for (Condition c : conditions) {
+		for (Condition<?> c : conditions)
 			if (!map.containsKey(c))
 				map.put(c, invocations.remove(0));
-			final Invocation<Object> invocation = (Invocation<Object>) map.get(c);
+	}
+
+	public boolean where(Object element) {
+		for (Condition c : conditions) {
+			Invocation<Object> invocation = (Invocation<Object>) map.get(c);
 			Object v = invocation.invoke(element);
 			if (c.where(v)) return true;
 		}

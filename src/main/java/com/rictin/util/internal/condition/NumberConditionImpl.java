@@ -9,10 +9,11 @@ package com.rictin.util.internal.condition;
 import java.math.BigDecimal;
 
 import com.rictin.util.Condition;
+import com.rictin.util.condition.ChainedConditionImpl;
 import com.rictin.util.condition.NumberCondition;
 
 
-public class NumberConditionImpl implements NumberCondition {
+public class NumberConditionImpl extends ChainedConditionImpl<Number> implements NumberCondition {
 
 	public NumberConditionImpl(Number number) {
 	}
@@ -35,8 +36,13 @@ public class NumberConditionImpl implements NumberCondition {
 		};
 	}
 
-	private int compare(Number a, Number b) {
+	private static int compare(Number a, Number b) {
 		return new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
 	}
-	
+
+	public boolean where(Number value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

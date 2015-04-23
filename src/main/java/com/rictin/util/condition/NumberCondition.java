@@ -8,7 +8,7 @@ package com.rictin.util.condition;
 
 import com.rictin.util.Condition;
 
-public interface NumberCondition {
+public interface NumberCondition extends ChainedCondition<Number> {
 
 	Condition<Number> isGreaterThan(Number number);
 	Condition<Number> isLessThan(Number number);
