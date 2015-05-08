@@ -20,9 +20,9 @@ public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
 	private Boolean hasNext;
 	private U element;
 
-	public PipeMap(Iterable<T> input, List<Invocation<T>> invocationList, U item) {
+	public PipeMap(PipeParent<T> input, U item) {
 		this.input = input.iterator();
-		this.invocationList = invocationList;
+		this.invocationList = input.invocations;
 	}
 
 	public Iterator<U> iterator() {
@@ -66,5 +66,5 @@ public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

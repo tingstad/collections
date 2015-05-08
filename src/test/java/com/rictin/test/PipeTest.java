@@ -6,11 +6,14 @@
  */
 package com.rictin.test;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.util.Pipe;
@@ -47,6 +50,19 @@ public class PipeTest {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
 				.where(pipe.item().getAge()).isLessThan(25)
+				.mapTo(pipe.item().getName())
+				.toList();
+		
+		Assert.assertEquals(1, output.size());
+		Assert.assertEquals(TORSTEIN, output.get(0));
+	}
+
+	@Test
+	@Ignore("Change to be less greedy")
+	public void testOneElementListWithMapTo() {
+		Pipe<Person> pipe = Pipe.from(asList(new Person(RICHARD, 30)));
+		List<String> output = pipe
+				.where(pipe.item().getAge()).isLessThan(2)
 				.mapTo(pipe.item().getName())
 				.toList();
 		

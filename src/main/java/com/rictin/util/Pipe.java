@@ -7,14 +7,14 @@
 package com.rictin.util;
 
 import com.rictin.util.internal.pipe.PipeImpl;
-import com.rictin.util.pipe.SuperPipe;
+import com.rictin.util.internal.pipe.PipeParent;
 import com.rictin.util.pipe.operation.GroupBy;
 import com.rictin.util.pipe.operation.MapTo;
 import com.rictin.util.pipe.operation.SortBy;
 import com.rictin.util.pipe.operation.ToList;
 import com.rictin.util.pipe.operation.Where;
 
-public abstract class Pipe<T> extends SuperPipe<T> implements Where<T>, MapTo<T>, SortBy<T>, GroupBy<T>, ToList<T> {
+public abstract class Pipe<T> extends PipeParent<T> implements Where<T>, MapTo<T>, SortBy<T>, GroupBy<T>, ToList<T> {
 
 	public static <T> Pipe<T> from(Iterable<T> input) {
 		return new PipeImpl<T>(input);
