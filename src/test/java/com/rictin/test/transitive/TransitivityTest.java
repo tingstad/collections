@@ -1,6 +1,11 @@
+/* Copyright 2014 Richard H. Tingstad
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.rictin.test.transitive;
 
-import static com.rictin.util.Conditions.where;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -21,9 +26,9 @@ public class TransitivityTest {
 		
 		Pipe<Human> pipe = Pipe.from(persons);
 		
-		pipe.select(
-				where( pipe.item().getDates().getYearOfBirth() ).isLessThan(1800));
-		List<Human> result = pipe.toList();
+		List<Human> result = pipe
+				.where( pipe.item().getDates().getYearOfBirth() ).isLessThan(1800)
+				.toList();
 		
 		assertEquals(1, result.size());
 		assertEquals(1791, result.get(0).getDates().getYearOfBirth());
