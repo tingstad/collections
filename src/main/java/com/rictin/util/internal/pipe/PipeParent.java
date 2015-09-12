@@ -18,19 +18,21 @@ import com.rictin.util.internal.proxy.Invocation;
 
 public abstract class PipeParent<T> implements Iterable<T> {
 
-	private static Map<String, PipeParent> pipes = new ConcurrentHashMap<String, PipeParent>();
+	static Map<String, PipeParent> pipes = new ConcurrentHashMap<String, PipeParent>();
+
+	private static ThreadLocal<List<PipeInvocation>> pipeInvocations = new ThreadLocal<List<PipeInvocation>>();
 
 	private T proxy;
 	private Iterable<T> source;
 	private Iterable<T> stream;
-	protected List<Invocation<T>> invocations = new ArrayList<Invocation<T>>();
+	private static ThreadLocal<List<Invocation>> invocations = new ThreadLocal<List<Invocation>>();
+	Class<T> itemClass;
 
 	protected PipeParent() { }
 
-	protected PipeParent(PipeParent<T> input) {
-		invocations = input.invocations;
-		proxy = input.proxy;
-		stream = input.stream;
+	protected PipeParent(PipeParent<T> inputPipe) {
+		proxy = inputPipe.proxy;
+		stream = inputPipe.stream;
 	}
 
 	protected PipeParent(Iterable<T> input) {
@@ -38,17 +40,22 @@ public abstract class PipeParent<T> implements Iterable<T> {
 	}
 
 	protected void init(Iterable<T> input) {
+		pipeInvocations.set(new ArrayList<PipeInvocation>());
 		source = input;
 		addPipe(source);
+		if (invocations.get() == null) {
+			invocations.set(new ArrayList<Invocation>());
+		}
 		PipeFromIterable<T> adapter = new PipeFromIterable<T>(input);
 		proxy = adapter.getProxyFactory().getProxy(new Callback() {
 
 			public Object intercept(Invocation invocation) {
-				invocations.add(invocation);
-				
+				addInvocation(invocation);
+//				pipeInvocations.get().add(new PipeInvocation<T>(pipe, invocation))
 				return null;
 			}
 		});
+		itemClass = (Class<T>) proxy.getClass();
 		stream = adapter;
 	}
 
@@ -69,6 +76,20 @@ public abstract class PipeParent<T> implements Iterable<T> {
 		return pipe.item();
 	}
 
+	static void addInvocation(Invocation invocation) {
+		invocations.get().add(invocation);
+	}
+
+	static Invocation takeNextInvocation() {
+		final List<Invocation> list = invocations.get();
+		return list.isEmpty() ? null : list.remove(0);
+	}
+
+	static Invocation takeLastInvocation() {
+		final List<Invocation> list = invocations.get();
+		return list.isEmpty() ? null : list.remove(invocations.get().size() - 1);
+	}
+
 	protected void addPipe(Iterable<T> source) {
 		pipes.put(getPipeId(source), this);
 		pipes.put(getPipeId(this), this);
@@ -82,20 +103,36 @@ public abstract class PipeParent<T> implements Iterable<T> {
 	 * Call from terminal methods.
 	 */
 	private void cleanUp() {
+		invocations.get().clear();
 		pipes.remove(getPipeId(source));
 		pipes.remove(getPipeId(this));
 	}
 
 	protected List<T> doToList() {
-		cleanUp();
 		List<T> list = new ArrayList<T>();
 		for (T element : this)
 			list.add(element);
+		cleanUp();
 		return list;
 	}
 
 	protected <U> Pipe<U> doMapTo(U item) {
-		return Pipe.from(new PipeMap<T, U>(this, item));
+		return new PipeMap<T, U>(this, item);
 	}
 
+}
+
+class PipeInvocation<T> {
+	private final Pipe<T> pipe;
+	private final Invocation<T> invocation;
+	PipeInvocation(Pipe<T> pipe, Invocation<T> invocation) {
+		this.pipe = pipe;
+		this.invocation = invocation;
+	}
+	public Pipe<T> getPipe() {
+		return pipe;
+	}
+	public Invocation<T> getInvocation() {
+		return invocation;
+	}
 }

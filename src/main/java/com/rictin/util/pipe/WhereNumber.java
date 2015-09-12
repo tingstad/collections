@@ -6,9 +6,10 @@
  */
 package com.rictin.util.pipe;
 
-public interface WhereNumber<T> {
 
-	PipeAfterWhere<T> isGreaterThan(Number number);
-	PipeAfterWhere<T> isLessThan(Number number);
+public interface WhereNumber {
+
+	Condition isGreaterThan(Number number);
+	Condition isLessThan(Number number);
 
 }

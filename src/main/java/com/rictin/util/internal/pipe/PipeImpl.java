@@ -14,7 +14,7 @@ import java.util.Map;
 
 import com.rictin.util.Pipe;
 import com.rictin.util.internal.ComparatorUtil;
-import com.rictin.util.pipe.WhereNumber;
+import com.rictin.util.pipe.Condition;
 
 public class PipeImpl<T> extends Pipe<T> {
 
@@ -22,8 +22,18 @@ public class PipeImpl<T> extends Pipe<T> {
 		super.init(input);
 	}
 
-	public WhereNumber<T> where(Number number) {
-		return new WhereNumberImpl<T>(this, number);
+	public PipeAfterWhereImpl<T> select(Condition condition) {
+		final ConditionImpl conditionImpl = (ConditionImpl) condition;
+		Predicate<T> predicate = new Predicate<T>() {
+
+			public boolean accept(T element) {
+				for (Predicate<T> predicate : conditionImpl.getPredicates())
+					if (!predicate.accept(element))
+						return false;
+				return true;
+			}
+		};
+		return new PipeAfterWhereImpl(this, predicate);
 	}
 
 	public Pipe<T> sortBy(Object... item) {

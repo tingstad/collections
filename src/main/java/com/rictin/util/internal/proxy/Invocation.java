@@ -9,7 +9,7 @@ package com.rictin.util.internal.proxy;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class Invocation<T>{
+public class Invocation<T> {
 
 	private Method method;
 	private Object[] args;
@@ -17,6 +17,7 @@ public class Invocation<T>{
 	private Invocation<Object> transitiveInvocation;
 
 	public Invocation(Class<?> clazz) {
+		System.out.println("Intercepted on " + clazz);
 		this.clazz = clazz;
 	}
 
@@ -58,6 +59,7 @@ public class Invocation<T>{
 	}
 
 	public void setMethod(Method method) {
+		System.out.println(method);
 		this.method = method;
 	}
 

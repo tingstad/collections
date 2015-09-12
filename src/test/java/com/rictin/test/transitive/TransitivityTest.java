@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.rictin.util.Pipe;
+import com.rictin.util.pipe.Condition;
 
 public class TransitivityTest {
 
@@ -27,7 +28,7 @@ public class TransitivityTest {
 		Pipe<Human> pipe = Pipe.from(persons);
 		
 		List<Human> result = pipe
-				.where( pipe.item().getDates().getYearOfBirth() ).isLessThan(1800)
+				.select( Condition.where( pipe.item().getDates().getYearOfBirth() ).isLessThan(1800) )
 				.toList();
 		
 		assertEquals(1, result.size());

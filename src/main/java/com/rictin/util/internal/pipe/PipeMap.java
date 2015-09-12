@@ -8,21 +8,29 @@ package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.rictin.util.Pipe;
+import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.internal.proxy.ProxyFactory;
+import com.rictin.util.pipe.Condition;
 
-public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
+public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 
 	private Iterator<T> input;
-	private List<Invocation<T>> invocationList;
 	private Invocation<T> invocation;
 	private Boolean hasNext;
 	private U element;
+	private Class<U> itemClass;
 
+	private U proxy;
+	
 	public PipeMap(PipeParent<T> input, U item) {
 		this.input = input.iterator();
-		this.invocationList = input.invocations;
+		itemClass = (Class<U>) item.getClass();
+		invocation = PipeParent.takeLastInvocation();
 	}
 
 	public Iterator<U> iterator() {
@@ -45,7 +53,6 @@ public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
 	}
 
 	private void prepareNext() {
-		Invocation<T> invocation = getInvocation();
 		while (input.hasNext()) {
 			T in = input.next();
 			U out = (U) invocation.invoke(in);
@@ -56,15 +63,53 @@ public class PipeMap<T, U> implements Iterator<U>, Iterable<U> {
 		hasNext = false;
 	}
 
-	private Invocation<T> getInvocation() {
-		if (invocation == null) {
-			invocation = invocationList.remove(invocationList.size() - 1);
-		}
-		return invocation;
-	}
-	
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public U item() {
+		if (proxy == null) {
+			ProxyFactory<U> proxyFactory = new ProxyFactory<U>(itemClass);
+			proxy = proxyFactory.getProxy(new Callback<U>() {
+
+				public Object intercept(Invocation<U> invocation) {
+					PipeParent.addInvocation(invocation);
+					return null;
+				}
+			});
+		}
+		return proxy;
+	}
+	
+	public PipeAfterWhereImpl<U> select(Condition condition) {
+		final ConditionImpl conditionImpl = (ConditionImpl) condition;
+		Predicate<T> predicate = new Predicate<T>() {
+
+			public boolean accept(T element) {
+				for (Predicate<T> predicate : conditionImpl.getPredicates())
+					if (!predicate.accept(element))
+						return false;
+				return true;
+			}
+		};
+		return new PipeAfterWhereImpl(this, predicate);
+	}
+
+	public <V> Pipe<V> mapTo(V item) {
+		return super.doMapTo(item);
+	}
+
+	public Pipe<U> sortBy(Object... item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<U> toList() {
+		return super.doToList();
+	}
+
+	public <V> Map<V, List<U>> groupBy(V item) {
+		return null;
+	}
 }

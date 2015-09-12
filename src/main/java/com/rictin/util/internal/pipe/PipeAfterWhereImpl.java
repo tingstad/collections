@@ -11,26 +11,25 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.rictin.util.Pipe;
-import com.rictin.util.internal.condition.Condition;
-import com.rictin.util.pipe.PipeAfterWhere;
 
-public class PipeAfterWhereImpl<T> extends PipeParent<T> implements PipeAfterWhere<T> {
+@Deprecated
+public class PipeAfterWhereImpl<T> extends PipeParent<T> implements Iterator<T> /*PipeAfterWhere<T>*/ {
 
 	private Iterator<T> input;
 	private Boolean hasNext;
 	private T element;
-	private Condition<T> condition;
+	private Predicate<T> predicate;
 
-	public PipeAfterWhereImpl(PipeParent<T> source, Condition<T> condition) {
+	public PipeAfterWhereImpl(PipeParent<T> source, Predicate<T> predicate) {
 		super(source);
 		this.input = source.iterator();
-		this.condition = condition;
+		this.predicate = predicate;
 	}
 
 	private void prepareNext() {
 		while (input.hasNext()) {
 			T in = input.next();
-			if (condition.accept(in)) {
+			if (predicate.accept(in)) {
 				element = in;
 				hasNext = true;
 				return;
@@ -48,8 +47,8 @@ public class PipeAfterWhereImpl<T> extends PipeParent<T> implements PipeAfterWhe
 		return doToList();
 	}
 
-	public WhereNumberImpl<T> and(Number number) {
-		return new WhereNumberImpl<T>(this, number);
+	public WhereNumberImpl and(Number number) {
+		return null;//new WhereNumberImpl<T>(this, number); TODO: implement "and"?
 	}
 
 	public boolean hasNext() {

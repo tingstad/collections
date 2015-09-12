@@ -6,50 +6,50 @@
  */
 package com.rictin.util.internal.pipe;
 
-import java.util.List;
-
-import com.rictin.util.internal.condition.Condition;
 import com.rictin.util.internal.proxy.Invocation;
-import com.rictin.util.pipe.PipeAfterWhere;
+import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.WhereNumber;
 
-public class WhereNumberImpl<T> implements WhereNumber<T> {
+public class WhereNumberImpl implements WhereNumber {
 
-	private final PipeParent<T> origin;
-	private final List<Invocation<T>> invocations;
-	private final Invocation<T> firstArg;
+	private final Invocation firstArg;
 	private final Number firstNumber;
+	private ConditionImpl condition;
 	
-	public WhereNumberImpl(PipeParent<T> origin, Number number) {
+	public WhereNumberImpl(Number number) {
 		this.firstNumber = number;
-		this.origin = origin;
-		this.invocations = origin.invocations;
-		this.firstArg = invocations.isEmpty() ? null : invocations.remove(0);
+		this.firstArg = PipeParent.takeNextInvocation();
 	}
 
-	public PipeAfterWhere<T> isGreaterThan(final Number number) {
-		final Invocation<T> secondArg = invocations.isEmpty() ? null : invocations.remove(0);
-		return new PipeAfterWhereImpl<T>(origin, new Condition<T>() {
+	public WhereNumberImpl(ConditionImpl condition, Number number) {
+		this(number);
+		this.condition = condition;
+	}
 
-			public boolean accept(T element) {
+	public Condition isGreaterThan(final Number number) {
+		final Invocation secondArg = PipeParent.takeNextInvocation();
+		Predicate<Object> predicate = new Predicate<Object>() {
+
+			public boolean accept(Object element) {
 				Number first = firstArg == null ? firstNumber : (Number)firstArg.invoke(element);
 				Number second = secondArg == null ? number : (Number)secondArg.invoke(element);
 				return first.doubleValue() > second.doubleValue();
 			}
-		});
+		};
+		return new ConditionImpl(condition, predicate);
 	}
 
-	public PipeAfterWhere<T> isLessThan(final Number number) {
-		final Invocation<T> secondArg = invocations.isEmpty() ? null : invocations.remove(0);
-		Condition<T> condition = new Condition<T>() {
+	public Condition isLessThan(final Number number) {
+		final Invocation secondArg = PipeParent.takeNextInvocation();
+		Predicate predicate = new Predicate() {
 
-			public boolean accept(T element) {
+			public boolean accept(Object element) {
 				Number first = firstArg == null ? firstNumber : (Number)firstArg.invoke(element);
 				Number second = secondArg == null ? number : (Number)secondArg.invoke(element);
 				return first.doubleValue() < second.doubleValue();
 			}
 		};
-		return new PipeAfterWhereImpl<T>(origin, condition);
+		return new ConditionImpl(condition, predicate);
 	}
 
 }

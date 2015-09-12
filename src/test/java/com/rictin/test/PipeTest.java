@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.util.Pipe;
+import com.rictin.util.pipe.Condition;
 
 public class PipeTest {
 
@@ -34,10 +34,10 @@ public class PipeTest {
 	}
 
 	@Test
-	public void test() {
+	public void testFilter() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<Person> output = pipe
-				.where(pipe.item().getAge()).isLessThan(25)
+				.select( Condition.where( pipe.item().getAge() ).isLessThan(25) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -46,10 +46,10 @@ public class PipeTest {
 	}
 
 	@Test
-	public void test2() {
+	public void testFilterAndTransform() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
-				.where(pipe.item().getAge()).isLessThan(25)
+				.select( Condition.where( pipe.item().getAge()).isLessThan(25) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -58,51 +58,49 @@ public class PipeTest {
 	}
 
 	@Test
-	@Ignore("Change to be less greedy")
+	public void testFilterMapFilter() {
+		Pipe<Person> pipe = Pipe.from(list);
+		Pipe<Integer> ages = pipe
+				.select(Condition.where( pipe.item().getAge()).isLessThan(31) )
+				.mapTo(pipe.item().getAge());
+		List<Integer> output = ages
+				.select(Condition.where( ages.item().intValue()).isLessThan(25) )
+				.toList();
+		
+		Assert.assertEquals(1, output.size());
+		Assert.assertEquals(2, output.get(0).intValue());
+	}
+
+	@Test
+	public void testErr() {
+		Pipe<Person> pipe = Pipe.from(list);
+		List<String> output = pipe
+				.select( Condition.where( pipe.item().getAge() ).isLessThan(25) )
+				.mapTo(pipe.item().getName())
+				.toList();
+		
+		Pipe<Person> pipe2 = Pipe.from(list);
+		Pipe<Integer> ages = pipe2
+				.select(Condition.where( pipe2.item().getAge() ).isLessThan(31) )
+				.mapTo(pipe2.item().getAge());
+	}
+
+	@Test
 	public void testOneElementListWithMapTo() {
 		Pipe<Person> pipe = Pipe.from(asList(new Person(RICHARD, 30)));
 		List<String> output = pipe
-				.where(pipe.item().getAge()).isLessThan(2)
+				.select(Condition.where( pipe.item().getAge()).isLessThan(40) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
-		Assert.assertEquals(TORSTEIN, output.get(0));
-	}
-
-	@Test
-	public void test3() {
-		Pipe<Person> pipe = Pipe.from(list);
-		Pipe<Integer> ages = pipe
-				.where(pipe.item().getAge()).isLessThan(31)
-				.mapTo(pipe.item().getAge());
-		List<Integer> output = ages
-				.where(ages.item().intValue()).isLessThan(25)
-				.toList();
-		
-		Assert.assertEquals(1, output.size());
-		Assert.assertEquals(2, output.get(0).intValue());
-	}
-
-	@Test
-	public void test4() {
-//		List<HasName> 
-		Pipe<Person> pipe = Pipe.from(list);
-		Pipe<Integer> ages = pipe
-				.where(pipe.item().getAge()).isLessThan(31)
-				.mapTo(pipe.item().getAge());
-		List<Integer> output = ages
-				.where(ages.item().intValue()).isLessThan(25)
-				.toList();
-		
-		Assert.assertEquals(1, output.size());
-		Assert.assertEquals(2, output.get(0).intValue());
+		Assert.assertEquals(RICHARD, output.get(0));
 	}
 
 	@Test
 	public void testOneLinePipe() {
 		List<Person> output = Pipe.from(list)
-				.where(Pipe.item(list).getAge()).isLessThan(25)
+				.select(Condition.where( Pipe.item(list).getAge()).isLessThan(25) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());

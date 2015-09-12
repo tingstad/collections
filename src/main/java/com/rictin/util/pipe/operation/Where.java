@@ -6,11 +6,12 @@
  */
 package com.rictin.util.pipe.operation;
 
-import com.rictin.util.pipe.WhereNumber;
+import com.rictin.util.Pipe;
+import com.rictin.util.internal.pipe.PipeAfterWhereImpl;
+import com.rictin.util.pipe.Condition;
 
 public interface Where<T> {
 
-	WhereNumber<T> where(Number number);
-	//TODO: WhereString<T> where(String string);
+	PipeAfterWhereImpl<T> select(Condition condition);
 
 }

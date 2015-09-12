@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.rictin.test.Person;
 import com.rictin.util.Pipe;
+import com.rictin.util.pipe.Condition;
 
 public class ConditionTest {
 
@@ -26,8 +27,8 @@ public class ConditionTest {
 		Pipe<Person> pipe = Pipe.from(list);
 
 		List<Person> adults = pipe
-				.where( pipe.item().getAge() ).isGreaterThan(3)
-				.and(5).isLessThan( pipe.item().getAge() )
+				.select( Condition.where( pipe.item().getAge() ).isGreaterThan(3)
+				.and(5).isLessThan( pipe.item().getAge() ) )
 				.toList();
 
 		Assert.assertEquals(2, adults.size());
