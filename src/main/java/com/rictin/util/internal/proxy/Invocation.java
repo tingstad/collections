@@ -17,7 +17,6 @@ public class Invocation<T> {
 	private Invocation<Object> transitiveInvocation;
 
 	public Invocation(Class<?> clazz) {
-		System.out.println("Intercepted on " + clazz);
 		this.clazz = clazz;
 	}
 
@@ -59,7 +58,6 @@ public class Invocation<T> {
 	}
 
 	public void setMethod(Method method) {
-		System.out.println(method);
 		this.method = method;
 	}
 
