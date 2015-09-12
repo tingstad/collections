@@ -36,4 +36,51 @@ public class ConditionTest {
 		Assert.assertEquals(31, adults.get(1).getAge());
 	}
 
+	@Test
+	public void testNumericOnlyCondition() {
+		List<Person> list = Arrays.asList(
+				new Person("RICHARD", 30),
+				new Person("KIRSTI", 31),
+				new Person("TORSTEIN", 2));
+
+		List<Person> persons = Pipe.from(list)
+				.select( Condition.where(4).isGreaterThan(3) )
+				.toList();
+
+		Assert.assertEquals(3, persons.size());
+	}
+
+	@Test
+	public void testFalseNumericOnlyCondition() {
+		List<Person> list = Arrays.asList(
+				new Person("RICHARD", 30),
+				new Person("KIRSTI", 31),
+				new Person("TORSTEIN", 2));
+
+		List<Person> persons = Pipe.from(list)
+				.select( Condition.where(2).isGreaterThan(3) )
+				.toList();
+
+		Assert.assertEquals(0, persons.size());
+	}
+
+	@Test
+	public void testManyConditions() {
+		List<Person> list = Arrays.asList(
+				new Person("RICHARD", 30),
+				new Person("KIRSTI", 31),
+				new Person("TORSTEIN", 2));
+		Pipe<Person> pipe = Pipe.from(list);
+
+		List<Person> persons = pipe.select(
+				Condition.where( pipe.item().getAge() ).isGreaterThan(3)
+				.and(5).isLessThan(6)
+				.and(pipe.item().getAge()).isLessThan(31)
+				)
+				.toList();
+
+		Assert.assertEquals(1, persons.size());
+		Assert.assertEquals("RICHARD", persons.get(0).getName());
+	}
+
 }
