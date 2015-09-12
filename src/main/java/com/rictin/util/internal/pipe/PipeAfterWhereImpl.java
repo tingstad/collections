@@ -7,13 +7,12 @@
 package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.rictin.util.Pipe;
 
 @Deprecated
-public class PipeAfterWhereImpl<T> extends PipeParent<T> implements Iterator<T> /*PipeAfterWhere<T>*/ {
+public class PipeAfterWhereImpl<T> extends Pipe<T> implements Iterator<T> {
 
 	private Iterator<T> input;
 	private Boolean hasNext;
@@ -21,7 +20,7 @@ public class PipeAfterWhereImpl<T> extends PipeParent<T> implements Iterator<T> 
 	private Predicate<T> predicate;
 
 	public PipeAfterWhereImpl(PipeParent<T> source, Predicate<T> predicate) {
-		super(source);
+		super.init(source);
 		this.input = source.iterator();
 		this.predicate = predicate;
 	}
@@ -36,15 +35,6 @@ public class PipeAfterWhereImpl<T> extends PipeParent<T> implements Iterator<T> 
 			}
 		}
 		hasNext = false;
-	}
-
-	@Override
-	public Iterator<T> iterator() {
-		return this;
-	}
-
-	public List<T> toList() {
-		return doToList();
 	}
 
 	public WhereNumberImpl and(Number number) {
@@ -67,11 +57,11 @@ public class PipeAfterWhereImpl<T> extends PipeParent<T> implements Iterator<T> 
 	}
 
 	public void remove() {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
-	public <U> Pipe<U> mapTo(U item) {
-		return doMapTo(item);
+	public Iterator<T> iterator() {
+		return this;
 	}
 
 }

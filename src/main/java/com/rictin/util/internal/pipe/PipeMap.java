@@ -7,8 +7,6 @@
 package com.rictin.util.internal.pipe;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.rictin.util.Pipe;
@@ -96,20 +94,4 @@ public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 		return new PipeAfterWhereImpl(this, predicate);
 	}
 
-	public <V> Pipe<V> mapTo(V item) {
-		return super.doMapTo(item);
-	}
-
-	public Pipe<U> sortBy(Object... item) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<U> toList() {
-		return super.doToList();
-	}
-
-	public <V> Map<V, List<U>> groupBy(V item) {
-		return null;
-	}
 }

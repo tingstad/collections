@@ -6,66 +6,21 @@
  */
 package com.rictin.util.internal.pipe;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 
 import com.rictin.util.Pipe;
-import com.rictin.util.internal.ComparatorUtil;
-import com.rictin.util.pipe.Condition;
 
 public class PipeImpl<T> extends Pipe<T> {
 
-	public PipeImpl(Iterable<T> input) {
+	private final Iterable<T> input;
+	
+	public PipeImpl(final Iterable<T> input) {
 		super.init(input);
+		this.input = input;
 	}
 
-	public PipeAfterWhereImpl<T> select(Condition condition) {
-		final ConditionImpl conditionImpl = (ConditionImpl) condition;
-		Predicate<T> predicate = new Predicate<T>() {
-
-			public boolean accept(T element) {
-				for (Predicate<T> predicate : conditionImpl.getPredicates())
-					if (!predicate.accept(element))
-						return false;
-				return true;
-			}
-		};
-		return new PipeAfterWhereImpl(this, predicate);
-	}
-
-	public Pipe<T> sortBy(Object... item) {
-		List<Comparator<T>> comparators = new ArrayList<Comparator<T>>(item.length);
-		for (int i = 0; i < item.length; i++) {
-//			comparators.add(ComparatorUtil.createComparator(false, false, invocations.remove(0)));
-		}
-		Comparator<T> comparator = ComparatorUtil.join(comparators);
-		
-		return this;
-	}
-
-	public <U> Pipe<U> mapTo(U item) {
-		return doMapTo(item);
-	}
-
-	public <U> Map<U, List<T>> groupBy(U item) {
-		Map<U, List<T>> map = new HashMap<U, List<T>>();
-/*		Invocation<T> invocation = invocations.remove(0);
-		for (T element : stream) {
-			@SuppressWarnings("unchecked")
-			U key = (U) invocation.invoke(element);
-			if (!map.containsKey(key)) {
-				map.put(key, new ArrayList<T>());
-			}
-			map.get(key).add(element);
-		}*/
-		return map;
-	}
-
-	public List<T> toList() {
-		return doToList();
+	public Iterator<T> iterator() {
+		return input.iterator();
 	}
 
 }
