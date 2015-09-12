@@ -14,18 +14,14 @@ import java.util.Map;
 
 import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.pipe.ConditionImpl;
-import com.rictin.util.internal.pipe.PipeAfterWhereImpl;
 import com.rictin.util.internal.pipe.PipeImpl;
 import com.rictin.util.internal.pipe.PipeMap;
 import com.rictin.util.internal.pipe.PipeParent;
+import com.rictin.util.internal.pipe.PipeSelect;
 import com.rictin.util.internal.pipe.Predicate;
 import com.rictin.util.pipe.Condition;
-import com.rictin.util.pipe.operation.GroupBy;
-import com.rictin.util.pipe.operation.MapTo;
-import com.rictin.util.pipe.operation.SortBy;
-import com.rictin.util.pipe.operation.ToList;
 
-public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T>, MapTo<T>, SortBy<T>, GroupBy<T>, ToList<T> {
+public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
 
 	public static <T> Pipe<T> from(final Iterable<T> input) {
 		return new PipeImpl<T>(input);
@@ -42,7 +38,7 @@ public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T>, MapT
 				return true;
 			}
 		};
-		return new PipeAfterWhereImpl(this, predicate);
+		return new PipeSelect<T>(this, predicate);
 	}
 
 	public Pipe<T> sortBy(Object... item) {

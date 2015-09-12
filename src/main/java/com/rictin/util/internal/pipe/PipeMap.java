@@ -13,7 +13,6 @@ import com.rictin.util.Pipe;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.internal.proxy.ProxyFactory;
-import com.rictin.util.pipe.Condition;
 
 public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 
@@ -78,20 +77,6 @@ public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 			});
 		}
 		return proxy;
-	}
-	
-	public PipeAfterWhereImpl<U> select(Condition condition) {
-		final ConditionImpl conditionImpl = (ConditionImpl) condition;
-		Predicate<T> predicate = new Predicate<T>() {
-
-			public boolean accept(T element) {
-				for (Predicate<T> predicate : conditionImpl.getPredicates())
-					if (!predicate.accept(element))
-						return false;
-				return true;
-			}
-		};
-		return new PipeAfterWhereImpl(this, predicate);
 	}
 
 }

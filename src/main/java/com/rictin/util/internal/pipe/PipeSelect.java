@@ -11,15 +11,14 @@ import java.util.NoSuchElementException;
 
 import com.rictin.util.Pipe;
 
-@Deprecated
-public class PipeAfterWhereImpl<T> extends Pipe<T> implements Iterator<T> {
+public class PipeSelect<T> extends Pipe<T> implements Iterator<T> {
 
 	private Iterator<T> input;
 	private Boolean hasNext;
 	private T element;
 	private Predicate<T> predicate;
 
-	public PipeAfterWhereImpl(PipeParent<T> source, Predicate<T> predicate) {
+	public PipeSelect(PipeParent<T> source, Predicate<T> predicate) {
 		super.init(source);
 		this.input = source.iterator();
 		this.predicate = predicate;
@@ -35,10 +34,6 @@ public class PipeAfterWhereImpl<T> extends Pipe<T> implements Iterator<T> {
 			}
 		}
 		hasNext = false;
-	}
-
-	public WhereNumberImpl and(Number number) {
-		return null;//new WhereNumberImpl<T>(this, number); TODO: implement "and"?
 	}
 
 	public boolean hasNext() {
