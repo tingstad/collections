@@ -6,9 +6,12 @@
  */
 package com.rictin.test;
 
+import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -107,5 +110,20 @@ public class PipeTest {
 		Assert.assertEquals(TORSTEIN, output.get(0).getName());
 	}
 
+	@Test
+	public void testBigIntegerMod() {
+		List<BigInteger> numbers = asList(valueOf(1), valueOf(2), valueOf(3), valueOf(4), valueOf(5));
+		
+		List<BigInteger> odd = Pipe.from(numbers).select(
+				Condition.where(
+						Pipe.item(numbers).mod(valueOf(2))
+				).isGreaterThan(0)
+		).toList();
+
+		Assert.assertEquals(3, odd.size());
+		Assert.assertEquals(1, odd.get(0).intValue());
+		Assert.assertEquals(3, odd.get(1).intValue());
+		Assert.assertEquals(5, odd.get(2).intValue());
+	}
 
 }

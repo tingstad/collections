@@ -28,14 +28,6 @@ public abstract class PipeParent<T> implements Iterable<T> {
 
 	protected PipeParent() { }
 
-	protected PipeParent(final PipeParent<T> inputPipe) {
-		init(inputPipe);
-	}
-
-	protected PipeParent(final Iterable<T> input) {
-		init(input);
-	}
-
 	protected void init(final PipeParent<T> inputPipe) {
 		proxy = inputPipe.proxy;
 	}

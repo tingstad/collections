@@ -19,6 +19,9 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
+
 public class ProxyFactory<T> {
 
 	private List<Class<?>> interfaces = new ArrayList<Class<?>>();
@@ -79,7 +82,7 @@ public class ProxyFactory<T> {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(clazz);
 		enhancer.setInterfaces(interfaces.toArray(new Class[0]));
-		enhancer.setCallback(new MethodInterceptor() {
+		MethodInterceptor interceptor = new MethodInterceptor() {
 
 			public Object intercept(Object arg0, Method arg1, Object[] arg2,
 					MethodProxy arg3) throws Throwable {
@@ -90,10 +93,13 @@ public class ProxyFactory<T> {
 				Object b = callback.intercept(invocation);
 				return b == null && !preserveReturnedNull ? a : b;
 			}
-		});
-		Object proxy = enhancer.create(argumentTypes,
-				getArguments(argumentTypes));
-		return (T) proxy;
+		};
+		enhancer.setCallbackType(interceptor.getClass());
+		Class<T> proxiedClass = enhancer.createClass();
+		Enhancer.registerCallbacks(proxiedClass, new net.sf.cglib.proxy.Callback[]{ interceptor });
+		Objenesis objenesis = new ObjenesisStd();
+		T proxy = objenesis.newInstance(proxiedClass);
+		return proxy;
 	}
 
 	private Object transitiveInterception(final Invocation<T> invocation) {
@@ -120,22 +126,19 @@ public class ProxyFactory<T> {
 	 * @return Object to return or null if real proxy should be used
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T createIdentityProxy(Class<?> c) {
-		T identity = null;
+	private static <T> T createIdentityProxy(final Class<?> c) {
 		if (String.class.equals(c)) {
-			identity = (T) "";
+			return (T) "";
 		} else if (Integer.class.equals(c)) {
-			identity = (T) Integer.valueOf(0);
+			return (T) Integer.valueOf(0);
 		} else if (Long.class.equals(c)) {
-			identity = (T) Long.valueOf(0);
+			return (T) Long.valueOf(0);
 		} else if (Double.class.equals(c)) {
-			identity = (T) Double.valueOf(0);
+			return (T) Double.valueOf(0);
 		} else if (c.isPrimitive()) {
 			return (T) Integer.valueOf(0);
-		} else {
-			return null;
 		}
-		return identity;
+		return null;
 	}
 
 	private static <T> Class<?>[] getArgumentTypesOfShortestConstructor(
@@ -166,7 +169,7 @@ public class ProxyFactory<T> {
 		return arguments;
 	}
 
-	private static <T> Object newInstance(Class<?> klass) {
+	private static <T> Object newInstance(final Class<?> klass) {
 		if (klass.isPrimitive()) {
 			if (Boolean.TYPE.equals(klass)) {
 				return false;
@@ -186,7 +189,7 @@ public class ProxyFactory<T> {
 				return 0;
 			}
 		}
-		return null;
+		return createIdentityProxy(klass);
 	}
 
 	/**
