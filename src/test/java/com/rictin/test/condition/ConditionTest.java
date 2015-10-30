@@ -83,4 +83,20 @@ public class ConditionTest {
 		Assert.assertEquals("RICHARD", persons.get(0).getName());
 	}
 
+	@Test
+	public void testStringCondition() {
+		List<Person> list = Arrays.asList(
+				new Person("RICHARD", 30),
+				new Person("KIRSTI", 31),
+				new Person("TORSTEIN", 2));
+		Pipe<Person> pipe = Pipe.from(list);
+
+		List<Person> persons = pipe.select(
+				Condition.where( pipe.item().getName() ).startsWith("R")
+				).toList();
+
+		Assert.assertEquals(1, persons.size());
+		Assert.assertEquals("RICHARD", persons.get(0).getName());
+	}
+
 }

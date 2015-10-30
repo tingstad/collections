@@ -1,6 +1,7 @@
 package com.rictin.util.pipe;
 
 import com.rictin.util.internal.pipe.WhereNumberImpl;
+import com.rictin.util.internal.pipe.WhereStringImpl;
 
 public abstract class Condition {
 	
@@ -11,5 +12,11 @@ public abstract class Condition {
 	}
 
 	public abstract WhereNumber and(Number number);
+
+	public static WhereString where(String string) {
+		return new WhereStringImpl(string);
+	}
+
+	public abstract WhereString and(String string);
 
 }

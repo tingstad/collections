@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.WhereNumber;
+import com.rictin.util.pipe.WhereString;
 
 public class ConditionImpl extends Condition {
 
@@ -20,6 +21,11 @@ public class ConditionImpl extends Condition {
 	@Override
 	public WhereNumber and(Number number) {
 		return new WhereNumberImpl(this, number);
+	}
+
+	@Override
+	public WhereString and(String number) {
+		return new WhereStringImpl(this, number);
 	}
 
 	public List<Predicate> getPredicates() {
