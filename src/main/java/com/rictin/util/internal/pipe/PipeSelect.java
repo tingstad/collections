@@ -10,24 +10,29 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.rictin.util.Pipe;
+import com.rictin.util.pipe.Condition;
 
 public class PipeSelect<T> extends Pipe<T> implements Iterator<T> {
 
 	private Iterator<T> input;
 	private Boolean hasNext;
 	private T element;
-	private Predicate<T> predicate;
+	private Condition condition;
 
-	public PipeSelect(PipeParent<T> source, Predicate<T> predicate) {
+	public PipeSelect(PipeParent<T> source, Condition condition) {
 		super.init(source);
 		this.input = source.iterator();
-		this.predicate = predicate;
+		this.condition = condition;
 	}
 
+	private boolean accept(final T element) {
+		return condition.satisfies(element);
+	}
+	
 	private void prepareNext() {
 		while (input.hasNext()) {
 			T in = input.next();
-			if (predicate.accept(in)) {
+			if (accept(in)) {
 				element = in;
 				hasNext = true;
 				return;

@@ -13,12 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.rictin.util.internal.ComparatorUtil;
-import com.rictin.util.internal.pipe.ConditionImpl;
 import com.rictin.util.internal.pipe.PipeImpl;
 import com.rictin.util.internal.pipe.PipeMap;
 import com.rictin.util.internal.pipe.PipeParent;
 import com.rictin.util.internal.pipe.PipeSelect;
-import com.rictin.util.internal.pipe.Predicate;
 import com.rictin.util.pipe.Condition;
 
 public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
@@ -27,18 +25,8 @@ public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
 		return new PipeImpl<T>(input);
 	}
 
-	public Pipe<T> select(Condition condition) {
-		final ConditionImpl conditionImpl = (ConditionImpl) condition;
-		Predicate<T> predicate = new Predicate<T>() {
-
-			public boolean accept(T element) {
-				for (Predicate<T> predicate : conditionImpl.getPredicates())
-					if (!predicate.accept(element))
-						return false;
-				return true;
-			}
-		};
-		return new PipeSelect<T>(this, predicate);
+	public Pipe<T> select(final Condition condition) {
+		return new PipeSelect<T>(this, condition);
 	}
 
 	public Pipe<T> sortBy(Object... item) {

@@ -6,10 +6,15 @@
  */
 package com.rictin.util.pipe;
 
+public class Str {
 
-public interface WhereNumber {
-
-	Condition isGreaterThan(Number number);
-	Condition isLessThan(Number number);
-
+	public static Matcher<String> startsWith(final String prefix) {
+		return new Matcher<String>(prefix) {
+			
+			public boolean matches(String value, String in) {
+				return in.startsWith(value);
+			}
+		};
+	}
+	
 }

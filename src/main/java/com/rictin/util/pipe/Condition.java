@@ -1,22 +1,29 @@
+/* Copyright 2014 Richard H. Tingstad
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.rictin.util.pipe;
 
-import com.rictin.util.internal.pipe.WhereNumberImpl;
-import com.rictin.util.internal.pipe.WhereStringImpl;
+import com.rictin.util.internal.pipe.ConditionImpl;
+import com.rictin.util.internal.proxy.Invocation;
 
-public abstract class Condition {
+
+public abstract class Condition<T> extends ConditionImpl {
+
+	Condition(Invocation invocation) {
+		super(null);
+	}
+
+	public abstract boolean satisfies(T value);
 	
-	protected Condition() { }
-
-	public static WhereNumber where(Number number) {
-		return new WhereNumberImpl(number);
+	public static <T> NewCondition<T> where(T itemValue) {
+		return new NewCondition<T>(itemValue, fetchInvocation());
 	}
 
-	public abstract WhereNumber and(Number number);
-
-	public static WhereString where(String string) {
-		return new WhereStringImpl(string);
+	public <U> NewCondition<U> and(U itemValue) {
+		return new NewCondition<U>(itemValue, fetchInvocation(), this);
 	}
-
-	public abstract WhereString and(String string);
 
 }

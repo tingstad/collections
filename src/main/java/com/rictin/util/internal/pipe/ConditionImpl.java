@@ -1,35 +1,28 @@
+/* Copyright 2014 Richard H. Tingstad
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.rictin.util.internal.pipe;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.rictin.util.internal.proxy.Invocation;
 
-import com.rictin.util.pipe.Condition;
-import com.rictin.util.pipe.WhereNumber;
-import com.rictin.util.pipe.WhereString;
 
-public class ConditionImpl extends Condition {
+public class ConditionImpl {
 
-	private final List<Predicate> predicates = new ArrayList<Predicate>();
-
-	public ConditionImpl(ConditionImpl condition, Predicate predicate) {
-		if (condition != null) {
-			predicates.addAll(condition.predicates);
-		}
-		predicates.add(predicate);
+	private final Invocation invocation;
+	
+	protected ConditionImpl(final Invocation invocation) {
+		this.invocation = invocation;
 	}
 
-	@Override
-	public WhereNumber and(Number number) {
-		return new WhereNumberImpl(this, number);
+	protected Invocation getInvocation() {
+		return invocation;
 	}
 
-	@Override
-	public WhereString and(String number) {
-		return new WhereStringImpl(this, number);
-	}
-
-	public List<Predicate> getPredicates() {
-		return predicates;
+	protected static Invocation fetchInvocation() {
+		return PipeParent.takeLastInvocation();
 	}
 
 }

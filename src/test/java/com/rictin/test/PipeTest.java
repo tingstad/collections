@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Num;
 
 public class PipeTest {
 
@@ -39,7 +40,7 @@ public class PipeTest {
 	public void testFilter() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<Person> output = pipe
-				.select( Condition.where( pipe.item().getAge() ).isLessThan(25) )
+				.select( Condition.where( pipe.item().getAge() ).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -51,7 +52,7 @@ public class PipeTest {
 	public void testFilterAndTransform() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
-				.select( Condition.where( pipe.item().getAge()).isLessThan(25) )
+				.select( Condition.where( pipe.item().getAge()).is(Num.lessThan(25)) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -63,10 +64,10 @@ public class PipeTest {
 	public void testFilterMapFilter() {
 		Pipe<Person> pipe = Pipe.from(list);
 		Pipe<Integer> ages = pipe
-				.select(Condition.where( pipe.item().getAge()).isLessThan(31) )
+				.select(Condition.where( pipe.item().getAge()).is(Num.lessThan(31)) )
 				.mapTo(pipe.item().getAge());
 		List<Integer> output = ages
-				.select(Condition.where( ages.item().intValue()).isLessThan(25) )
+				.select(Condition.where( ages.item().intValue()).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -77,13 +78,13 @@ public class PipeTest {
 	public void testErr() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
-				.select( Condition.where( pipe.item().getAge() ).isLessThan(25) )
+				.select( Condition.where( pipe.item().getAge() ).is(Num.lessThan(25)) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
 		Pipe<Person> pipe2 = Pipe.from(list);
 		Pipe<Integer> ages = pipe2
-				.select(Condition.where( pipe2.item().getAge() ).isLessThan(31) )
+				.select(Condition.where( pipe2.item().getAge() ).is(Num.lessThan(31)) )
 				.mapTo(pipe2.item().getAge());
 	}
 
@@ -91,7 +92,7 @@ public class PipeTest {
 	public void testOneElementListWithMapTo() {
 		Pipe<Person> pipe = Pipe.from(asList(new Person(RICHARD, 30)));
 		List<String> output = pipe
-				.select(Condition.where( pipe.item().getAge()).isLessThan(40) )
+				.select(Condition.where( pipe.item().getAge()).is(Num.lessThan(40)) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -102,7 +103,7 @@ public class PipeTest {
 	@Test
 	public void testOneLinePipe() {
 		List<Person> output = Pipe.from(list)
-				.select(Condition.where( Pipe.item(list).getAge()).isLessThan(25) )
+				.select(Condition.where( Pipe.item(list).getAge()).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -116,7 +117,7 @@ public class PipeTest {
 		List<BigInteger> odd = Pipe.from(numbers).select(
 				Condition.where(
 						Pipe.item(numbers).mod(valueOf(2))
-				).isGreaterThan(0)
+				).is(Num.greaterThan(valueOf(0)))
 		).toList();
 
 		Assert.assertEquals(3, odd.size());

@@ -15,6 +15,8 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Num;
+import com.rictin.util.pipe.Str;
 
 public class ConditionTest {
 
@@ -27,8 +29,8 @@ public class ConditionTest {
 		Pipe<Person> pipe = Pipe.from(list);
 
 		List<Person> adults = pipe
-				.select( Condition.where( pipe.item().getAge() ).isGreaterThan(3)
-				.and(5).isLessThan( pipe.item().getAge() ) )
+				.select( Condition.where( pipe.item().getAge() ).is(Num.greaterThan(3))
+				.and(5).is(Num.lessThan( pipe.item().getAge() )) )
 				.toList();
 
 		Assert.assertEquals(2, adults.size());
@@ -44,7 +46,7 @@ public class ConditionTest {
 				new Person("TORSTEIN", 2));
 
 		List<Person> persons = Pipe.from(list)
-				.select( Condition.where(4).isGreaterThan(3) )
+				.select( Condition.where(4).is(Num.greaterThan(3)) )
 				.toList();
 
 		Assert.assertEquals(3, persons.size());
@@ -58,7 +60,7 @@ public class ConditionTest {
 				new Person("TORSTEIN", 2));
 
 		List<Person> persons = Pipe.from(list)
-				.select( Condition.where(2).isGreaterThan(3) )
+				.select( Condition.where(2).is(Num.greaterThan(3)) )
 				.toList();
 
 		Assert.assertEquals(0, persons.size());
@@ -73,9 +75,9 @@ public class ConditionTest {
 		Pipe<Person> pipe = Pipe.from(list);
 
 		List<Person> persons = pipe.select(
-				Condition.where( pipe.item().getAge() ).isGreaterThan(3)
-				.and(5).isLessThan(6)
-				.and(pipe.item().getAge()).isLessThan(31)
+				Condition.where( pipe.item().getAge() ).is(Num.greaterThan(3))
+				.and(5).is(Num.lessThan(6))
+				.and(pipe.item().getAge()).is(Num.lessThan(31))
 				)
 				.toList();
 
@@ -89,10 +91,9 @@ public class ConditionTest {
 				new Person("RICHARD", 30),
 				new Person("KIRSTI", 31),
 				new Person("TORSTEIN", 2));
-		Pipe<Person> pipe = Pipe.from(list);
 
-		List<Person> persons = pipe.select(
-				Condition.where( pipe.item().getName() ).startsWith("R")
+		List<Person> persons = Pipe.from(list).select(
+				Condition.where( Pipe.item(list).getName() ).is(Str.startsWith("R"))
 				).toList();
 
 		Assert.assertEquals(1, persons.size());
