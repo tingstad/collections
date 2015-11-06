@@ -25,17 +25,17 @@ public class NewCondition<T> extends NewConditionImpl<T> {
 		this(value, invocation, null);
 	}
 
-	public Condition<T> is(final Matcher<T> matcher) {
+	public Condition is(final Matcher<T> matcher) {
 		
 		final T firstValue = this.firstValue;
 		final Invocation firstInvocation = this.firstInvocation;
 		final T secondValue = getValue(matcher);
 		final Invocation secondInvocation = fetchInvocation();
 
-		return new Condition<T>() {
+		return new Condition() {
 
 			@Override
-			public boolean satisfies(final T element) {
+			public boolean satisfies(final Object element) {
 				
 				if (condition != null && !condition.satisfies(element)) return false;
 				

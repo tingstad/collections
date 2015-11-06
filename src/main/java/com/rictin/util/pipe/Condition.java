@@ -11,12 +11,12 @@ import java.util.Collection;
 import com.rictin.util.internal.pipe.ConditionImpl;
 
 
-public abstract class Condition<T> extends ConditionImpl {
+public abstract class Condition extends ConditionImpl {
 
 	Condition() {
 	}
 
-	public abstract boolean satisfies(T value);
+	public abstract boolean satisfies(Object element);
 	
 	public static <T> NewCondition<T> where(T itemValue) {
 		return new NewCondition<T>(itemValue, fetchInvocation());
