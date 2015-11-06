@@ -30,7 +30,7 @@ public class NewCondition<T> extends NewConditionImpl<T> {
 		final T firstValue = this.firstValue;
 		final Invocation firstInvocation = this.firstInvocation;
 		final T secondValue = getValue(matcher);
-		final Invocation secondInvocation = getInvocation(matcher);
+		final Invocation secondInvocation = fetchInvocation();
 
 		return new Condition<T>() {
 

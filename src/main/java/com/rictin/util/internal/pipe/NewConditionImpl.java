@@ -8,10 +8,6 @@ public class NewConditionImpl<T> {
 		return PipeParent.takeLastInvocation();
 	}
 
-	protected Invocation getInvocation(MatcherImpl matcher) {
-		return matcher.getInvocation();
-	}
-
 	protected T getValue(MatcherImpl<T> matcher) {
 		return matcher.getValue();
 	}
