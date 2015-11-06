@@ -9,13 +9,11 @@ package com.rictin.util.pipe;
 import java.util.Collection;
 
 import com.rictin.util.internal.pipe.ConditionImpl;
-import com.rictin.util.internal.proxy.Invocation;
 
 
 public abstract class Condition<T> extends ConditionImpl {
 
-	Condition(Invocation invocation) {
-		super(null);
+	Condition() {
 	}
 
 	public abstract boolean satisfies(T value);

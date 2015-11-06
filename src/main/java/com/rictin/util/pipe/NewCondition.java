@@ -32,7 +32,7 @@ public class NewCondition<T> extends NewConditionImpl<T> {
 		final T secondValue = getValue(matcher);
 		final Invocation secondInvocation = getInvocation(matcher);
 
-		return new Condition<T>(null) {
+		return new Condition<T>() {
 
 			@Override
 			public boolean satisfies(final T element) {

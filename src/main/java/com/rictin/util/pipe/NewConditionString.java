@@ -21,7 +21,7 @@ public class NewConditionString extends NewCondition<String> {
 		final String secondValue = prefix;
 		final Invocation secondInvocation = fetchInvocation();
 
-		return new Condition(null) {
+		return new Condition() {
 
 			@Override
 			public boolean satisfies(final Object element) {

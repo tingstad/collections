@@ -11,14 +11,7 @@ import com.rictin.util.internal.proxy.Invocation;
 
 public class ConditionImpl {
 
-	private final Invocation invocation;
-	
-	protected ConditionImpl(final Invocation invocation) {
-		this.invocation = invocation;
-	}
-
-	protected Invocation getInvocation() {
-		return invocation;
+	protected ConditionImpl() {
 	}
 
 	protected static Invocation fetchInvocation() {
