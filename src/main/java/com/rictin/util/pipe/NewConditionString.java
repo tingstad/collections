@@ -15,26 +15,7 @@ public class NewConditionString extends NewCondition<String> {
 	}
 
 	public Condition startsWith(final String prefix) {
-		
-		final String firstValue = this.firstValue;
-		final Invocation firstInvocation = this.firstInvocation;
-		final String secondValue = prefix;
-		final Invocation secondInvocation = fetchInvocation();
-
-		return new Condition() {
-
-			@Override
-			public boolean satisfies(final Object element) {
-				
-				if (condition != null && !condition.satisfies(element)) return false;
-				
-				String value = firstInvocation == null ? firstValue : (String)firstInvocation.invoke(element);
-				String in = secondInvocation == null ? secondValue : (String)secondInvocation.invoke(element);
-				
-				return Str.startsWith(prefix).matches(in, value);
-			}
-		};
+		return is(Str.startsWith(prefix));
 	}
-	
-	
+
 }
