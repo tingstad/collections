@@ -6,6 +6,8 @@
  */
 package com.rictin.util.pipe;
 
+import java.util.Collection;
+
 import com.rictin.util.internal.pipe.ConditionImpl;
 import com.rictin.util.internal.proxy.Invocation;
 
@@ -20,6 +22,14 @@ public abstract class Condition<T> extends ConditionImpl {
 	
 	public static <T> NewCondition<T> where(T itemValue) {
 		return new NewCondition<T>(itemValue, fetchInvocation());
+	}
+
+	public static NewConditionString where(String itemValue) {
+		return new NewConditionString(itemValue, fetchInvocation());
+	}
+
+	public static NewCondition<Collection> where(Collection itemValue) {
+		return null;
 	}
 
 	public <U> NewCondition<U> and(U itemValue) {

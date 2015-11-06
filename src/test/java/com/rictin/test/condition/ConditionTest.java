@@ -100,4 +100,19 @@ public class ConditionTest {
 		Assert.assertEquals("RICHARD", persons.get(0).getName());
 	}
 
+	@Test
+	public void testStringConditionWithoutMatcher() {
+		List<Person> list = Arrays.asList(
+				new Person("RICHARD", 30),
+				new Person("KIRSTI", 31),
+				new Person("TORSTEIN", 2));
+
+		List<Person> persons = Pipe.from(list).select(
+				Condition.where( Pipe.item(list).getName() ).startsWith("R")
+				).toList();
+
+		Assert.assertEquals(1, persons.size());
+		Assert.assertEquals("RICHARD", persons.get(0).getName());
+	}
+
 }

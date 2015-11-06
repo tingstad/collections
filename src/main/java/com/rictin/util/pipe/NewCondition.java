@@ -11,9 +11,9 @@ import com.rictin.util.internal.proxy.Invocation;
 
 public class NewCondition<T> extends NewConditionImpl<T> {
 
-	private T firstValue;
-	private Invocation firstInvocation;
-	private final Condition condition;
+	protected T firstValue;
+	protected Invocation firstInvocation;
+	protected final Condition condition;
 	
 	NewCondition(final T value, final Invocation invocation, final Condition condition) {
 		this.condition = condition;
