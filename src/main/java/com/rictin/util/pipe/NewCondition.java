@@ -6,45 +6,10 @@
  */
 package com.rictin.util.pipe;
 
-import com.rictin.util.internal.pipe.NewConditionImpl;
-import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.pipe.matcher.Matcher;
 
-public class NewCondition<T> extends NewConditionImpl<T> {
+public interface NewCondition<T> {
 
-	private T firstValue;
-	private Invocation firstInvocation;
-	private final Condition condition;
-	
-	NewCondition(final T value, final Invocation invocation, final Condition condition) {
-		this.condition = condition;
-		this.firstValue = value;
-		this.firstInvocation = invocation;
-	}
-
-	NewCondition(final T value, final Invocation invocation) {
-		this(value, invocation, null);
-	}
-
-	public Condition is(final Matcher<T> matcher) {
-		
-		final T firstValue = this.firstValue;
-		final Invocation firstInvocation = this.firstInvocation;
-		final T secondValue = getValue(matcher);
-		final Invocation secondInvocation = fetchInvocation();
-
-		return new Condition() {
-
-			@Override
-			public boolean satisfies(final Object element) {
-				
-				if (condition != null && !condition.satisfies(element)) return false;
-				
-				T value = firstInvocation == null ? firstValue : (T)firstInvocation.invoke(element);
-				T in = secondInvocation == null ? secondValue : (T)secondInvocation.invoke(element);
-				
-				return matcher.matches(in, value);
-			}
-		};
-	}
+	Condition<?> is(Matcher<T> matcher);
 
 }

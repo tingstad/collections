@@ -9,29 +9,31 @@ package com.rictin.util.pipe;
 import java.util.Collection;
 
 import com.rictin.util.internal.pipe.ConditionImpl;
+import com.rictin.util.internal.pipe.NewConditionImpl;
+import com.rictin.util.internal.pipe.NewConditionStringImpl;
 
 
-public abstract class Condition extends ConditionImpl {
+public abstract class Condition<T> extends ConditionImpl {
 
-	Condition() {
-	}
-
-	public abstract boolean satisfies(Object element);
+	public abstract boolean satisfies(T element);
 	
-	public static <T> NewCondition<T> where(T itemValue) {
-		return new NewCondition<T>(itemValue, fetchInvocation());
+	public static <V> NewCondition<V> where(V itemValue) {
+		return new NewConditionImpl<V>(itemValue, fetchInvocation());
+	}
+	public <U> NewCondition<U> and(U itemValue) {
+		return new NewConditionImpl<U>(itemValue, fetchInvocation(), this);
 	}
 
 	public static NewConditionString where(String itemValue) {
-		return new NewConditionString(itemValue, fetchInvocation());
+		return new NewConditionStringImpl(itemValue, fetchInvocation());
+	}
+	public NewConditionString and(String itemValue) {
+		return new NewConditionStringImpl(itemValue, fetchInvocation(), this);
 	}
 
-	public static NewCondition<Collection> where(Collection itemValue) {
-		return null;
+	public static NewCondition<Collection<?>> where(Collection<?> itemValue) {
+		throw new RuntimeException("Not yes implemented"); //TODO: where(collection)
 	}
 
-	public <U> NewCondition<U> and(U itemValue) {
-		return new NewCondition<U>(itemValue, fetchInvocation(), this);
-	}
 
 }

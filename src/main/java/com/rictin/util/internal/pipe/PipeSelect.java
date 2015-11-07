@@ -17,9 +17,9 @@ public class PipeSelect<T> extends Pipe<T> implements Iterator<T> {
 	private Iterator<T> input;
 	private Boolean hasNext;
 	private T element;
-	private Condition condition;
+	private Condition<T> condition;
 
-	public PipeSelect(PipeParent<T> source, Condition condition) {
+	public PipeSelect(PipeParent<T> source, Condition<T> condition) {
 		super.init(source);
 		this.input = source.iterator();
 		this.condition = condition;

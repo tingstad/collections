@@ -15,8 +15,8 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
-import com.rictin.util.pipe.Num;
-import com.rictin.util.pipe.Str;
+import com.rictin.util.pipe.matcher.Num;
+import com.rictin.util.pipe.matcher.Str;
 
 public class ConditionTest {
 

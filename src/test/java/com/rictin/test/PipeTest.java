@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
-import com.rictin.util.pipe.Num;
+import com.rictin.util.pipe.matcher.Num;
 
 public class PipeTest {
 

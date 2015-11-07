@@ -6,16 +6,9 @@
  */
 package com.rictin.util.pipe;
 
-import com.rictin.util.internal.proxy.Invocation;
 
-public class NewConditionString extends NewCondition<String> {
+public interface NewConditionString extends NewCondition<String> {
 
-	NewConditionString(String value, Invocation invocation) {
-		super(value, invocation);
-	}
-
-	public Condition startsWith(final String prefix) {
-		return is(Str.startsWith(prefix));
-	}
+	Condition<?> startsWith(final String prefix);
 
 }
