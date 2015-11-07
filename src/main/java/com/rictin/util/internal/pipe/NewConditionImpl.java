@@ -15,16 +15,14 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 
 	private final T firstValue;
 	private final Invocation firstInvocation;
-	private final Condition condition;
+	private final Condition conditionAnd;
+	private final Condition conditionOr;
 
-	public NewConditionImpl(T value, Invocation<?> invocation, Condition<?> condition) {
-		this.condition = condition;
+	public NewConditionImpl(T value, Invocation<?> invocation, Condition<?> conditionAnd, Condition<?> conditionOr) {
+		this.conditionAnd = conditionAnd;
+		this.conditionOr = conditionOr;
 		this.firstValue = value;
 		this.firstInvocation = invocation;
-	}
-
-	public NewConditionImpl(T value, Invocation<?> invocation) {
-		this(value, invocation, null);
 	}
 
 	protected T getValue(MatcherImpl<T> matcher) {
@@ -41,7 +39,8 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 			@Override
 			public boolean satisfies(final Object element) {
 				
-				if (condition != null && !condition.satisfies(element)) return false;
+				if (conditionAnd != null && !conditionAnd.satisfies(element)) return false;
+				if (conditionOr != null && conditionOr.satisfies(element)) return true;
 				
 				T value = firstInvocation == null ? firstValue : (T)firstInvocation.invoke(element);
 				T in = secondInvocation == null ? secondValue : (T)secondInvocation.invoke(element);

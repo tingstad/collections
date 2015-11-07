@@ -6,6 +6,8 @@
  */
 package com.rictin.test.condition;
 
+import static com.rictin.util.pipe.Condition.where;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -126,6 +128,33 @@ public class ConditionTest {
 
 		Assert.assertEquals(1, persons.size());
 		Assert.assertEquals("KIRSTI", persons.get(0).getName());
+	}
+
+	@Test
+	public void testStaticOrCondition() {
+		List<Person> persons = Pipe.from(list)
+				.select(Condition.or(
+						Condition.where(Pipe.item(list).getAge()).lessThan(30),
+						Condition.where(Pipe.item(list).getAge()).greaterThan(30)
+				))
+				.toList();
+
+		Assert.assertEquals(2, persons.size());
+		Assert.assertEquals("KIRSTI", persons.get(0).getName());
+		Assert.assertEquals("TORSTEIN", persons.get(1).getName());
+	}
+
+	@Test
+	public void testFluentOrCondition() {
+		List<Person> persons = Pipe.from(list)
+				.select(where(Pipe.item(list).getAge()).lessThan(30)
+						.or(Pipe.item(list).getAge()).greaterThan(30)
+				)
+				.toList();
+
+		Assert.assertEquals(2, persons.size());
+		Assert.assertEquals("KIRSTI", persons.get(0).getName());
+		Assert.assertEquals("TORSTEIN", persons.get(1).getName());
 	}
 
 }

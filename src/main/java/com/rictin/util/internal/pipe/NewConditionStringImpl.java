@@ -13,14 +13,10 @@ import com.rictin.util.pipe.matcher.Str;
 
 public class NewConditionStringImpl extends NewConditionImpl<String> implements NewConditionString {
 
-	public NewConditionStringImpl(String value, Invocation<?> invocation, Condition<?> condition) {
-		super(value, invocation, condition);
+	public NewConditionStringImpl(String value, Invocation<?> invocation, Condition<?> conditionAnd, Condition<?> conditionOr) {
+		super(value, invocation, conditionAnd, conditionOr);
 	}
 	
-	public NewConditionStringImpl(String value, Invocation<?> invocation) {
-		super(value, invocation);
-	}
-
 	public Condition<?> startsWith(String prefix) {
 		return is(Str.startsWith(prefix));
 	}

@@ -7,8 +7,10 @@
 package com.rictin.util.pipe;
 
 
-public interface NewConditionString extends NewCondition<String> {
+public interface NewConditionNumber<T extends Number> extends NewCondition<T> {
 
-	Condition<?> startsWith(String prefix);
+	Condition<?> greaterThan(T number);
+
+	Condition<?> lessThan(T number);
 
 }
