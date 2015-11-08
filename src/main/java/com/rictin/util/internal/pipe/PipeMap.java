@@ -9,12 +9,11 @@ package com.rictin.util.internal.pipe;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.rictin.util.Pipe;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
-public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
+public class PipeMap<T, U> extends PipeImpl<U> implements Iterator<U>, Iterable<U> {
 
 	private Iterator<T> input;
 	private Invocation<T> invocation;
@@ -24,10 +23,10 @@ public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 
 	private U proxy;
 	
-	public PipeMap(PipeParent<T> input, U item) {
+	public PipeMap(PipeImpl<T> input, U item) {
 		this.input = input.iterator();
 		itemClass = (Class<U>) item.getClass();
-		invocation = PipeParent.takeLastInvocation();
+		invocation = PipeImpl.takeLastInvocation();
 	}
 
 	public Iterator<U> iterator() {
@@ -71,7 +70,7 @@ public class PipeMap<T, U> extends Pipe<U> implements Iterator<U>, Iterable<U> {
 			proxy = proxyFactory.getProxy(new Callback<U>() {
 
 				public Object intercept(Invocation<U> invocation) {
-					PipeParent.addInvocation(invocation);
+					PipeImpl.addInvocation(invocation);
 					return null;
 				}
 			});

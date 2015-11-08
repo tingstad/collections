@@ -32,7 +32,7 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 	public Condition<?> is(final Matcher<T> matcher) {
 		
 		final T secondValue = getValue(matcher);
-		final Invocation secondInvocation = PipeParent.takeLastInvocation();
+		final Invocation secondInvocation = PipeImpl.takeLastInvocation();
 
 		return new Condition() {
 

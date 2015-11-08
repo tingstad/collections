@@ -15,7 +15,7 @@ public class ConditionImpl {
 	}
 
 	protected static Invocation<?> fetchInvocation() {
-		return PipeParent.takeLastInvocation();
+		return PipeImpl.takeLastInvocation();
 	}
 
 }

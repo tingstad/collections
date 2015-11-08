@@ -11,23 +11,32 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.pipe.PipeImpl;
-import com.rictin.util.internal.pipe.PipeMap;
-import com.rictin.util.internal.pipe.PipeParent;
-import com.rictin.util.internal.pipe.PipeSelect;
 import com.rictin.util.pipe.Condition;
 
-public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
+public abstract class Pipe<T> implements Iterable<T> {
+
+	protected static final Map<String, Pipe> pipes = new ConcurrentHashMap<String, Pipe>();
 
 	public static <T> Pipe<T> from(final Iterable<T> input) {
 		return new PipeImpl<T>(input);
 	}
 
-	public Pipe<T> select(final Condition condition) {
-		return new PipeSelect<T>(this, condition);
+	public abstract T item();
+
+	public static <T> T item(Iterable<T> source) {
+		String key = getPipeId(source);
+		if (!pipes.containsKey(key)) {
+			throw new IllegalArgumentException("No pipe exists for source " + source);
+		}
+		Pipe<T> pipe = pipes.get(key);
+		return pipe.item();
 	}
+
+	public abstract Pipe<T> select(final Condition condition);
 
 	public Pipe<T> sortBy(Object... item) {
 		List<Comparator<T>> comparators = new ArrayList<Comparator<T>>(item.length);
@@ -53,9 +62,7 @@ public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
 		return map;
 	}
 
-	public <U> Pipe<U> mapTo(U item) {
-		return new PipeMap<T, U>(this, item);
-	}
+	public abstract <U> Pipe<U> mapTo(U item);
 
 	public List<T> toList() {
 		List<T> list = new ArrayList<T>();
@@ -63,6 +70,12 @@ public abstract class Pipe<T> extends PipeParent<T> implements Iterable<T> {
 			list.add(element);
 		cleanUp();
 		return list;
+	}
+
+	protected abstract void cleanUp();
+
+	protected static <T> String getPipeId(Iterable<T> source) {
+		return System.identityHashCode(source) + "-" + Thread.currentThread().getId();
 	}
 
 }
