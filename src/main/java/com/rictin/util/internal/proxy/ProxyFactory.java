@@ -7,8 +7,10 @@
 package com.rictin.util.internal.proxy;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -76,6 +78,43 @@ public class ProxyFactory<T> {
 	}
 
 	private T newProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
+		Class<?> c = null;
+		try {
+			c = Class.forName("com.rictin.util.proxy.ProxyFactoryImpl");
+		} catch (ClassNotFoundException e) {
+			return newProxyInternal(callback, preserveReturnedNull);
+		}
+		Object factory = null; //TODO: ProxyFactoryInterface instead of Object
+		try {
+			factory = c.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+		return (T) factory.toString(); //TODO: newProxy() instead of toString();
+	}
+
+	private T newProxyInternal(final Callback<T> callback, final boolean preserveReturnedNull) {
+		Object prox = Proxy.newProxyInstance(clazz.getClassLoader(),
+		        clazz.isInterface() ? new Class[]{ clazz } : clazz.getInterfaces(),
+		        new InvocationHandler() {
+					
+					public Object invoke(Object proxy, Method method, Object[] args)
+							throws Throwable {
+						Invocation<T> invocation = new Invocation<T>(clazz);
+						invocation.setMethod(method);
+						invocation.setArgs(args);
+						Object a = transitiveInterception(invocation);
+						Object b = callback.intercept(invocation);
+						return b == null && !preserveReturnedNull ? a : b;
+					}
+				});
+		return (T) prox;
+	}
+
+	//TODO: move to new class
+	private T newProxyCglib(final Callback<T> callback, final boolean preserveReturnedNull) {
 		if (identity != null) {
 			return identity;
 		}

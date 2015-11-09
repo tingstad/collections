@@ -22,16 +22,16 @@ public class TransitivityTest {
 
 	@Test
 	public void testFilter() {
-		List<Human> persons = new ArrayList<Human>(Arrays.asList(
+		List<HasDates> persons = new ArrayList<HasDates>(Arrays.asList(
 				new Human("Ada", 1815),
 				new Human("Charles", 1791)));
 		
-		Pipe<Human> pipe = Pipe.from(persons);
-		
-		List<Human> result = pipe
+		Pipe<HasDates> pipe = Pipe.from(persons);
+
+		List<HasDates> result = pipe
 				.select( Condition.where( pipe.item().getDates().getYearOfBirth() ).is(Num.lessThan(1800)) )
 				.toList();
-		
+
 		assertEquals(1, result.size());
 		assertEquals(1791, result.get(0).getDates().getYearOfBirth());
 	}

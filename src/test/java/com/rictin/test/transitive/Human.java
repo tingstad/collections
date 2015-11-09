@@ -6,7 +6,7 @@
  */
 package com.rictin.test.transitive;
 
-public class Human {
+public class Human implements HasDates {
 
 	private Dates dates;
 

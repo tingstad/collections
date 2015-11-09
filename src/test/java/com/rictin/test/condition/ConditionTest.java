@@ -15,7 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.Person;
+import com.rictin.test.data.Person;
+import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.matcher.Matcher;
@@ -28,10 +29,10 @@ public class ConditionTest {
 	
 	@Before
 	public void setUp() {
-		list = Arrays.asList(
-				new Person("RICHARD", 30),
-				new Person("KIRSTI", 31),
-				new Person("TORSTEIN", 2));
+		list = Arrays.<Person>asList(
+				new PersonImpl("RICHARD", 30),
+				new PersonImpl("KIRSTI", 31),
+				new PersonImpl("TORSTEIN", 2));
 	}
 	
 	@Test

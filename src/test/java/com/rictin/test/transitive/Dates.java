@@ -6,7 +6,7 @@
  */
 package com.rictin.test.transitive;
 
-public class Dates {
+public class Dates implements HasYearOfBirth {
 
 	private int yearOfBirth;
 
