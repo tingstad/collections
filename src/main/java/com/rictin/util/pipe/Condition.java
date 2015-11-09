@@ -30,6 +30,15 @@ public abstract class Condition<T> extends ConditionImpl {
 		};
 	}
 
+	public static <U> Condition<U> not(final Condition condition) {
+		return new Condition<U>() {
+
+			public boolean satisfies(U element) {
+				return !condition.satisfies(element);
+			}
+		};
+	}
+
 	public static <U> NewCondition<U> where(U itemValue) {
 		return new NewConditionImpl<U>(itemValue, fetchInvocation(), null, null);
 	}
