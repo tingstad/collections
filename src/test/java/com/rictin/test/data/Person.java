@@ -23,4 +23,5 @@ public interface Person extends HasName {
 
 	void setAge(int age);
 
+	IDocument getDocument();
 }

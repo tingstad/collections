@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.rictin.test.data.Document;
 import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Chain;
@@ -99,11 +100,11 @@ public class ChainTest {
 
 	@Test
 	public void testSubProxy() {
-		Person richard = new Person("Richard", 31);
+		PersonImpl richard = new PersonImpl("Richard", 31);
 		richard.setDocument(new Document("Richard's document"));
-		Person ned = new Person("Ned", 45);
+		PersonImpl ned = new PersonImpl("Ned", 45);
 		ned.setDocument(new Document("Ned's document"));
-		Chain<Person> chain = Chain.from(Arrays.asList(
+		Chain<Person> chain = Chain.from(Arrays.<Person>asList(
 				richard, ned));
 		chain.filter().accept("Ned's document").getDocument().getTitle();
 		List<Person> havingNedsDocument = chain.toList();
