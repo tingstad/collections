@@ -6,7 +6,6 @@
  */
 package com.rictin.util.internal.lists;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 import com.rictin.util.internal.proxy.Callback;

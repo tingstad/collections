@@ -4,16 +4,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.rictin.test.transitive;
+package com.rictin.util.internal.pipe;
 
-public class Human implements HasDates {
 
-	private Dates dates;
+public class MatcherImpl<T> {
 
-	public Human(String name, int yearOfBirth) {
-		dates = new Dates(yearOfBirth);
+	private final T value;
+	
+	protected MatcherImpl(T value) {
+		this.value = value;
 	}
-
-	public Dates getDates() { return dates; }
+	
+	T getValue() {
+		return value;
+	}
 
 }

@@ -4,16 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.rictin.test.transitive;
+package com.rictin.util.pipe;
 
-public class Human implements HasDates {
 
-	private Dates dates;
+public interface NewConditionString extends NewCondition<String> {
 
-	public Human(String name, int yearOfBirth) {
-		dates = new Dates(yearOfBirth);
-	}
-
-	public Dates getDates() { return dates; }
+	Condition<?> startsWith(String prefix);
 
 }

@@ -6,14 +6,23 @@
  */
 package com.rictin.test;
 
+import static java.math.BigInteger.valueOf;
+import static java.util.Arrays.asList;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.rictin.test.data.Person;
+import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Pipe;
+import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.matcher.Num;
 
 public class PipeTest {
 
@@ -25,16 +34,16 @@ public class PipeTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add(new Person(RICHARD, 30));
-		list.add(new Person(KIRSTI, 31));
-		list.add(new Person(TORSTEIN, 2));
+		list.add(new PersonImpl(RICHARD, 30));
+		list.add(new PersonImpl(KIRSTI, 31));
+		list.add(new PersonImpl(TORSTEIN, 2));
 	}
 
 	@Test
-	public void test() {
+	public void testFilter() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<Person> output = pipe
-				.filterKeepLessThan(25, pipe.item().getAge())
+				.select( Condition.where( pipe.item().getAge() ).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -43,10 +52,10 @@ public class PipeTest {
 	}
 
 	@Test
-	public void test2() {
+	public void testFilterAndTransform() {
 		Pipe<Person> pipe = Pipe.from(list);
 		List<String> output = pipe
-				.filterKeepLessThan(25, pipe.item().getAge())
+				.select( Condition.where( pipe.item().getAge()).is(Num.lessThan(25)) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -55,13 +64,13 @@ public class PipeTest {
 	}
 
 	@Test
-	public void test3() {
+	public void testFilterMapFilter() {
 		Pipe<Person> pipe = Pipe.from(list);
 		Pipe<Integer> ages = pipe
-				.filterKeepLessThan(31, pipe.item().getAge())
+				.select(Condition.where( pipe.item().getAge()).is(Num.lessThan(31)) )
 				.mapTo(pipe.item().getAge());
 		List<Integer> output = ages
-				.filterKeepLessThan(25, ages.item().toString())
+				.select(Condition.where( ages.item().intValue()).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
@@ -69,29 +78,56 @@ public class PipeTest {
 	}
 
 	@Test
-	public void test4() {
-//		List<HasName> 
+	public void testErr() {
 		Pipe<Person> pipe = Pipe.from(list);
-		Pipe<Integer> ages = pipe
-				.filterKeepLessThan(31, pipe.item().getAge())
-				.mapTo(pipe.item().getAge());
-		List<Integer> output = ages
-				.filterKeepLessThan(25, ages.item().toString())
+		List<String> output = pipe
+				.select( Condition.where( pipe.item().getAge() ).is(Num.lessThan(25)) )
+				.mapTo(pipe.item().getName())
+				.toList();
+		
+		Pipe<Person> pipe2 = Pipe.from(list);
+		Pipe<Integer> ages = pipe2
+				.select(Condition.where( pipe2.item().getAge() ).is(Num.lessThan(31)) )
+				.mapTo(pipe2.item().getAge());
+	}
+
+	@Test
+	public void testOneElementListWithMapTo() {
+		Pipe<Person> pipe = Pipe.from(asList((Person) new PersonImpl(RICHARD, 30)));
+		List<String> output = pipe
+				.select(Condition.where( pipe.item().getAge()).is(Num.lessThan(40)) )
+				.mapTo(pipe.item().getName())
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
-		Assert.assertEquals(2, output.get(0).intValue());
+		Assert.assertEquals(RICHARD, output.get(0));
 	}
 
 	@Test
 	public void testOneLinePipe() {
 		List<Person> output = Pipe.from(list)
-				.filterKeepLessThan(25, Pipe.item(list).getAge())
+				.select(Condition.where( Pipe.item(list).getAge()).is(Num.lessThan(25)) )
 				.toList();
 		
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(TORSTEIN, output.get(0).getName());
 	}
 
+	@Test
+	@Ignore("needs class proxy implementation")
+	public void testBigIntegerMod() {
+		List<BigInteger> numbers = asList(valueOf(1), valueOf(2), valueOf(3), valueOf(4), valueOf(5));
+		
+		List<BigInteger> odd = Pipe.from(numbers).select(
+				Condition.where(
+						Pipe.item(numbers).mod(valueOf(2))
+				).is(Num.greaterThan(valueOf(0)))
+		).toList();
+
+		Assert.assertEquals(3, odd.size());
+		Assert.assertEquals(1, odd.get(0).intValue());
+		Assert.assertEquals(3, odd.get(1).intValue());
+		Assert.assertEquals(5, odd.get(2).intValue());
+	}
 
 }

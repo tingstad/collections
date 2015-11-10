@@ -1,14 +1,8 @@
-/* Copyright 2013 Richard H. Tingstad
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-package com.rictin.test;
+package com.rictin.test.data;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Person implements HasName {
+public class PersonImpl implements Person {
 
 	private String name;
 	private int age;
@@ -16,7 +10,7 @@ public class Person implements HasName {
 	private Double score;
 	private Document document;
 
-	public Person(String name, int age) {
+	public PersonImpl(String name, int age) {
 		this.name = name;
 		this.age = age;
 	}

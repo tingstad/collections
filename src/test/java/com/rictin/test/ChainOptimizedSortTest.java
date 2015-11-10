@@ -1,3 +1,9 @@
+/* Copyright 2014 Richard H. Tingstad
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.rictin.test;
 
 import static com.rictin.util.OptionalArgument.NO_OPTIMIZATION;
@@ -10,16 +16,18 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.rictin.test.data.Document;
+import com.rictin.test.data.IDocument;
 import com.rictin.util.Chain;
 import com.rictin.util.Lists;
 
 public class ChainOptimizedSortTest {
 
-	private List<Document> documents;
+	private List<IDocument> documents;
 
 	@Before
 	public void setUp() {
-		documents = Arrays.asList(
+		documents = Arrays.<IDocument>asList(
 				new Document("A"),
 				new Document("F"),
 				new Document("C"),
@@ -30,10 +38,10 @@ public class ChainOptimizedSortTest {
 
 	@Test
 	public void test() {
-		Chain<Document> c = Chain.from(documents);
+		Chain<IDocument> c = Chain.from(documents);
 		c.sort(NO_OPTIMIZATION).ascendingBy().getTitle();
 		c.limit(3);
-		List<Document> firstThree = c.toList();
+		List<IDocument> firstThree = c.toList();
 		
 		assertEquals(3, firstThree.size());
 		assertEquals("A", firstThree.get(0).getTitle());

@@ -7,8 +7,10 @@
 package com.rictin.util.internal.proxy;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,25 +21,17 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
+
 public class ProxyFactory<T> {
 
 	private List<Class<?>> interfaces = new ArrayList<Class<?>>();
 
-	public Class<T> clazz;
+	private Class<T> clazz;
 	private Class<?>[] argumentTypes;
 	private T identity;
 	
-/*	public static <T> T createProxy(T element, MethodInterceptor interceptor) {
-		List<T> list = new ArrayList<T>(1);
-		list.add(element);
-		return createProxy(list, interceptor);
-	}
-
-	public static <T> T createProxy(Collection<T> collection, 
-			Callback<T> callback) {
-		return new ProxyFactory<T>(collection).getProxy(callback);
-	}*/
-
 	public ProxyFactory(T element) {
 		List<T> list = new ArrayList<T>(1);
 		list.add(element);
@@ -75,7 +69,6 @@ public class ProxyFactory<T> {
 	}
 	
 	private T getProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
-//		final ProxyFactory<T> p = this;
 		if (Modifier.isFinal(clazz.getModifiers())) {
 			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
 			return (T) (preserveReturnedNull || returnValue != null ? returnValue : identity);
@@ -85,30 +78,70 @@ public class ProxyFactory<T> {
 	}
 
 	private T newProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
+		Class<?> c = null;
+		try {
+			c = Class.forName("com.rictin.util.proxy.ProxyFactoryImpl");
+		} catch (ClassNotFoundException e) {
+			return newProxyInternal(callback, preserveReturnedNull);
+		}
+		Object factory = null; //TODO: ProxyFactoryInterface instead of Object
+		try {
+			factory = c.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+		return (T) factory.toString(); //TODO: newProxy() instead of toString();
+	}
+
+	private T newProxyInternal(final Callback<T> callback, final boolean preserveReturnedNull) {
+		Object prox = Proxy.newProxyInstance(clazz.getClassLoader(),
+		        clazz.isInterface() ? new Class[]{ clazz } : clazz.getInterfaces(),
+		        new InvocationHandler() {
+					
+					public Object invoke(Object proxy, Method method, Object[] args)
+							throws Throwable {
+						Invocation<T> invocation = new Invocation<T>(clazz);
+						invocation.setMethod(method);
+						invocation.setArgs(args);
+						Object a = transitiveInterception(invocation);
+						Object b = callback.intercept(invocation);
+						return b == null && !preserveReturnedNull ? a : b;
+					}
+				});
+		return (T) prox;
+	}
+
+	//TODO: move to new class
+	private T newProxyCglib(final Callback<T> callback, final boolean preserveReturnedNull) {
 		if (identity != null) {
 			return identity;
 		}
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(clazz);
 		enhancer.setInterfaces(interfaces.toArray(new Class[0]));
-		enhancer.setCallback(new MethodInterceptor() {
+		MethodInterceptor interceptor = new MethodInterceptor() {
 
 			public Object intercept(Object arg0, Method arg1, Object[] arg2,
 					MethodProxy arg3) throws Throwable {
 				Invocation<T> invocation = new Invocation<T>(clazz);
 				invocation.setMethod(arg1);
 				invocation.setArgs(arg2);
-				Object a = transitiveInterception(callback, invocation);
+				Object a = transitiveInterception(invocation);
 				Object b = callback.intercept(invocation);
 				return b == null && !preserveReturnedNull ? a : b;
 			}
-		});
-		Object proxy = enhancer.create(argumentTypes,
-				getArguments(argumentTypes));
-		return (T) proxy;
+		};
+		enhancer.setCallbackType(interceptor.getClass());
+		Class<T> proxiedClass = enhancer.createClass();
+		Enhancer.registerCallbacks(proxiedClass, new net.sf.cglib.proxy.Callback[]{ interceptor });
+		Objenesis objenesis = new ObjenesisStd();
+		T proxy = objenesis.newInstance(proxiedClass);
+		return proxy;
 	}
 
-	private Object transitiveInterception(Callback<T> callback, final Invocation<T> invocation) {
+	private Object transitiveInterception(final Invocation<T> invocation) {
 
 		Class returnType = invocation.getReturnType();
 		final ProxyFactory subFactory = new ProxyFactory(returnType);
@@ -117,7 +150,7 @@ public class ProxyFactory<T> {
 				invocation.setTransitiveInvocation(subInvocation);
 				if (subFactory.identity != null)
 					return null;
-				return transitiveInterception(null, subInvocation);
+				return transitiveInterception(subInvocation);
 			}
 		});
 		
@@ -132,22 +165,19 @@ public class ProxyFactory<T> {
 	 * @return Object to return or null if real proxy should be used
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T createIdentityProxy(Class<?> c) {
-		T identity = null;
+	private static <T> T createIdentityProxy(final Class<?> c) {
 		if (String.class.equals(c)) {
-			identity = (T) "";
+			return (T) "";
 		} else if (Integer.class.equals(c)) {
-			identity = (T) Integer.valueOf(0);
+			return (T) Integer.valueOf(0);
 		} else if (Long.class.equals(c)) {
-			identity = (T) Long.valueOf(0);
+			return (T) Long.valueOf(0);
 		} else if (Double.class.equals(c)) {
-			identity = (T) Double.valueOf(0);
+			return (T) Double.valueOf(0);
 		} else if (c.isPrimitive()) {
 			return (T) Integer.valueOf(0);
-		} else {
-			return null;
 		}
-		return identity;
+		return null;
 	}
 
 	private static <T> Class<?>[] getArgumentTypesOfShortestConstructor(
@@ -178,7 +208,7 @@ public class ProxyFactory<T> {
 		return arguments;
 	}
 
-	private static <T> Object newInstance(Class<?> klass) {
+	private static <T> Object newInstance(final Class<?> klass) {
 		if (klass.isPrimitive()) {
 			if (Boolean.TYPE.equals(klass)) {
 				return false;
@@ -191,14 +221,14 @@ public class ProxyFactory<T> {
 			} else if (Byte.TYPE.equals(klass)) {
 				return (byte) 0;
 			} else if (Long.TYPE.equals(klass)) {
-				return 0l;
+				return 0L;
 			} else if (Short.TYPE.equals(klass)) {
 				return (short) 0;
 			} else {
 				return 0;
 			}
 		}
-		return null;
+		return createIdentityProxy(klass);
 	}
 
 	/**

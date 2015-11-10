@@ -20,16 +20,19 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.rictin.test.Person;
+import com.rictin.test.data.Person;
+import com.rictin.test.data.PersonImpl;
 
 public class CollectTest {
 
+	
+	
 	@Test
 	public void test() {
-		List<Person> persons = Arrays.asList(
-				new Person("A", 20),
-				new Person("B", 20),
-				new Person("C", 20));
+		List<Person> persons = Arrays.<Person>asList(
+				new PersonImpl("A", 20),
+				new PersonImpl("B", 20),
+				new PersonImpl("C", 20));
 
 		List<String> names = new ArrayList<String>();
 		collect(persons, names).getName();
@@ -41,10 +44,10 @@ public class CollectTest {
 
 	@Test
 	public void testSetResult() {
-		List<Person> persons = Arrays.asList(
-				new Person("A", 20),
-				new Person("B", 20),
-				new Person("A", 20));
+		List<Person> persons = Arrays.<Person>asList(
+				new PersonImpl("A", 20),
+				new PersonImpl("B", 20),
+				new PersonImpl("A", 20));
 
 		Set<String> names = new HashSet<String>();
 		collect(persons, names).getName();
@@ -56,9 +59,9 @@ public class CollectTest {
 	@Test
 	public void testSetInput() {
 		Set<Person> persons = new HashSet<Person>(asList(
-				new Person("A", 20),
-				new Person("B", 20),
-				new Person("A", 20)));
+				new PersonImpl("A", 20),
+				new PersonImpl("B", 20),
+				new PersonImpl("A", 20)));
 
 		Set<String> names = new HashSet<String>();
 		collect(persons, names).getName();

@@ -22,7 +22,7 @@ public class ListFilter<T> extends ListHandler<T> {
 		LESS_THAN,
 		LESS_THAN_OR_EQUAL,
 		DUPLICATE
-	};
+	}
 
 	private boolean accept;
 	private Operation operation;
@@ -160,6 +160,8 @@ public class ListFilter<T> extends ListHandler<T> {
 					test = exists.contains(value);
 					exists.add(value);
 					break;
+				default:
+					throw new IllegalStateException();
 				}
 			}
 			if (accept != test) {

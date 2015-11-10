@@ -12,6 +12,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.rictin.test.data.HasName;
+import com.rictin.test.data.Person;
+import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Lists;
 
 public class ProxyTest {
@@ -21,7 +24,7 @@ public class ProxyTest {
 		List<NoConstructor> list = new ArrayList<NoConstructor>();
 		list.add(new NoConstructor());
 
-		NoConstructor proxy = Lists.min(list);
+		HasNoConstructor proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
@@ -31,7 +34,7 @@ public class ProxyTest {
 		List<NoConstructorArguments> list = new ArrayList<NoConstructorArguments>();
 		list.add(new NoConstructorArguments());
 
-		NoConstructorArguments proxy = Lists.min(list);
+		HasNoConstructorArguments proxy = Lists.min(list);
 		
 		Assert.assertNotNull(proxy);
 	}
@@ -41,7 +44,7 @@ public class ProxyTest {
 		List<PrimitiveArguments> list = new ArrayList<PrimitiveArguments>();
 		list.add(new PrimitiveArguments(0, 0l, (char)0, 0f, 0d, false, (byte)0, (short)0));
 		
-		PrimitiveArguments proxy = Lists.min(list);
+		HasPrimitiveArguments proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
@@ -51,7 +54,7 @@ public class ProxyTest {
 		List<IntegerArgument> list = new ArrayList<IntegerArgument>();
 		list.add(new IntegerArgument(0));
 
-		IntegerArgument proxy = Lists.min(list);
+		HasIntegerArgument proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
@@ -72,8 +75,8 @@ public class ProxyTest {
 	@Test
 	public void testTypeDetection() {
 		List<HasName> list = new ArrayList<HasName>();
-		list.add(new Person("a", 1));
-		list.add(new Person("b", 1));
+		list.add(new PersonImpl("a", 1));
+		list.add(new PersonImpl("b", 1));
 
 		Lists.sort(list).descendingBy().getName();
 
@@ -82,17 +85,21 @@ public class ProxyTest {
 
 }
 
-class NoConstructor{ }
+interface HasNoConstructor{ }
+class NoConstructor implements HasNoConstructor{ }
 
-class NoConstructorArguments {
+interface HasNoConstructorArguments {}
+class NoConstructorArguments implements HasNoConstructorArguments {
 	public NoConstructorArguments() {}
 }
 
-class PrimitiveArguments {
+interface HasPrimitiveArguments {}
+class PrimitiveArguments implements HasPrimitiveArguments {
 	public PrimitiveArguments(int i, long l, char c, float f, double d, boolean b, byte y, short s) {}
 }
 
-class IntegerArgument {
+interface HasIntegerArgument {}
+class IntegerArgument implements HasIntegerArgument {
 	public IntegerArgument(Integer i) {}
 }
 

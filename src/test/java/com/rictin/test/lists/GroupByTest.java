@@ -16,16 +16,17 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.rictin.test.Person;
+import com.rictin.test.data.Person;
+import com.rictin.test.data.PersonImpl;
 
 public class GroupByTest {
 
 	@Test
 	public void test() {
 		List<Person> persons = asList(
-				new Person("Erik", 4),
-				new Person("Erik", 30),
-				new Person("Thor", 30));
+				(Person) new PersonImpl("Erik", 4),
+				(Person) new PersonImpl("Erik", 30),
+				(Person) new PersonImpl("Thor", 30));
 
 		Map<Integer, List<Person>> personsByAge = new HashMap<Integer, List<Person>>();
 		groupBy(persons, personsByAge).getAge();
@@ -39,11 +40,11 @@ public class GroupByTest {
 	@Test
 	public void testNulls() {
 		List<Person> persons = asList(
-				new Person("Erik", 4),
+				(Person) new PersonImpl("Erik", 4),
 				null,
-				new Person("Erik", 30),
-				new Person(null, 20),
-				new Person("Thor", 30));
+				(Person) new PersonImpl("Erik", 30),
+				(Person) new PersonImpl(null, 20),
+				(Person) new PersonImpl("Thor", 30));
 
 		Map<String, List<Person>> personsByName = new HashMap<String, List<Person>>();
 		groupBy(persons, personsByName).getName();
