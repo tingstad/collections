@@ -15,8 +15,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.data.Person;
-import com.rictin.test.data.PersonImpl;
+import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
 public class ListAggregatorTest {
@@ -26,9 +25,9 @@ public class ListAggregatorTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add((Person)new PersonImpl("Richard", 30));
-		list.add((Person)new PersonImpl("Kirsti", 31));
-		list.add((Person)new PersonImpl("Torstein", 1));
+		list.add(new Person("Richard", 30));
+		list.add(new Person("Kirsti", 31));
+		list.add(new Person("Torstein", 1));
 	}
 
 	@Test
@@ -47,8 +46,8 @@ public class ListAggregatorTest {
 
 	@Test
 	public void testNullValue() {
-		((PersonImpl)list.get(0)).setPoints(1000L);
-		((PersonImpl)list.get(2)).setPoints(2000L);
+		list.get(0).setPoints(1000L);
+		list.get(2).setPoints(2000L);
 
 		Long sum = Lists.sum(list).getPoints();
 
@@ -67,9 +66,9 @@ public class ListAggregatorTest {
 
 	@Test
 	public void testDecimalAverage() {
-		((PersonImpl)list.get(0)).setScore(0.8);
-		((PersonImpl)list.get(1)).setScore(0.8);
-		((PersonImpl)list.get(2)).setScore(0.9);
+		list.get(0).setScore(0.8);
+		list.get(1).setScore(0.8);
+		list.get(2).setScore(0.9);
 
 		Double sum = Lists.sum(list).getScore();
 

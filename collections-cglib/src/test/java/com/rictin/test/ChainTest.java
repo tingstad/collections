@@ -14,8 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.data.Document;
-import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Chain;
 
@@ -26,9 +24,9 @@ public class ChainTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add(new PersonImpl("RICHARD", 30));
-		list.add(new PersonImpl("KIRSTI", 31));
-		list.add(new PersonImpl("TORSTEIN", 2));
+		list.add(new Person("RICHARD", 30));
+		list.add(new Person("KIRSTI", 31));
+		list.add(new Person("TORSTEIN", 2));
 	}
 
 	@Test
@@ -79,13 +77,12 @@ public class ChainTest {
 
 	@Test
 	public void testSortByTwoFields() {
-		Chain<Person> chain = Chain.from(Arrays.<Person>asList(
-				new PersonImpl("Richard", 31),
-				new PersonImpl("Richard", 30),
-				new PersonImpl("Kirsti", 31)));
+		Chain<Person> chain = Chain.from(Arrays.asList(
+				new Person("Richard", 31), new Person("Richard", 30),
+				new Person("Kirsti", 31)));
 		chain.sort().descendingBy().getAge();
 		chain.sort().ascendingBy().getName();
-		
+
 		Person person = chain.next();
 		Assert.assertEquals(31, person.getAge());
 		Assert.assertEquals("Kirsti", person.getName());
@@ -94,23 +91,21 @@ public class ChainTest {
 		Assert.assertEquals("Richard", person.getName());
 		person = chain.next();
 		Assert.assertEquals(30, person.getAge());
-		Assert.assertEquals("Richard", person.getName());		
+		Assert.assertEquals("Richard", person.getName());
 		Assert.assertFalse(chain.hasNext());
 	}
 
 	@Test
 	public void testSubProxy() {
 		PersonImpl richard = new PersonImpl("Richard", 31);
-		richard.setDocument(new Document("Richard's document"));
+		richard.setDocument(new com.rictin.test.data.Document("Richard's document"));
 		PersonImpl ned = new PersonImpl("Ned", 45);
-		ned.setDocument(new Document("Ned's document"));
-		Chain<Person> chain = Chain.from(Arrays.<Person>asList(
-				richard, ned));
+		ned.setDocument(new com.rictin.test.data.Document("Ned's document"));
+		Chain<com.rictin.test.data.Person> chain = Chain.from(Arrays.<com.rictin.test.data.Person> asList(richard, ned));
 		chain.filter().accept("Ned's document").getDocument().getTitle();
-		List<Person> havingNedsDocument = chain.toList();
-		
+		List<com.rictin.test.data.Person> havingNedsDocument = chain.toList();
+
 		Assert.assertEquals(1, havingNedsDocument.size());
 		Assert.assertEquals("Ned", havingNedsDocument.get(0).getName());
 	}
-
 }

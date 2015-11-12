@@ -16,9 +16,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.rictin.test.data.HasName;
-import com.rictin.test.data.Person;
-import com.rictin.test.data.PersonImpl;
+import com.rictin.test.HasName;
+import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
 public class ListsSortTest {
@@ -31,9 +30,9 @@ public class ListsSortTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add(new PersonImpl(RICHARD, 30));
-		list.add(new PersonImpl(KIRSTI, 31));
-		list.add(new PersonImpl(TORSTEIN, 2));
+		list.add(new Person(RICHARD, 30));
+		list.add(new Person(KIRSTI, 31));
+		list.add(new Person(TORSTEIN, 2));
 	}
 
 	@Test
@@ -88,7 +87,7 @@ public class ListsSortTest {
 
 	@Test
 	public void testSortNullLast() {
-		list.add(new PersonImpl(null, 1));
+		list.add(new Person(null, 1));
 		Lists.sort(list).ascendingBy().getName();
 
 		assertEquals(KIRSTI, list.get(0).getName());
@@ -99,7 +98,7 @@ public class ListsSortTest {
 
 	@Test
 	public void testSortNullFirst() {
-		list.add(new PersonImpl(null, 1));
+		list.add(new Person(null, 1));
 		Lists.sort(list).nullsFirstAscendingBy().getName();
 
 		assertEquals(null, list.get(0).getName());
@@ -110,7 +109,7 @@ public class ListsSortTest {
 
 	@Test
 	public void testSortNullFirstDescending() {
-		list.add(new PersonImpl(null, 1));
+		list.add(new Person(null, 1));
 		Lists.sort(list).nullsFirstDescendingBy().getName();
 
 		assertEquals(null, list.get(0).getName());
@@ -122,7 +121,7 @@ public class ListsSortTest {
 	@Test
 	public void testNullElementsAndNullValues() {
 		list.add(null);
-		list.add(new PersonImpl(null, 1));
+		list.add(new Person(null, 1));
 		Lists.sort(list).ascendingBy().getName();
 
 		assertEquals(KIRSTI, list.get(0).getName());
@@ -135,7 +134,7 @@ public class ListsSortTest {
 	@Test
 	public void testNullElementsAndNullValuesNullsFirst() {
 		list.add(null);
-		list.add(new PersonImpl(null, 1));
+		list.add(new Person(null, 1));
 		Lists.sort(list).nullsFirstDescendingBy().getName();
 
 		assertEquals(null, list.get(0));

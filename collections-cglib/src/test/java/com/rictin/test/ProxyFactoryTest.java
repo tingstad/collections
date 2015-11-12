@@ -13,8 +13,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.data.Person;
-import com.rictin.test.data.PersonImpl;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.internal.proxy.ProxyFactory;
@@ -27,7 +25,7 @@ public class ProxyFactoryTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add(new PersonImpl(RICHARD, 30));
+		list.add(new Person(RICHARD, 30));
 	}
 
 	@Test

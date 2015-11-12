@@ -18,8 +18,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.rictin.test.data.Person;
-import com.rictin.test.data.PersonImpl;
+import com.rictin.test.Person;
 
 public class FlatCollectTest {
 
@@ -27,8 +26,8 @@ public class FlatCollectTest {
 	public void test() {
 		@SuppressWarnings("unchecked")
 		List<List<Person>> persons = asList(null,
-				asList((Person) new PersonImpl("Eve", 20), null),
-				asList((Person) new PersonImpl("Bob", 30), new PersonImpl("Mallory", 40)));
+				asList(new Person("Eve", 20), null),
+				asList(new Person("Bob", 30), new Person("Mallory", 40)));
 
 		List<String> names = new ArrayList<String>();
 		flatCollect(persons, names).getName();
@@ -42,8 +41,8 @@ public class FlatCollectTest {
 		@SuppressWarnings("unchecked")
 		Set<List<Person>> persons = new HashSet<List<Person>>(asList(
 				null,
-				asList((Person) new PersonImpl("Bob", 30), (Person) new PersonImpl("Mallory", 40)),
-				asList((Person) new PersonImpl("Eve", 20), null)));
+				asList(new Person("Bob", 30), new Person("Mallory", 40)),
+				asList(new Person("Eve", 20), null)));
 
 		List<Integer> ages = new ArrayList<Integer>();
 		flatCollect(persons, ages).getAge();

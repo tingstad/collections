@@ -16,18 +16,16 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.data.Document;
-import com.rictin.test.data.IDocument;
 import com.rictin.util.Chain;
 import com.rictin.util.Lists;
 
 public class ChainOptimizedSortTest {
 
-	private List<IDocument> documents;
+	private List<Document> documents;
 
 	@Before
 	public void setUp() {
-		documents = Arrays.<IDocument>asList(
+		documents = Arrays.asList(
 				new Document("A"),
 				new Document("F"),
 				new Document("C"),
@@ -38,10 +36,10 @@ public class ChainOptimizedSortTest {
 
 	@Test
 	public void test() {
-		Chain<IDocument> c = Chain.from(documents);
+		Chain<Document> c = Chain.from(documents);
 		c.sort(NO_OPTIMIZATION).ascendingBy().getTitle();
 		c.limit(3);
-		List<IDocument> firstThree = c.toList();
+		List<Document> firstThree = c.toList();
 		
 		assertEquals(3, firstThree.size());
 		assertEquals("A", firstThree.get(0).getTitle());

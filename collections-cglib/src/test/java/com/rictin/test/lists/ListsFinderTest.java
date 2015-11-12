@@ -18,8 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rictin.test.data.Person;
-import com.rictin.test.data.PersonImpl;
+import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
 public class ListsFinderTest {
@@ -29,8 +28,8 @@ public class ListsFinderTest {
 	@Before
 	public void setUp() {
 		list = new ArrayList<Person>();
-		list.add(new PersonImpl("Erik", 20));
-		list.add(new PersonImpl("Lars", 27));
+		list.add(new Person("Erik", 20));
+		list.add(new Person("Lars", 27));
 	}
 
 	@Test
