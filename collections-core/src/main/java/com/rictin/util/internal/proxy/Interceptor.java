@@ -6,10 +6,10 @@
  */
 package com.rictin.util.internal.proxy;
 
-import java.util.List;
+import java.lang.reflect.Method;
 
-public interface ProxyProvider<T> {
+public interface Interceptor {
 
-	T newProxy(Class<T> clazz, T identity, List<Class<?>> interfaces, Interceptor interceptor);
-
+	Object intercept(Class clazz, Method method, Object[] args);
+	
 }

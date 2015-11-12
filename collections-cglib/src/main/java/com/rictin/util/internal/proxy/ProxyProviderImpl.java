@@ -19,7 +19,7 @@ import org.objenesis.ObjenesisStd;
 
 public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 
-	public T newProxy(final Callback<T> callback, final boolean preserveReturnedNull, final Class<T> clazz, T identity, List<Class<?>> interfaces) {
+	public T newProxy(final Class<T> clazz, T identity, List<Class<?>> interfaces, final Interceptor inInterceptor) {
 		if (identity != null) {
 			return identity;
 		}
@@ -31,14 +31,9 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 		enhancer.setInterfaces(interfaceList.toArray(new Class[0]));
 		MethodInterceptor interceptor = new MethodInterceptor() {
 
-			public Object intercept(Object arg0, Method arg1, Object[] arg2,
+			public Object intercept(Object arg0, Method method, Object[] args,
 					MethodProxy arg3) throws Throwable {
-				Invocation<T> invocation = new Invocation<T>(clazz);
-				invocation.setMethod(arg1);
-				invocation.setArgs(arg2);
-				Object a = transitiveInterception(invocation);
-				Object b = callback.intercept(invocation);
-				return b == null && !preserveReturnedNull ? a : b;
+				return inInterceptor.intercept(clazz, method, args);
 			}
 		};
 		enhancer.setCallbackType(interceptor.getClass());
@@ -49,25 +44,4 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 		return proxy;
 	}
 
-	private Object transitiveInterception(final Invocation<T> invocation) {
-
-		Class returnType = invocation.getReturnType();
-		final ProxyFactory subFactory = new ProxyFactory(returnType);
-		Object subProxy = subFactory.getProxy(new Callback() {
-			public Object intercept(Invocation subInvocation) {
-				invocation.setTransitiveInvocation(subInvocation);
-				if (subFactory.identity != null)
-					return null;
-				return transitiveInterception(subInvocation);
-			}
-		});
-		
-		return subProxy;
-	}
-
-}
-
-class CountAndDepth {
-	public long count = 0;
-	public long depth = 0;
 }

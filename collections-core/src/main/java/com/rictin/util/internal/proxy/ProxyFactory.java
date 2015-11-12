@@ -70,7 +70,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 		return proxy;
 	}
 
-	private T callNewProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
+	private ProxyProvider<T> getProxyProvider() {
 		ProxyProvider<T> proxyProvider = null;
 		Class<?> c = null;
 		try {
@@ -87,22 +87,33 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 				throw new RuntimeException(e);
 			}
 		}
-		return (T) proxyProvider.newProxy(callback, preserveReturnedNull, clazz, identity, interfaces);
+		return proxyProvider;
 	}
 
-	public T newProxy(final Callback<T> callback, final boolean preserveReturnedNull, final Class<T> clazz, T identity, List<Class<?>> interfaces) {
+	private T callNewProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
+		ProxyProvider<T> proxyProvider = getProxyProvider();
+		Interceptor interceptor = new Interceptor() {
+			
+			public Object intercept(Class clazz, Method method, Object[] args) {
+				Invocation<T> invocation = new Invocation<T>(clazz);
+				invocation.setMethod(method);
+				invocation.setArgs(args);
+				Object a = transitiveInterception(invocation);
+				Object b = callback.intercept(invocation);
+				return b == null && !preserveReturnedNull ? a : b;
+			}
+		};
+		return (T) proxyProvider.newProxy(clazz, identity, interfaces, interceptor);
+	}
+
+	public T newProxy(final Class<T> clazz, T identity, List<Class<?>> interfaces, final Interceptor interceptor) {
 		Object prox = Proxy.newProxyInstance(clazz.getClassLoader(),
 		        clazz.isInterface() ? new Class[]{ clazz } : clazz.getInterfaces(),
 		        new InvocationHandler() {
 					
 					public Object invoke(Object proxy, Method method, Object[] args)
 							throws Throwable {
-						Invocation<T> invocation = new Invocation<T>(clazz);
-						invocation.setMethod(method);
-						invocation.setArgs(args);
-						Object a = transitiveInterception(invocation);
-						Object b = callback.intercept(invocation);
-						return b == null && !preserveReturnedNull ? a : b;
+						return interceptor.intercept(clazz, method, args);
 					}
 				});
 		return (T) prox;
