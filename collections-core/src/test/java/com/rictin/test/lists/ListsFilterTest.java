@@ -9,11 +9,9 @@ package com.rictin.test.lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.test.data.Person;
@@ -130,14 +128,6 @@ public class ListsFilterTest {
 		Lists.filter(list).removeDuplicates().getPoints();
 		Assert.assertEquals(2, list.size());
 		Assert.assertEquals(3, Lists.sum(list).getPoints().longValue());
-	}
-
-	@Test
-	@Ignore("needs class proxy implementation")
-	public void testAtomicInteger() {
-		@SuppressWarnings("unused")
-		AtomicInteger a = Lists.filter(list).rejectGreaterThan(2).getAtomicInteger();
-		Assert.assertEquals(0, list.size());
 	}
 
 	@Test

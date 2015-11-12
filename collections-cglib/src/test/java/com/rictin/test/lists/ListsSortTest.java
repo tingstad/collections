@@ -58,7 +58,7 @@ public class ListsSortTest {
 	}
 
 	@SuppressWarnings("unused")
-	@Ignore
+	@Ignore("TODO: Not yet resolved")
 	@Test(expected = Exception.class)
 	public void testThatTryingToUseElementGivesError() {
 		Person person = Lists.sort(list).descendingBy();
@@ -144,9 +144,8 @@ public class ListsSortTest {
 		assertEquals(KIRSTI, list.get(4).getName());
 	}
 
-	@Test
-	@Ignore
-	public void testEmptyList() {
+	@Test(expected = Exception.class)
+	public void testEmptyListFailsBecauseWeNeedAnElementToKnowType() {
 		list.clear();
 		Lists.sort(list).ascendingBy().getName();
 

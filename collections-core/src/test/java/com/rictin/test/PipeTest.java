@@ -6,16 +6,13 @@
  */
 package com.rictin.test;
 
-import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.test.data.Person;
@@ -111,23 +108,6 @@ public class PipeTest {
 		
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(TORSTEIN, output.get(0).getName());
-	}
-
-	@Test
-	@Ignore("needs class proxy implementation")
-	public void testBigIntegerMod() {
-		List<BigInteger> numbers = asList(valueOf(1), valueOf(2), valueOf(3), valueOf(4), valueOf(5));
-		
-		List<BigInteger> odd = Pipe.from(numbers).select(
-				Condition.where(
-						Pipe.item(numbers).mod(valueOf(2))
-				).is(Num.greaterThan(valueOf(0)))
-		).toList();
-
-		Assert.assertEquals(3, odd.size());
-		Assert.assertEquals(1, odd.get(0).intValue());
-		Assert.assertEquals(3, odd.get(1).intValue());
-		Assert.assertEquals(5, odd.get(2).intValue());
 	}
 
 }

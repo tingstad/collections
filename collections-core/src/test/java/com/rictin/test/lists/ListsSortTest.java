@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.rictin.test.data.HasName;
 import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Lists;
@@ -59,32 +58,12 @@ public class ListsSortTest {
 	}
 
 	@SuppressWarnings("unused")
-	@Ignore
+	@Ignore("TODO: Not yet resolved")
 	@Test(expected = Exception.class)
 	public void testThatTryingToUseElementGivesError() {
 		Person person = Lists.sort(list).descendingBy();
 		String name = person.getName();
 		int age = person.getAge();
-	}
-
-	@Test
-	@Ignore("needs class proxy implementation")
-	public void testInterface() {
-		List<HasName> names = new ArrayList<HasName>();
-		names.add(new HasName() {
-			public String getName() {
-				return KIRSTI;
-			}
-		});
-		names.add(new HasName() {
-			public String getName() {
-				return RICHARD;
-			}
-		});
-		Lists.sort(names).descendingBy().getName();
-
-		assertEquals(RICHARD, names.get(0).getName());
-		assertEquals(KIRSTI, names.get(1).getName());
 	}
 
 	@Test
@@ -146,18 +125,16 @@ public class ListsSortTest {
 		assertEquals(KIRSTI, list.get(4).getName());
 	}
 
-	@Test
-	@Ignore
-	public void testEmptyList() {
+	@Test(expected = Exception.class)
+	public void testEmptyListFailsBecauseWeNeedAnElementToKnowType() {
 		list.clear();
 		Lists.sort(list).ascendingBy().getName();
 
 		assertEquals(0, list.size());
 	}
 
-	@Test
-	@Ignore("needs class proxy implementation")
-	public void testNumber() {
+	@Test(expected = Exception.class)
+	public void testNumberFailsBecauseNumberIsNotAnInterface() {
 		List<Number> list = new ArrayList<Number>();
 		list.add(20);
 		list.add(30);
