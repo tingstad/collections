@@ -23,6 +23,7 @@
 
 	<modules>
 		<module>collections-core</module>
+		<module>collections-test</module>
 		<module>collections-cglib</module>
 		<module>collections-javassist</module>
 	</modules>
@@ -41,32 +42,6 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-					<resources>
-						<resource>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>src/**</include>
-								<include>LICENSE.txt</include>
-								<include>pom.xml</include>
-							</includes>
-						</resource>
-					</resources>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencyManagement>
@@ -80,7 +55,6 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
-				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
