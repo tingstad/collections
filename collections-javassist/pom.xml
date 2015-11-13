@@ -1,14 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<parent>
+		<groupId>com.rictin.util</groupId>
+		<artifactId>collections-super-pom</artifactId>
+		<version>0.3-SNAPSHOT</version>
+	</parent>
 	<groupId>com.rictin.util</groupId>
-	<artifactId>collections-super-pom</artifactId>
-	<version>0.3-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<artifactId>collections-javassist</artifactId>
+	<packaging>jar</packaging>
 	<name>${project.artifactId}</name>
 	<url>http://www.rictin.com/lists</url>
-	<inceptionYear>2013</inceptionYear>
 	<developers>
 		<developer>
 			<name>Richard H. Tingstad</name>
@@ -21,12 +23,6 @@
 		</license>
 	</licenses>
 
-	<modules>
-		<module>collections-core</module>
-		<module>collections-cglib</module>
-		<module>collections-javassist</module>
-	</modules>
-	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -69,19 +65,26 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.rictin.util</groupId>
-				<artifactId>collections-core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.11</version>
-				<scope>test</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>com.rictin.util</groupId>
+			<artifactId>collections-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<!--version>3.16.1-GA</version> bug: https://issues.jboss.org/browse/JASSIST-244 -->
+			<version>3.15.0-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>2.2</version>
+		</dependency>
+	</dependencies>
 </project>

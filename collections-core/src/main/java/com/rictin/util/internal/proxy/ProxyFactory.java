@@ -23,7 +23,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 
 	private Class<T> clazz;
 	private Class<?>[] argumentTypes;
-	T identity;
+	private T identity;
 	
 	public ProxyFactory(T element) {
 		List<T> list = new ArrayList<T>(1);
