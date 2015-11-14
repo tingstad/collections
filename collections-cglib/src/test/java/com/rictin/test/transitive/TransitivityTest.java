@@ -20,6 +20,10 @@ import com.rictin.util.pipe.matcher.Num;
 
 public class TransitivityTest {
 
+
+	/* This test failed because of https://issues.jboss.org/browse/JASSIST-244
+	 * Method getDates() was not intercepted because it's declared in parent (HasDates)
+	 */
 	@Test
 	public void testFilter() {
 		List<Human> persons = new ArrayList<Human>(Arrays.asList(

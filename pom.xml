@@ -23,7 +23,6 @@
 
 	<modules>
 		<module>collections-core</module>
-		<module>collections-test</module>
 		<module>collections-cglib</module>
 		<module>collections-javassist</module>
 	</modules>
