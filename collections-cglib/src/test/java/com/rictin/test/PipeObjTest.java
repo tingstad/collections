@@ -21,7 +21,7 @@ import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.matcher.Num;
 
-public class PipeTest {
+public class PipeObjTest {
 
 	private final static String RICHARD = "Richard";
 	private final static String KIRSTI = "Kirsti";

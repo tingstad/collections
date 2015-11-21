@@ -17,7 +17,7 @@ import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.internal.proxy.ProxyFactory;
 
-public class ProxyFactoryTest {
+public class ProxyFactoryObjTest {
 
 	private final static String RICHARD = "Richard";
 	private List<Person> list;

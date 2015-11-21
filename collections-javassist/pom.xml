@@ -66,8 +66,12 @@
 				<version>2.15</version>
 				<configuration>
 					<dependenciesToScan>
+						<dependency>com.rictin.util:collections-core</dependency>
 						<dependency>com.rictin.util:collections-cglib</dependency>
 					</dependenciesToScan>
+					<excludes>
+						<exclude>**/*CoreOnlyTest.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -76,6 +80,13 @@
 		<dependency>
 			<groupId>com.rictin.util</groupId>
 			<artifactId>collections-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.rictin.util</groupId>
+			<artifactId>collections-core</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.rictin.util</groupId>

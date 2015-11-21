@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
-public class ListstForEachTest {
+public class ListstForEachObjTest {
 
 	private List<Person> list;
 	

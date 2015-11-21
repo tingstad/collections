@@ -14,44 +14,44 @@ import org.junit.Test;
 
 import com.rictin.util.Lists;
 
-public class ProxyTest {
+public class ProxyObjTest {
 	
 	@Test
 	public void testNoConstructor() {
-		List<NoConstructor> list = new ArrayList<NoConstructor>();
-		list.add(new NoConstructor());
+		List<NoConstructorObj> list = new ArrayList<NoConstructorObj>();
+		list.add(new NoConstructorObj());
 
-		NoConstructor proxy = Lists.min(list);
+		NoConstructorObj proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
 
 	@Test
 	public void testNoConstructorArguments() {
-		List<NoConstructorArguments> list = new ArrayList<NoConstructorArguments>();
-		list.add(new NoConstructorArguments());
+		List<NoConstructorArgumentsObj> list = new ArrayList<NoConstructorArgumentsObj>();
+		list.add(new NoConstructorArgumentsObj());
 
-		NoConstructorArguments proxy = Lists.min(list);
+		NoConstructorArgumentsObj proxy = Lists.min(list);
 		
 		Assert.assertNotNull(proxy);
 	}
 
 	@Test
 	public void testPrimitiveArguments() {
-		List<PrimitiveArguments> list = new ArrayList<PrimitiveArguments>();
-		list.add(new PrimitiveArguments(0, 0l, (char)0, 0f, 0d, false, (byte)0, (short)0));
+		List<PrimitiveArgumentsObj> list = new ArrayList<PrimitiveArgumentsObj>();
+		list.add(new PrimitiveArgumentsObj(0, 0l, (char)0, 0f, 0d, false, (byte)0, (short)0));
 		
-		PrimitiveArguments proxy = Lists.min(list);
+		PrimitiveArgumentsObj proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
 
 	@Test
 	public void testIntegerArgument() {
-		List<IntegerArgument> list = new ArrayList<IntegerArgument>();
-		list.add(new IntegerArgument(0));
+		List<IntegerArgumentObj> list = new ArrayList<IntegerArgumentObj>();
+		list.add(new IntegerArgumentObj(0));
 
-		IntegerArgument proxy = Lists.min(list);
+		IntegerArgumentObj proxy = Lists.min(list);
 
 		Assert.assertNotNull(proxy);
 	}
@@ -82,18 +82,18 @@ public class ProxyTest {
 
 }
 
-class NoConstructor{ }
+class NoConstructorObj{ }
 
-class NoConstructorArguments {
-	public NoConstructorArguments() {}
+class NoConstructorArgumentsObj {
+	public NoConstructorArgumentsObj() {}
 }
 
-class PrimitiveArguments {
-	public PrimitiveArguments(int i, long l, char c, float f, double d, boolean b, byte y, short s) {}
+class PrimitiveArgumentsObj {
+	public PrimitiveArgumentsObj(int i, long l, char c, float f, double d, boolean b, byte y, short s) {}
 }
 
-class IntegerArgument {
-	public IntegerArgument(Integer i) {}
+class IntegerArgumentObj {
+	public IntegerArgumentObj(Integer i) {}
 }
 
 interface A { }

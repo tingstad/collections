@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.rictin.util.ComparatorBuilder;
 
-public class ComparatorBuilderTest {
+public class ComparatorBuilderObjTest {
 
 	private final static String RICHARD = "Richard";
 	private final static String KIRSTI = "Kirsti";

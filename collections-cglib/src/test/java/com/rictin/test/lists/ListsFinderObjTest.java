@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
-public class ListsFinderTest {
+public class ListsFinderObjTest {
 
 	private List<Person> list;
 

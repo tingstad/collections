@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.rictin.test.Person;
 
-public class FlatCollectTest {
+public class FlatCollectObjTest {
 
 	@Test
 	public void test() {

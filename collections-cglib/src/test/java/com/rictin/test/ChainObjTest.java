@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Chain;
 
-public class ChainTest {
+public class ChainObjTest {
 
 	private List<Person> list;
 

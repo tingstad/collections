@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import com.rictin.test.Person;
 
-public class GroupByTest {
+public class GroupByObjTest {
 
 	@Test
 	public void test() {

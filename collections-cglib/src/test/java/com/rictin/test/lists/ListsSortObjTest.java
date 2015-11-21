@@ -20,7 +20,7 @@ import com.rictin.test.HasName;
 import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
-public class ListsSortTest {
+public class ListsSortObjTest {
 
 	private final static String RICHARD = "Richard";
 	private final static String KIRSTI = "Kirsti";

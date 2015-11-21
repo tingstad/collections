@@ -22,7 +22,7 @@ import com.rictin.util.pipe.matcher.Matcher;
 import com.rictin.util.pipe.matcher.Num;
 import com.rictin.util.pipe.matcher.Str;
 
-public class ConditionTest {
+public class ConditionObjTest {
 
 	private List<Person> list;
 	

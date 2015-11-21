@@ -18,7 +18,7 @@ import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.matcher.Num;
 
-public class TransitivityTest {
+public class TransitivityObjTest {
 
 
 	/* This test failed because of https://issues.jboss.org/browse/JASSIST-244

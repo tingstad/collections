@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.rictin.test.Person;
 
-public class CollectTest {
+public class CollectObjTest {
 
 	@Test
 	public void test() {

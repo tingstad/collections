@@ -17,7 +17,7 @@ import com.rictin.test.Person;
 
 import static com.rictin.util.Lists.select;
 
-public class SelectTest {
+public class SelectObjTest {
 
 	private List<Person> list;
 

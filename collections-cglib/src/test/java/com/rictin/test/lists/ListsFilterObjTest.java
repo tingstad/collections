@@ -18,7 +18,7 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
-public class ListsFilterTest {
+public class ListsFilterObjTest {
 
 	private List<Person> list;
 

@@ -133,20 +133,6 @@ public class ListsSortTest {
 		assertEquals(0, list.size());
 	}
 
-	@Test(expected = Exception.class)
-	public void testNumberFailsBecauseNumberIsNotAnInterface() {
-		List<Number> list = new ArrayList<Number>();
-		list.add(20);
-		list.add(30);
-		list.add(10.5);
-		Lists.sort(list).ascendingBy().intValue();
-
-		assertEquals(3, list.size());
-		assertEquals(10, list.get(0).intValue());
-		assertEquals(20, list.get(1).intValue());
-		assertEquals(30, list.get(2).intValue());
-	}
-
 	@Test
 	public void testInteger() {
 		List<Integer> list = new ArrayList<Integer>();

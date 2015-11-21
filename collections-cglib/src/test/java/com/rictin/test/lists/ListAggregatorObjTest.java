@@ -18,7 +18,7 @@ import org.junit.Test;
 import com.rictin.test.Person;
 import com.rictin.util.Lists;
 
-public class ListAggregatorTest {
+public class ListAggregatorObjTest {
 
 	private List<Person> list;
 

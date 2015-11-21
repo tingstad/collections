@@ -19,7 +19,7 @@ import org.junit.Test;
 import com.rictin.util.Chain;
 import com.rictin.util.Lists;
 
-public class ChainOptimizedSortTest {
+public class ChainOptimizedSortObjTest {
 
 	private List<Document> documents;
 
