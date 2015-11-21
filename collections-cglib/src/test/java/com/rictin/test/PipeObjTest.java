@@ -117,8 +117,8 @@ public class PipeObjTest {
 		List<BigInteger> odd = Pipe.from(numbers).select(
 				Condition.where(
 						Pipe.item(numbers).mod(valueOf(2))
-				).is(Num.greaterThan(valueOf(0)))
-		).toList();
+				).greaterThan(valueOf(0)))
+				.toList();
 
 		Assert.assertEquals(3, odd.size());
 		Assert.assertEquals(1, odd.get(0).intValue());

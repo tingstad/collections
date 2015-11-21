@@ -92,7 +92,7 @@ public class PipeTest {
 	public void testOneElementListWithMapTo() {
 		Pipe<Person> pipe = Pipe.from(asList((Person) new PersonImpl(RICHARD, 30)));
 		List<String> output = pipe
-				.select(Condition.where( pipe.item().getAge()).is(Num.lessThan(40)) )
+				.select(Condition.where( pipe.item().getAge() ).is(Num.lessThan(40)) )
 				.mapTo(pipe.item().getName())
 				.toList();
 		
@@ -108,6 +108,28 @@ public class PipeTest {
 		
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(TORSTEIN, output.get(0).getName());
+	}
+
+	@Test
+	public void testEqualTo() {
+		List<Person> output = Pipe.from(list)
+				.select(Condition.where( Pipe.item(list).getName() ).equalTo(TORSTEIN))
+				.toList();
+		
+		Assert.assertEquals(1, output.size());
+		Assert.assertEquals(TORSTEIN, output.get(0).getName());
+	}
+
+	@Test
+	public void testNull() {
+		list.add(new PersonImpl(null, 0));
+
+		List<Person> output = Pipe.from(list)
+				.select(Condition.where( Pipe.item(list).getName() ).isNull())
+				.toList();
+		
+		Assert.assertEquals(1, output.size());
+		Assert.assertNull(output.get(0).getName());
 	}
 
 }

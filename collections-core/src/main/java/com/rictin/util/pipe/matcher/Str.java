@@ -7,7 +7,7 @@
 package com.rictin.util.pipe.matcher;
 
 
-public class Str {
+public class Str extends Obj {
 
 	public static Matcher<String> startsWith(final String prefix) {
 		return new Matcher<String>(prefix) {

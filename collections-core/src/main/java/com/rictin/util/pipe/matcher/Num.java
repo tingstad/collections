@@ -7,7 +7,7 @@
 package com.rictin.util.pipe.matcher;
 
 
-public class Num {
+public class Num extends Obj {
 
 	public static <T extends Number> Matcher<T> greaterThan(T value) {
 		return new Matcher<T>(value) {

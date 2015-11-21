@@ -10,6 +10,7 @@ import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.NewCondition;
 import com.rictin.util.pipe.matcher.Matcher;
+import com.rictin.util.pipe.matcher.Obj;
 
 public class NewConditionImpl<T> implements NewCondition<T> {
 
@@ -48,6 +49,14 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 				return matcher.matches(in, value);
 			}
 		};
+	}
+
+	public Condition<?> isNull() {
+		return is(Obj.isNull());
+	}
+
+	public Condition<?> equalTo(Object obj) {
+		return is(Obj.equalTo(obj));
 	}
 
 }

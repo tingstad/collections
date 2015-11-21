@@ -70,7 +70,7 @@ public abstract class Condition<T> extends ConditionImpl {
 	}
 
 	public static NewCondition<Collection<?>> where(Collection<?> itemValue) {
-		throw new RuntimeException("Not yes implemented"); //TODO: where(collection)
+		throw new RuntimeException("Not yet implemented"); //TODO: where(collection)
 	}
 
 
