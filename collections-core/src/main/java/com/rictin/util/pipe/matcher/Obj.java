@@ -21,7 +21,7 @@ public class Obj {
 		return new Matcher<Object>(value) {
 			
 			public boolean matches(Object value, Object in) {
-				return value == in;
+				return value == null ? in == null : value.equals(in);
 			}
 		};
 	}

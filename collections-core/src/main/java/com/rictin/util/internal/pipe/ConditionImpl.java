@@ -9,7 +9,7 @@ package com.rictin.util.internal.pipe;
 import com.rictin.util.internal.proxy.Invocation;
 
 
-public class ConditionImpl {
+public abstract class ConditionImpl {
 
 	protected ConditionImpl() {
 	}

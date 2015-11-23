@@ -7,7 +7,7 @@
 package com.rictin.util.internal.pipe;
 
 
-public class MatcherImpl<T> {
+public abstract class MatcherImpl<T> {
 
 	private final T value;
 	

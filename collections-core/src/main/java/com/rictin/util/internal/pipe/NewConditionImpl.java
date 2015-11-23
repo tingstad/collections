@@ -26,7 +26,7 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 		this.firstInvocation = invocation;
 	}
 
-	protected T getValue(MatcherImpl<T> matcher) {
+	private T getValue(MatcherImpl<T> matcher) {
 		return matcher.getValue();
 	}
 
