@@ -133,7 +133,7 @@ public class ConditionObjTest {
 	@Test
 	public void testStaticOrCondition() {
 		List<Person> persons = Pipe.from(list)
-				.select(Condition.or(
+				.select(Condition.either(
 						Condition.where(Pipe.item(list).getAge()).lessThan(30),
 						Condition.where(Pipe.item(list).getAge()).greaterThan(30)
 				))

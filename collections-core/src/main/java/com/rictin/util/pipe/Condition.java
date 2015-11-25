@@ -18,7 +18,7 @@ public abstract class Condition<T> extends ConditionImpl {
 
 	public abstract boolean satisfies(T element);
 
-	public static <U> Condition<U> or(final Condition... conditions) {
+	public static <U> Condition<U> either(final Condition... conditions) {
 		return new Condition<U>() {
 
 			public boolean satisfies(U element) {
@@ -39,14 +39,14 @@ public abstract class Condition<T> extends ConditionImpl {
 		};
 	}
 
-	public static <U> NewCondition<U> where(U itemValue) {
-		return new NewConditionImpl<U>(itemValue, fetchInvocation(), null, null);
+	public static <X> NewCondition<X> where(X itemValue) {
+		return new NewConditionImpl<X>(itemValue, fetchInvocation(), null, null);
 	}
-	public <U> NewCondition<U> and(U itemValue) {
-		return new NewConditionImpl<U>(itemValue, fetchInvocation(), this, null);
+	public <X> NewCondition<X> and(X itemValue) {
+		return new NewConditionImpl<X>(itemValue, fetchInvocation(), this, null);
 	}
-	public <U> NewCondition<U> or(U itemValue) {
-		return new NewConditionImpl<U>(itemValue, fetchInvocation(), null, this);
+	public <X> NewCondition<X> or(X itemValue) {
+		return new NewConditionImpl<X>(itemValue, fetchInvocation(), null, this);
 	}
 
 	public static NewConditionString where(String itemValue) {
@@ -59,14 +59,14 @@ public abstract class Condition<T> extends ConditionImpl {
 		return new NewConditionStringImpl(itemValue, fetchInvocation(), null, this);
 	}
 
-	public static <T extends Number> NewConditionNumber<T> where(T itemValue) {
-		return new NewConditionNumberImpl<T>(itemValue, fetchInvocation(), null, null);
+	public static <N extends Number> NewConditionNumber<N> where(N itemValueNumber) {
+		return new NewConditionNumberImpl<N>(itemValueNumber, fetchInvocation(), null, null);
 	}
-	public <N extends Number> NewConditionNumber<N> and(N itemValue) {
-		return new NewConditionNumberImpl<N>(itemValue, fetchInvocation(), this, null);
+	public <N extends Number> NewConditionNumber<N> and(N itemValueNumber) {
+		return new NewConditionNumberImpl<N>(itemValueNumber, fetchInvocation(), this, null);
 	}
-	public <N extends Number> NewConditionNumber<N> or(N itemValue) {
-		return new NewConditionNumberImpl<N>(itemValue, fetchInvocation(), null, this);
+	public <N extends Number> NewConditionNumber<N> or(N itemValueNumber) {
+		return new NewConditionNumberImpl<N>(itemValueNumber, fetchInvocation(), null, this);
 	}
 
 	public static NewCondition<Collection<?>> where(Collection<?> itemValue) {
