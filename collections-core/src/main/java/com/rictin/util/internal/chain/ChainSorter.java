@@ -96,20 +96,13 @@ public class ChainSorter<T> extends Chained<T> {
 				list.add(element);
 				continue;
 			}
-			int i = list.size() - 1;
-			boolean hit = false;
-			while (i >= 0 && comparator.compare(element, list.get(i)) <= 0) {
-				i--;
-				hit = true;
-			}
-			if (hit) {
-				i++;
-				if (list.size() == limit) {
-					list.remove(i);
+			int index = Collections.binarySearch(list, element, comparator);
+			index = index < 0 ? ~index : index;
+			if (index < limit) {
+				list.add(index, element);
+				if (list.size() > limit) {
+					list.remove(limit);
 				}
-				list.add(i, element);
-			} else if (list.size() < limit) {
-				list.add(element);
 			}
 		}
 	}
