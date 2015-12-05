@@ -7,8 +7,10 @@
 package com.rictin.util.internal.chain;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import com.rictin.util.OptionalArgument;
@@ -21,8 +23,7 @@ public class ChainSorter<T> extends Chained<T> {
 	private boolean nullFirst = false;
 
 	private Chained<T> input;
-	private List<T> list;
-	private int index = 0;
+	private Iterator<T> iterator;
 	private Comparator<T> comparator;
 	private Integer limit;
 	private OptionalArgument[] options;
@@ -69,27 +70,32 @@ public class ChainSorter<T> extends Chained<T> {
 
 	@Override
 	protected boolean hasNext() {
-		return list == null && input.hasNext() || index < list.size();
+		return getIterator().hasNext();
 	}
 
 	@Override
 	protected T getNext() {
-		if (list == null) {
+		return getIterator().next();
+	}
+
+	private Iterator<T> getIterator() {
+		if (iterator == null) {
 			if (limit == null || !optimize()) {
-				list = new ArrayList<T>();
+				List<T> list = new ArrayList<T>();
 				while (input.hasNext()) {
 					list.add(input.getNext());
 				}
-				Collections.sort(list, getComparator());
+				Collections.sort((List) list, getComparator());
+				iterator = list.iterator();
 			} else {
-				list = new ArrayList<T>(limit);
-				populateSortedListWithLimit();
+				iterator = populateSortedListWithLimit().iterator();
 			}
 		}
-		return list.get(index++);
+		return iterator;
 	}
 
-	private void populateSortedListWithLimit() {
+	private Collection<T> populateSortedListWithLimit() {
+		List<T> list = new ArrayList<T>(limit + 1);
 		while (input.hasNext()) {
 			T element = input.getNext();
 			if (list.isEmpty()) {
@@ -97,7 +103,14 @@ public class ChainSorter<T> extends Chained<T> {
 				continue;
 			}
 			int index = Collections.binarySearch(list, element, comparator);
-			index = index < 0 ? ~index : index;
+			if (index < 0) {
+				index = ~index;
+			} else {
+				int j = index;
+				for (int i = index + 1; i < list.size() && comparator.compare(list.get(j), list.get(i)) == 0; ++i)
+					index = i; //TODO: Make this O(log n)
+				index++;
+			}
 			if (index < limit) {
 				list.add(index, element);
 				if (list.size() > limit) {
@@ -105,6 +118,7 @@ public class ChainSorter<T> extends Chained<T> {
 				}
 			}
 		}
+		return list;
 	}
 
 	Comparator<T> getComparator() {

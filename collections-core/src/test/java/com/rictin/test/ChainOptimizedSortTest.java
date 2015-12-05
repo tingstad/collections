@@ -61,4 +61,25 @@ public class ChainOptimizedSortTest {
 		assertTrue(optimized < comparisons);
 	}
 
+	@Test
+	public void testShouldBeStable() {
+		documents = Arrays.<IDocument>asList(
+				new Document("A"),
+				new Document("F"),
+				new Document("C"),
+				new Document("A"),
+				new Document("B"),
+				new Document("A"));
+		
+		Chain<IDocument> c = Chain.from(documents);
+		c.sort().ascendingBy().getTitle();
+		c.limit(3);
+		List<IDocument> firstThree = c.toList();
+		
+		assertEquals(3, firstThree.size());
+		assertEquals(documents.get(0), firstThree.get(0));
+		assertEquals(documents.get(3), firstThree.get(1));
+		assertEquals(documents.get(5), firstThree.get(2));
+	}
+
 }
