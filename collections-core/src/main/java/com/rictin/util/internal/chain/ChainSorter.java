@@ -102,14 +102,15 @@ public class ChainSorter<T> extends Chained<T> {
 				list.add(element);
 				continue;
 			}
+			if (list.size() >= limit 
+					&& comparator.compare(element, list.get(list.size() - 1)) >= 0)
+				continue;
 			int index = Collections.binarySearch(list, element, comparator);
 			if (index < 0) {
 				index = ~index;
 			} else {
-				int j = index;
-				for (int i = index + 1; i < list.size() && comparator.compare(list.get(j), list.get(i)) == 0; ++i)
-					index = i; //TODO: Make this O(log n)
-				index++;
+				//TODO: Make this O(log n)
+				while (++index < list.size() && comparator.compare(list.get(index), element) == 0);
 			}
 			if (index < limit) {
 				list.add(index, element);
