@@ -14,6 +14,7 @@ import com.rictin.util.Pipe;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Order;
 
 public class PipeImpl<T> extends Pipe<T> {
 
@@ -56,6 +57,10 @@ public class PipeImpl<T> extends Pipe<T> {
 
 	public Pipe<T> select(final Condition condition) {
 		return new PipeSelect<T>(this, condition);
+	}
+
+	public Pipe<T> sort(final Order order) {
+		return new PipeSort(this, order);
 	}
 
 	public <U> Pipe<U> mapTo(U item) {

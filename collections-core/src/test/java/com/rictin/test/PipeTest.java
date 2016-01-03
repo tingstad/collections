@@ -19,6 +19,7 @@ import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Order;
 import com.rictin.util.pipe.matcher.Num;
 
 public class PipeTest {
@@ -130,6 +131,17 @@ public class PipeTest {
 		
 		Assert.assertEquals(1, output.size());
 		Assert.assertNull(output.get(0).getName());
+	}
+
+	@Test
+	public void testSort() {
+		List<Person> output = Pipe.from(list)
+				.sort(Order.by(Pipe.item(list).getAge()))
+				.toList();
+		
+		Assert.assertEquals(TORSTEIN, output.get(0).getName());
+		Assert.assertEquals(RICHARD, output.get(1).getName());
+		Assert.assertEquals(KIRSTI, output.get(2).getName());
 	}
 
 }

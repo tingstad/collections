@@ -13,10 +13,10 @@ import com.rictin.util.pipe.Condition;
 
 public class PipeSelect<T> extends PipeImpl<T> implements Iterator<T> {
 
-	private Iterator<T> input;
+	private final Condition<T> condition;
+	private final Iterator<T> input;
 	private Boolean hasNext;
 	private T element;
-	private Condition<T> condition;
 
 	public PipeSelect(PipeImpl<T> source, Condition<T> condition) {
 		super.init(source);

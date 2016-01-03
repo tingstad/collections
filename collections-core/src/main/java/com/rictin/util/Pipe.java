@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.pipe.PipeImpl;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Order;
 
 public abstract class Pipe<T> implements Iterable<T> {
 
@@ -37,6 +38,8 @@ public abstract class Pipe<T> implements Iterable<T> {
 	}
 
 	public abstract Pipe<T> select(final Condition condition);
+
+	public abstract Pipe<T> sort(Order order);
 
 	public Pipe<T> sortBy(Object... item) {
 		List<Comparator<T>> comparators = new ArrayList<Comparator<T>>(item.length);

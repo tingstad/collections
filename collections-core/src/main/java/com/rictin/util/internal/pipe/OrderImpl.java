@@ -6,15 +6,22 @@
  */
 package com.rictin.util.internal.pipe;
 
+import java.util.Comparator;
+
 import com.rictin.util.internal.proxy.Invocation;
 
+public abstract class OrderImpl {
 
-public abstract class ConditionImpl {
+	protected Comparator comparator;
 
-	protected ConditionImpl() {}
+	protected OrderImpl() {}
 
 	protected static Invocation<?> fetchInvocation() {
 		return PipeImpl.takeLastInvocation();
+	}
+
+	Comparator getComparator() {
+		return comparator;
 	}
 
 }
