@@ -51,6 +51,8 @@ public abstract class Pipe<T> implements Iterable<T> {
 		return this;
 	}
 
+	public abstract Pipe<T> first(int limit);
+
 	public <U> Map<U, List<T>> groupBy(U item) {
 		Map<U, List<T>> map = new HashMap<U, List<T>>();
 /*		Invocation<T> invocation = invocations.remove(0);

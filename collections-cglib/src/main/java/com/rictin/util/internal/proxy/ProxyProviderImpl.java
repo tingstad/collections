@@ -7,6 +7,7 @@
 package com.rictin.util.internal.proxy;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 			return identity;
 		}
 		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(clazz);
+		if (!Modifier.isPrivate(clazz.getModifiers()))
+			enhancer.setSuperclass(clazz);
 		List<Class<?>> interfaceList = new ArrayList<Class<?>>(interfaces);
 		if (clazz.isInterface() && !interfaceList.contains(clazz))
 			interfaceList.add(clazz);

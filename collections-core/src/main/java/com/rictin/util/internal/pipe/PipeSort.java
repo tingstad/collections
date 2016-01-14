@@ -11,12 +11,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Order;
 
 public class PipeSort<T> extends PipeImpl<T> {
 
-	private final OrderImpl order;
+	private final Order order;
 	private final Iterator<T> input;
+	private int limit;
 
 	public PipeSort(PipeImpl<T> source, Order order) {
 		super.init(source);
@@ -29,8 +31,15 @@ public class PipeSort<T> extends PipeImpl<T> {
 		List<T> list = new ArrayList<T>();
 		while (input.hasNext())
 			list.add(input.next());
+		OrderParent order = this.order;
 		Collections.sort(list, order.getComparator());
 		return list.iterator();
+	}
+
+	@Override
+	public Pipe<T> first(final int limit) {
+		this.limit = limit;
+		return super.first(limit);
 	}
 
 }

@@ -55,12 +55,19 @@ public class PipeImpl<T> extends Pipe<T> {
 		return proxy;
 	}
 
+	@Override
 	public Pipe<T> select(final Condition condition) {
 		return new PipeSelect<T>(this, condition);
 	}
 
+	@Override
 	public Pipe<T> sort(final Order order) {
 		return new PipeSort(this, order);
+	}
+
+	@Override
+	public Pipe<T> first(final int limit) {
+		return null; //TODO: Create PipeLimit
 	}
 
 	public <U> Pipe<U> mapTo(U item) {

@@ -78,7 +78,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 		} catch (ClassNotFoundException e) {
 			proxyProvider = this;
 		}
-		if (proxyProvider == null) {
+		if (proxyProvider == null) { //TODO: what?
 			try {
 				proxyProvider = (ProxyProvider<T>) c.newInstance();
 			} catch (InstantiationException e) {
@@ -107,8 +107,8 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 	}
 
 	public T newProxy(final Class<T> clazz, T identity, List<Class<?>> interfaces, final Interceptor interceptor) {
-		Object prox = Proxy.newProxyInstance(clazz.getClassLoader(),
-		        clazz.isInterface() ? new Class[]{ clazz } : clazz.getInterfaces(),
+		Object prox = Proxy.newProxyInstance(this.getClass().getClassLoader(),
+		        clazz.isInterface() ? new Class[]{ clazz } : interfaces.toArray(new Class[0]),
 		        new InvocationHandler() {
 					
 					public Object invoke(Object proxy, Method method, Object[] args)

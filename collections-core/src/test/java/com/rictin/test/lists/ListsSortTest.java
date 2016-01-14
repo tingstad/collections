@@ -68,35 +68,58 @@ public class ListsSortTest {
 
 	@Test
 	public void testSortNullLast() {
+		list.add(null);
 		list.add(new PersonImpl(null, 1));
+
 		Lists.sort(list).ascendingBy().getName();
 
 		assertEquals(KIRSTI, list.get(0).getName());
 		assertEquals(RICHARD, list.get(1).getName());
 		assertEquals(TORSTEIN, list.get(2).getName());
 		assertEquals(null, list.get(3).getName());
+		assertEquals(null, list.get(4));
+	}
+
+	@Test
+	public void testSortNullLastDescending() {
+		list.add(null);
+		list.add(new PersonImpl(null, 1));
+
+		Lists.sort(list).descendingBy().getName();
+
+		assertEquals(TORSTEIN, list.get(0).getName());
+		assertEquals(RICHARD, list.get(1).getName());
+		assertEquals(KIRSTI, list.get(2).getName());
+		assertEquals(null, list.get(3).getName());
+		assertEquals(null, list.get(4));
 	}
 
 	@Test
 	public void testSortNullFirst() {
 		list.add(new PersonImpl(null, 1));
+		list.add(null);
+
 		Lists.sort(list).nullsFirstAscendingBy().getName();
 
-		assertEquals(null, list.get(0).getName());
-		assertEquals(KIRSTI, list.get(1).getName());
-		assertEquals(RICHARD, list.get(2).getName());
-		assertEquals(TORSTEIN, list.get(3).getName());
+		assertEquals(null, list.get(0));
+		assertEquals(null, list.get(1).getName());
+		assertEquals(KIRSTI, list.get(2).getName());
+		assertEquals(RICHARD, list.get(3).getName());
+		assertEquals(TORSTEIN, list.get(4).getName());
 	}
 
 	@Test
 	public void testSortNullFirstDescending() {
 		list.add(new PersonImpl(null, 1));
+		list.add(null);
+
 		Lists.sort(list).nullsFirstDescendingBy().getName();
 
-		assertEquals(null, list.get(0).getName());
-		assertEquals(TORSTEIN, list.get(1).getName());
-		assertEquals(RICHARD, list.get(2).getName());
-		assertEquals(KIRSTI, list.get(3).getName());
+		assertEquals(null, list.get(0));
+		assertEquals(null, list.get(1).getName());
+		assertEquals(TORSTEIN, list.get(2).getName());
+		assertEquals(RICHARD, list.get(3).getName());
+		assertEquals(KIRSTI, list.get(4).getName());
 	}
 
 	@Test

@@ -6,22 +6,61 @@
  */
 package com.rictin.util.internal.pipe;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
+import com.rictin.util.compare.JoinedComparator;
+import com.rictin.util.internal.ComparatorUtil;
 import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.pipe.Order;
 
-public abstract class OrderImpl {
+public class OrderImpl extends Order {
 
-	protected Comparator comparator;
+	private final List<Invocation> invocations;
+	private final OrderImpl origin;
+	private boolean descending;
+	private boolean nullsFirst;
 
-	protected OrderImpl() {}
-
-	protected static Invocation<?> fetchInvocation() {
-		return PipeImpl.takeLastInvocation();
+	public OrderImpl(final int values) {
+		this(values, null);
 	}
 
+	private OrderImpl(final int values, final OrderImpl origin) {
+		invocations = new ArrayList<Invocation>(values);
+		for (final byte nil : new byte[values]) // for (int i = 0; i < values; i++)
+			invocations.add(PipeImpl.takeLastInvocation());
+		this.origin = origin;
+	}
+
+	public OrderImpl descending() {
+		this.descending = true;
+		return this;
+	}
+
+	public OrderImpl nullsFirst() {
+		this.nullsFirst = true;
+		return this;
+	}
+
+	public OrderImpl thenBy(Object... itemValue) {
+		return new OrderImpl(itemValue.length, this);
+	}
+
+	private Comparator buildComparator(final Invocation invocation) {
+		return ComparatorUtil.createComparator(descending, nullsFirst, invocation);
+	}
+
+	@Override
 	Comparator getComparator() {
-		return comparator;
+		final int n = invocations.size();
+		final List<Comparator> comparators = new ArrayList(n);
+		for (final byte nil : new byte[n])
+			comparators.add(buildComparator(invocations.remove(0)));
+		final Comparator comparator = new JoinedComparator(comparators);
+		return origin == null 
+				? comparator 
+				: new JoinedComparator(origin.getComparator(), comparator);
 	}
 
 }

@@ -6,33 +6,16 @@
  */
 package com.rictin.util.pipe;
 
-import java.util.Comparator;
-
 import com.rictin.util.internal.pipe.OrderImpl;
-import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.internal.pipe.OrderParent;
 
 
-public class Order extends OrderImpl {
+public abstract class Order extends OrderParent {
 
-	private Order(Comparator comparator) {
-		this.comparator = comparator;
-	}
+	protected Order() {}
 
-	public static <X> Order by(X itemValue) {
-		final Invocation invocation = fetchInvocation();
-		final Comparator comparator = new Comparator() {
-
-			public int compare(Object o1, Object o2) {
-				Object v1 = invocation.invoke(o1);
-				Object v2 = invocation.invoke(o2);
-				if (v1 == null)
-					return v2 == null ? 0 : -1;
-				if (v2 == null)
-					return 1;
-				return ((Comparable) v1).compareTo(v2);
-			}
-		};
-		return new Order(comparator);
+	public static OrderImpl by(Object... itemValue) {
+		return new OrderImpl(itemValue.length);
 	}
 
 }

@@ -31,7 +31,6 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 		while (iterator.hasNext()) {
 			Class<?> c = iterator.next();
 			if (!Modifier.isPublic(c.getModifiers())) {
-				System.out.println(c);
 				iterator.remove();
 			}
 		}
@@ -40,7 +39,8 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 				interfaceList.add(clazz);
 			factory.setInterfaces(interfaceList.toArray(new Class[0]));
 		} else {
-			factory.setSuperclass(clazz);
+			if (!Modifier.isPrivate(clazz.getModifiers()))
+				factory.setSuperclass(clazz);
 			factory.setInterfaces(interfaceList.toArray(new Class[0]));
 		}
 		MethodHandler methodHandler = new MethodHandler() {

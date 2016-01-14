@@ -40,7 +40,7 @@ public class ComparatorUtil {
 				}
 				Object v1 = invocation.invoke(o1);
 				Object v2 = invocation.invoke(o2);
-				if (v1 == null && v1 == v2) {
+				if (v1 == null && v2 == null) {
 					return 0;
 				} else if (v1 == null) {
 					return nullFirst ? -1 : 1;
