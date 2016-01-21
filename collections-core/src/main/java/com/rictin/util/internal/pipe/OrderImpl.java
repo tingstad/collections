@@ -21,6 +21,7 @@ public class OrderImpl extends Order {
 	private final OrderImpl origin;
 	private boolean descending;
 	private boolean nullsFirst;
+	private Comparator comparator;
 
 	public OrderImpl(final int values) {
 		this(values, null);
@@ -34,11 +35,15 @@ public class OrderImpl extends Order {
 	}
 
 	public OrderImpl descending() {
+		if (this.comparator != null)
+			throw new IllegalStateException();
 		this.descending = true;
 		return this;
 	}
 
 	public OrderImpl nullsFirst() {
+		if (this.comparator != null)
+			throw new IllegalStateException();
 		this.nullsFirst = true;
 		return this;
 	}
@@ -53,14 +58,18 @@ public class OrderImpl extends Order {
 
 	@Override
 	Comparator getComparator() {
-		final int n = invocations.size();
-		final List<Comparator> comparators = new ArrayList(n);
-		for (final byte nil : new byte[n])
-			comparators.add(buildComparator(invocations.remove(0)));
-		final Comparator comparator = new JoinedComparator(comparators);
-		return origin == null 
-				? comparator 
-				: new JoinedComparator(origin.getComparator(), comparator);
+		if (this.comparator == null) {
+			final int n = invocations.size();
+			final List<Comparator> comparators = new ArrayList(n);
+			for (final byte nil : new byte[n])
+				comparators.add(buildComparator(invocations.remove(0)));
+			final Comparator comparator = new JoinedComparator(comparators);
+			this.comparator = 
+					origin == null 
+					? comparator 
+					: new JoinedComparator(origin.getComparator(), comparator);
+		}
+		return this.comparator;
 	}
 
 }

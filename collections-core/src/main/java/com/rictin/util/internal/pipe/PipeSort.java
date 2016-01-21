@@ -6,34 +6,32 @@
  */
 package com.rictin.util.internal.pipe;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 
 import com.rictin.util.Pipe;
+import com.rictin.util.internal.pipe.sort.SortedIterable;
 import com.rictin.util.pipe.Order;
 
 public class PipeSort<T> extends PipeImpl<T> {
 
 	private final Order order;
-	private final Iterator<T> input;
+	private final Iterable<T> input;
 	private int limit;
 
-	public PipeSort(PipeImpl<T> source, Order order) {
+	public PipeSort(final PipeImpl<T> source, final Order order) {
 		super.init(source);
-		this.input = source.iterator();
+		this.input = source;
 		this.order = order;
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-		List<T> list = new ArrayList<T>();
-		while (input.hasNext())
-			list.add(input.next());
-		OrderParent order = this.order;
-		Collections.sort(list, order.getComparator());
-		return list.iterator();
+		final OrderParent order = this.order;
+		final Comparator<T> comparator = order.getComparator();
+		final SortedIterable<T> sortedIterable = 
+				new SortedIterable<T>(this.input, comparator);
+		return sortedIterable.iterator();
 	}
 
 	@Override
