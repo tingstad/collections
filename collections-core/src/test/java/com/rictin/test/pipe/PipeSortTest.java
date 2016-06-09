@@ -24,17 +24,19 @@ public class PipeSortTest {
 
 		List<List> list = Arrays.<List>asList(
 				Arrays.asList(1),
-				Arrays.asList(1, 2, 3),
 				Arrays.asList(),
-				Arrays.asList(1, 2),
-				Arrays.asList(1, 2, 3, 4));
+				Arrays.asList(1, 2, 3, 4),
+				Arrays.asList(1, 2, 3),
+				Arrays.asList(4, 4, 4, 4),
+				Arrays.asList(1, 2));
 
 		List<List> bySize = Pipe.from(list)
 				.sort(Order.by(Pipe.item(list).size()))
 				.toList();
 
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 0; i < list.size() - 1; i++)
 			Assert.assertEquals(i, bySize.get(i).size());
+		Assert.assertEquals("Should be stable", 4, bySize.get(list.size()-1).get(0));
 	}
 
 	@Test

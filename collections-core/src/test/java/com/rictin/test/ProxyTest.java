@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.rictin.test.data.HasName;
-import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Lists;
 
