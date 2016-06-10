@@ -6,6 +6,8 @@
  */
 package com.rictin.test.pipe;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,6 +58,50 @@ public class PipeSortTest {
 		Assert.assertEquals("Ric", sorted.get(1).getName());
 		Assert.assertEquals("Anna", sorted.get(2).getName());
 		Assert.assertEquals("Kir", sorted.get(3).getName());
+	}
+
+	@Test
+	public void testSortDescending() {
+		List<Person> list = Arrays.<Person>asList(
+				new PersonImpl("Ric", 32),
+				new PersonImpl("Kir", 33),
+				new PersonImpl("Tor", 4),
+				new PersonImpl("Ada", 33));
+
+		List<Person> sorted = Pipe.from(list)
+				.sort(Order.by(Pipe.item(list).getAge())
+						.descending()
+						.thenBy(Pipe.item(list).getName()))
+				.toList();
+		
+		assertEquals("Ada", sorted.get(0).getName());
+		assertEquals("Kir", sorted.get(1).getName());
+		assertEquals("Ric", sorted.get(2).getName());
+		assertEquals("Tor", sorted.get(3).getName());
+	}
+
+	@Test
+	public void testSortDescending2() {
+		List<Person> list = Arrays.<Person>asList(
+				new PersonImpl("Ric", 32),
+				new PersonImpl("Kir", 33),
+				new PersonImpl("Tor", 4),
+				new PersonImpl("Ada", 4),
+				new PersonImpl("Ada", 33));
+
+		List<Person> sorted = Pipe.from(list)
+				.sort(
+						Order.by(Pipe.item(list).getAge())
+						.thenBy(Pipe.item(list).getName())
+						.descending()
+				)
+				.toList();
+		
+		assertEquals("Tor", sorted.get(0).getName());
+		assertEquals("Ada", sorted.get(1).getName());
+		assertEquals("Ric", sorted.get(2).getName());
+		assertEquals("Kir", sorted.get(3).getName());
+		assertEquals("Ada", sorted.get(4).getName());
 	}
 
 }

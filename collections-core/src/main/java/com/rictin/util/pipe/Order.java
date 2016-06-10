@@ -14,8 +14,13 @@ public abstract class Order extends OrderParent {
 
 	protected Order() {}
 
-	public static OrderImpl by(Object... itemValue) {
+	public static Order by(Object... itemValue) {
 		return new OrderImpl(itemValue.length);
 	}
 
+	public abstract Order thenBy(Object... itemValue);
+
+	public abstract Order descending();
+
+	public abstract Order nullsFirst();
 }

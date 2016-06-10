@@ -48,6 +48,7 @@ public class OrderImpl extends Order {
 		return this;
 	}
 
+	@Override
 	public OrderImpl thenBy(Object... itemValue) {
 		return new OrderImpl(itemValue.length, this);
 	}
