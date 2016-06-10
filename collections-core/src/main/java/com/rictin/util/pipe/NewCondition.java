@@ -12,6 +12,6 @@ public interface NewCondition<T> {
 
 	Condition<?> is(Matcher<T> matcher);
 	Condition<?> isNull();
-	Condition<?> equalTo(Object obj);
+	Condition<?> equalTo(T other);
 
 }
