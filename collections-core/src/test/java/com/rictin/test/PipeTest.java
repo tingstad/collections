@@ -6,7 +6,10 @@
  */
 package com.rictin.test;
 
+import static com.rictin.util.Pipe.item;
+import static com.rictin.util.pipe.Condition.where;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import com.rictin.test.data.Person;
 import com.rictin.test.data.PersonImpl;
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Order;
 import com.rictin.util.pipe.matcher.Num;
 
 public class PipeTest {
@@ -108,6 +112,23 @@ public class PipeTest {
 		
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(TORSTEIN, output.get(0).getName());
+	}
+
+	@Test
+	public void testFilterWithOrAndOrdering() {
+		List<Person> result = Pipe.from(list)
+				.select(
+						where(item(list).getAge()).greaterThan(30)
+						.or(item(list).getName()).equalTo(TORSTEIN)
+				)
+				.sort(
+						Order.by(item(list).getName()).descending()
+				)
+				.toList();
+		
+		assertEquals(2, result.size());
+		assertEquals(TORSTEIN, result.get(0).getName());
+		assertEquals(KIRSTI, result.get(1).getName());
 	}
 
 	@Test
