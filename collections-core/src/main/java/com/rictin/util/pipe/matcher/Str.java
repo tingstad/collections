@@ -17,5 +17,32 @@ public class Str extends Obj {
 			}
 		};
 	}
-	
+
+	public static Matcher<String> endsWith(final String suffix) {
+		return new Matcher<String>(suffix) {
+			
+			public boolean matches(String value, String in) {
+				return in.endsWith(value);
+			}
+		};
+	}
+
+	public static Matcher<String> contains(final String suffix) {
+		return new Matcher<String>(suffix) {
+			
+			public boolean matches(String value, String in) {
+				return in.contains(value);
+			}
+		};
+	}
+
+	public static Matcher<String> matches(final String regex) {
+		return new Matcher<String>(regex) {
+			
+			public boolean matches(String value, String in) {
+				return in.matches(value);
+			}
+		};
+	}
+
 }

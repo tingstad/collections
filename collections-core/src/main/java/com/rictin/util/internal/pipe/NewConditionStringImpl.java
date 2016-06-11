@@ -16,9 +16,21 @@ public class NewConditionStringImpl extends NewConditionImpl<String> implements 
 	public NewConditionStringImpl(String value, Invocation<?> invocation, Condition<?> conditionAnd, Condition<?> conditionOr) {
 		super(value, invocation, conditionAnd, conditionOr);
 	}
-	
+
 	public Condition<?> startsWith(String prefix) {
 		return is(Str.startsWith(prefix));
+	}
+
+	public Condition<?> endsWith(String suffix) {
+		return is(Str.endsWith(suffix));
+	}
+
+	public Condition<?> contains(String string) {
+		return is(Str.contains(string));
+	}
+
+	public Condition<?> matches(String regex) {
+		return is(Str.matches(regex));
 	}
 
 }

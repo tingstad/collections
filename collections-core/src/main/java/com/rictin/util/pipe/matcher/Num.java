@@ -27,6 +27,24 @@ public class Num extends Obj {
 		};
 	}
 
+	public static <T extends Number> Matcher<T> noGreaterThan(T value) {
+		return new Matcher<T>(value) {
+			
+			public boolean matches(T value, T in) {
+				return compare(in, value) <= 0;
+			}
+		};
+	}
+
+	public static <T extends Number> Matcher<T> noLessThan(T value) {
+		return new Matcher<T>(value) {
+			
+			public boolean matches(T value, T in) {
+				return compare(in, value) >= 0;
+			}
+		};
+	}
+
 	private static int compare(Number a, Number b) {
 		if (a == null && b == null)
 			return 0;

@@ -9,6 +9,7 @@ package com.rictin.util.pipe;
 import java.util.Collection;
 
 import com.rictin.util.internal.pipe.ConditionImpl;
+import com.rictin.util.internal.pipe.NewConditionCollectionImpl;
 import com.rictin.util.internal.pipe.NewConditionImpl;
 import com.rictin.util.internal.pipe.NewConditionNumberImpl;
 import com.rictin.util.internal.pipe.NewConditionStringImpl;
@@ -69,9 +70,14 @@ public abstract class Condition<T> extends ConditionImpl {
 		return new NewConditionNumberImpl<N>(itemValueNumber, fetchInvocation(), null, this);
 	}
 
-	public static NewCondition<Collection<?>> where(Collection<?> itemValue) {
-		throw new RuntimeException("Not yet implemented"); //TODO: where(collection)
+	public static <C extends Collection> NewConditionCollection<C> where(C itemValueCollection) {
+		return new NewConditionCollectionImpl<C>(itemValueCollection, fetchInvocation(), null, null);
 	}
-
+	public <C extends Collection> NewConditionCollection<C> and(C itemValueCollection) {
+		return new NewConditionCollectionImpl<C>(itemValueCollection, fetchInvocation(), this, null);
+	}
+	public <C extends Collection> NewConditionCollection<C> or(C itemValueCollection) {
+		return new NewConditionCollectionImpl<C>(itemValueCollection, fetchInvocation(), null, this);
+	}
 
 }

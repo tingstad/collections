@@ -26,10 +26,6 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 		this.firstInvocation = invocation;
 	}
 
-	private T getValue(MatcherImpl<T> matcher) {
-		return matcher.getValue();
-	}
-
 	public Condition<?> is(final Matcher<T> matcher) {
 		
 		final T secondValue = getValue(matcher);
@@ -55,8 +51,12 @@ public class NewConditionImpl<T> implements NewCondition<T> {
 		return is(Obj.isNull());
 	}
 
-	public Condition<?> equalTo(Object obj) {
+	public Condition<?> equalTo(T obj) {
 		return is(Obj.equalTo(obj));
+	}
+	
+	private T getValue(MatcherImpl<T> matcher) {
+		return matcher.getValue();
 	}
 
 }

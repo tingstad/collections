@@ -11,4 +11,10 @@ public interface NewConditionString extends NewCondition<String> {
 
 	Condition<?> startsWith(String prefix);
 
+	Condition<?> endsWith(String suffix);
+
+	Condition<?> contains(String string);
+
+	Condition<?> matches(String regex);
+
 }

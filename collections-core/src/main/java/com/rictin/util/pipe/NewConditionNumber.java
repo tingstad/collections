@@ -13,4 +13,8 @@ public interface NewConditionNumber<T extends Number> extends NewCondition<T> {
 
 	Condition<?> lessThan(T number);
 
+	Condition<?> noGreaterThan(T number);
+
+	Condition<?> noLessThan(T number);
+
 }

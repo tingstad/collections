@@ -25,4 +25,12 @@ public class NewConditionNumberImpl<T extends Number> extends NewConditionImpl<T
 		return is(Num.lessThan(number));
 	}
 
+	public Condition<?> noGreaterThan(T number) {
+		return is(Num.noGreaterThan(number));
+	}
+
+	public Condition<?> noLessThan(T number) {
+		return is(Num.noLessThan(number));
+	}
+
 }
