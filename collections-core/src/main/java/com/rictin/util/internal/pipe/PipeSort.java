@@ -11,13 +11,14 @@ import java.util.Iterator;
 
 import com.rictin.util.Pipe;
 import com.rictin.util.internal.pipe.sort.SortedIterable;
+import com.rictin.util.internal.pipe.sort.SortedLimitedIterable;
 import com.rictin.util.pipe.Order;
 
 public class PipeSort<T> extends PipeImpl<T> {
 
 	private final Order order;
 	private final Iterable<T> input;
-	private int limit;
+	private Integer limit;
 
 	public PipeSort(final PipeImpl<T> source, final Order order) {
 		super.init(source);
@@ -30,7 +31,9 @@ public class PipeSort<T> extends PipeImpl<T> {
 		final OrderParent order = this.order;
 		final Comparator<T> comparator = order.getComparator();
 		final SortedIterable<T> sortedIterable = 
-				new SortedIterable<T>(this.input, comparator);
+				limit == null 
+						? new SortedIterable<T>(this.input, comparator) 
+						: new SortedLimitedIterable<T>(input, comparator, limit);
 		return sortedIterable.iterator();
 	}
 

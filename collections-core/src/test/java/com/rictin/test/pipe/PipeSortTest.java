@@ -6,12 +6,14 @@
  */
 package com.rictin.test.pipe;
 
+import static com.rictin.util.Pipe.item;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rictin.test.data.Person;
@@ -102,6 +104,19 @@ public class PipeSortTest {
 		assertEquals("Ric", sorted.get(2).getName());
 		assertEquals("Kir", sorted.get(3).getName());
 		assertEquals("Ada", sorted.get(4).getName());
+	}
+
+	@Test
+	@Ignore("Interpreted as String, not CharSequence") //TODO: Fix CharSequence
+	public void testCharSequence() {
+		List<CharSequence> input = Arrays.<CharSequence>asList(
+				"i", "ii", "iii", "iv", "v", "vi");
+
+		List<CharSequence> list = Pipe.from(input)
+				.sort(Order.by(item(input).length()))
+				.toList();
+		
+		assertEquals(Arrays.<CharSequence>asList("i", "v", "ii", "iv", "vi", "iii"), list);
 	}
 
 }

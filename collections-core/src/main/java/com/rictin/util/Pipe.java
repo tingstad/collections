@@ -42,6 +42,7 @@ public abstract class Pipe<T> implements Iterable<T> {
 	public abstract Pipe<T> sort(Order order);
 
 	public Pipe<T> sortBy(Object... item) {
+		if(2<3) throw new RuntimeException("Not yet implemented"); //TODO: implement sortBy
 		List<Comparator<T>> comparators = new ArrayList<Comparator<T>>(item.length);
 		for (int i = 0; i < item.length; i++) {
 //			comparators.add(ComparatorUtil.createComparator(false, false, invocations.remove(0)));

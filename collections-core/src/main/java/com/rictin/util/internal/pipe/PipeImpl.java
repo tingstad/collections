@@ -62,12 +62,12 @@ public class PipeImpl<T> extends Pipe<T> {
 
 	@Override
 	public Pipe<T> sort(final Order order) {
-		return new PipeSort(this, order);
+		return new PipeSort<T>(this, order);
 	}
 
 	@Override
 	public Pipe<T> first(final int limit) {
-		return null; //TODO: Create PipeLimit
+		return new PipeLimit<T>(this, limit);
 	}
 
 	public <U> Pipe<U> mapTo(U item) {
