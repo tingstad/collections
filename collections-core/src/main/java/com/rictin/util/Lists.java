@@ -8,11 +8,8 @@ package com.rictin.util;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import com.rictin.util.internal.lists.Collect;
-import com.rictin.util.internal.lists.FlatCollect;
-import com.rictin.util.internal.lists.GroupBy;
 import com.rictin.util.internal.lists.ListAggregator;
 import com.rictin.util.internal.lists.ListFilter;
 import com.rictin.util.internal.lists.ListFinder;
@@ -39,12 +36,9 @@ import com.rictin.util.internal.lists.ListUpdater;
  * <p/>
  * <code>Lists.<i>forEach</i>(list).setScore(0)</code>
  * <p/>
- * <code>Lists.<i>select</i>(fromList, toList).acceptGreaterThan(30).getAge()</code>
- * <p/>
  * <code>List&lt;String> names = new ArrayList&lt;String>();</br>
  * Lists.<i>collect</i>(persons, names).getName()</code>
  * <p/>
- * <code>Lists.<i>groupBy</i>(inputList, resultMap).getAge()</code>
  * 
  * @author Richard H. Tingstad
  */
@@ -166,10 +160,6 @@ public class Lists {
 		return new ListUpdater<T>(collection).createProxy();
 	}
 
-	public static <T> T groupBy(Collection<T> input, Map<?, List<T>> result) {
-		return new GroupBy<T>(input, result).createProxy();
-	}
-
 	/**
 	 * Example:<br/>
 	 * List&lt;String> names = new ArrayList&lt;String>();<br/>
@@ -182,30 +172,6 @@ public class Lists {
 	 */
 	public static <T> T collect(Collection<T> input, Collection<?> result) {
 		return new Collect<T>(input, result).createProxy();
-	}
-
-	/**
-	 * Similar to the filter method, but populates a target collection with the
-	 * results instead of manipulating the original one.
-	 * 
-	 * @param input
-	 * @param result
-	 * @see Lists#filter(Collection)
-	 */
-	public static <T> ListFilter<T> select(Collection<T> input,
-			Collection<T> result) {
-		return new ListFilter<T>(input, result);
-	}
-
-	/**
-	 * Similar to Scala's flatMap.
-	 * 
-	 * @param input
-	 * @param result
-	 */
-	public static <T> T flatCollect(Collection<? extends Collection<T>> input,
-			Collection<?> result) {
-		return new FlatCollect<T>(input, result).createProxy();
 	}
 
 }

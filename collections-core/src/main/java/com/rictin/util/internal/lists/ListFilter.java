@@ -28,15 +28,9 @@ public class ListFilter<T> extends ListHandler<T> {
 	private Operation operation;
 	private Object testValue;
 	private Number number;
-	private Collection<T> destination;
 
 	public ListFilter(Collection<T> collection) {
 		super(collection);
-	}
-
-	public ListFilter(Collection<T> input, Collection<T> result) {
-		this(input);
-		this.destination = result;
 	}
 
 	public T accept(Object value) {
@@ -165,12 +159,7 @@ public class ListFilter<T> extends ListHandler<T> {
 				}
 			}
 			if (accept != test) {
-				if (destination == null) {
-					iterator.remove();
-				}
-			}
-			else if (destination != null) {
-				destination.add(element);
+				iterator.remove();
 			}
 		}
 		return null;
