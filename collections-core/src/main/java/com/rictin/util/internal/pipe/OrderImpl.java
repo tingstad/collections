@@ -34,6 +34,7 @@ public class OrderImpl extends Order {
 		this.origin = origin;
 	}
 
+	@Override
 	public OrderImpl descending() {
 		if (this.comparator != null)
 			throw new IllegalStateException();
@@ -41,6 +42,7 @@ public class OrderImpl extends Order {
 		return this;
 	}
 
+	@Override
 	public OrderImpl nullsFirst() {
 		if (this.comparator != null)
 			throw new IllegalStateException();

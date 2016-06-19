@@ -21,16 +21,8 @@ public class PipeImpl<T> extends Pipe<T> {
 	private final static ThreadLocal<List<Invocation>> invocations = new ThreadLocal<List<Invocation>>();
 	private T proxy;
 	private Iterable<T> source;
-	private Iterable<T> input;
-	
-	protected PipeImpl() { }
 
 	public PipeImpl(final Iterable<T> input) {
-		this.init(input);
-		this.input = input;
-	}
-
-	protected void init(final Iterable<T> input) {
 		source = input;
 		addPipe(source);
 		if (invocations.get() == null) {
@@ -47,10 +39,12 @@ public class PipeImpl<T> extends Pipe<T> {
 		});
 	}
 
-	protected void init(final PipeImpl<T> inputPipe) {
+	protected PipeImpl(final PipeImpl<T> inputPipe) {
 		proxy = inputPipe.proxy;
 	}
-	
+
+	protected PipeImpl() { }
+
 	public T item() {
 		return proxy;
 	}
@@ -75,7 +69,7 @@ public class PipeImpl<T> extends Pipe<T> {
 	}
 
 	public Iterator<T> iterator() {
-		return input.iterator();
+		return source.iterator();
 	}
 
 	protected void addPipe(Iterable<T> source) {
@@ -94,11 +88,6 @@ public class PipeImpl<T> extends Pipe<T> {
 
 	static void addInvocation(Invocation invocation) {
 		invocations.get().add(invocation);
-	}
-
-	static Invocation takeNextInvocation() {
-		final List<Invocation> list = invocations.get();
-		return list.isEmpty() ? null : list.remove(0);
 	}
 
 	static Invocation takeLastInvocation() {

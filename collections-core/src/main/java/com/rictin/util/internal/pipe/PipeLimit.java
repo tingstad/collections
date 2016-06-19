@@ -15,7 +15,7 @@ public class PipeLimit<T> extends PipeImpl<T> implements Iterator<T> {
 	private int count;
 
 	public PipeLimit(final PipeImpl<T> source, final int limit) {
-		super.init(source);
+		super(source);
 		this.input = source.iterator();
 		this.limit = limit;
 	}

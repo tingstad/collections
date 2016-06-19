@@ -19,7 +19,7 @@ public class PipeSelect<T> extends PipeImpl<T> implements Iterator<T> {
 	private T element;
 
 	public PipeSelect(PipeImpl<T> source, Condition<T> condition) {
-		super.init(source);
+		super(source);
 		this.input = source.iterator();
 		this.condition = condition;
 	}

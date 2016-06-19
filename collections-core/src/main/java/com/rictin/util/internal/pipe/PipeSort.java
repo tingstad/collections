@@ -21,7 +21,7 @@ public class PipeSort<T> extends PipeImpl<T> {
 	private Integer limit;
 
 	public PipeSort(final PipeImpl<T> source, final Order order) {
-		super.init(source);
+		super(source);
 		this.input = source;
 		this.order = order;
 	}
