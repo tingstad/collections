@@ -35,7 +35,7 @@ import com.rictin.util.internal.lists.ListUpdater;
  * <p/>
  * <code>Lists.<i>search</i>(list).forValue("Erik").getFirstName() != null</code>
  * <p/>
- * <code>int minScore = Lists.<i>minimum</i>().getScore()</code>
+ * <code>int minScore = Lists.<i>min</i>().getScore()</code>
  * <p/>
  * <code>Lists.<i>forEach</i>(list).setScore(0)</code>
  * <p/>
