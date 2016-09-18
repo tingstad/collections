@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ProxyProvider<T> {
 
+	//TODO: remove identity
 	T newProxy(Class<T> clazz, T identity, List<Class<?>> interfaces, Interceptor interceptor);
 
 }

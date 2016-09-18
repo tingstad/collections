@@ -13,30 +13,32 @@ import java.util.List;
 import com.rictin.util.Pipe;
 import com.rictin.util.internal.proxy.Callback;
 import com.rictin.util.internal.proxy.Invocation;
+import com.rictin.util.internal.proxy.ProxyHolder;
 import com.rictin.util.pipe.Condition;
 import com.rictin.util.pipe.Order;
 
 public class PipeImpl<T> extends Pipe<T> {
 
-	private final static ThreadLocal<List<Invocation>> invocations = new ThreadLocal<List<Invocation>>();
+	protected final static ThreadLocal<List<PipeInvocation>> invocations = new ThreadLocal<List<PipeInvocation>>();
 	private T proxy;
 	private Iterable<T> source;
+	private ProxyHolder<T> proxyHolder;
+	protected PipeInvocation last;
 
 	public PipeImpl(final Iterable<T> input) {
 		source = input;
 		addPipe(source);
-		if (invocations.get() == null) {
-			invocations.set(new ArrayList<Invocation>());
-		}
+		invocations.set(new ArrayList<PipeInvocation>());
 		PipeFromIterable<T> adapter = new PipeFromIterable<T>(input);
-		proxy = adapter.getProxyFactory().getProxy(new Callback() {
+		final Pipe pipe = this;
+		proxyHolder = adapter.getProxyFactory().getProxyHolder(new Callback<T>() {
 
-			public Object intercept(Invocation invocation) {
+			public Object intercept(Invocation<T> invocation) {
 				addInvocation(invocation);
-//				pipeInvocations.get().add(new PipeInvocation<T>(pipe, invocation))
 				return null;
 			}
 		});
+		proxy = proxyHolder.getProxy();
 	}
 
 	protected PipeImpl(final PipeImpl<T> inputPipe) {
@@ -46,6 +48,14 @@ public class PipeImpl<T> extends Pipe<T> {
 	protected PipeImpl() { }
 
 	public T item() {
+		last = new PipeInvocation(this);
+		invocations.get().add(last);
+
+		if (proxyHolder.isFakeProxy()) {
+			// See intercept method further up
+			addInvocation(new Invocation<T>(proxyHolder.getProxy().getClass()));
+		}
+		
 		return proxy;
 	}
 
@@ -86,13 +96,37 @@ public class PipeImpl<T> extends Pipe<T> {
 		pipes.remove(getPipeId(this));
 	}
 
-	static void addInvocation(Invocation invocation) {
-		invocations.get().add(invocation);
+	void addInvocation(Invocation invocation) {
+		last.addInvocation(invocation);
 	}
 
 	static Invocation takeLastInvocation() {
-		final List<Invocation> list = invocations.get();
-		return list.isEmpty() ? null : list.remove(invocations.get().size() - 1);
+		final List<PipeInvocation> list = invocations.get();
+		if (list.isEmpty())
+			return null;
+		final PipeInvocation pipeInvocation = list.remove(list.size() - 1);
+		if (pipeInvocation.getInvocation() != null) {
+			return pipeInvocation.getInvocation();
+		}
+		return new Invocation(
+				pipeInvocation.getPipe().proxyHolder.getProxy().getClass());
 	}
 
+}
+
+class PipeInvocation {
+	private Pipe pipe;
+	private Invocation invocation;
+	PipeInvocation(Pipe pipe) {
+		this.pipe = pipe;
+	}
+	void addInvocation(Invocation invocation) {
+		this.invocation = invocation;
+	}
+	Invocation getInvocation() {
+		return invocation;
+	}
+	PipeImpl getPipe() {
+		return (PipeImpl)pipe;
+	}
 }

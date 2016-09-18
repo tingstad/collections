@@ -107,7 +107,7 @@ public class PipeSortTest {
 	}
 
 	@Test
-	@Ignore("Interpreted as String, not CharSequence") //TODO: Fix CharSequence
+	@Ignore("Interpreted as String, not CharSequence")
 	public void testCharSequence() {
 		List<CharSequence> input = Arrays.<CharSequence>asList(
 				"i", "ii", "iii", "iv", "v", "vi");

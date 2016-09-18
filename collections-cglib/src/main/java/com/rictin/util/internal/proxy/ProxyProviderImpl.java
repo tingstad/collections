@@ -21,11 +21,8 @@ import org.objenesis.ObjenesisStd;
 public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 
 	public T newProxy(final Class<T> clazz, T identity, List<Class<?>> interfaces, final Interceptor inInterceptor) {
-		if (identity != null) {
-			return identity;
-		}
 		Enhancer enhancer = new Enhancer();
-		if (!Modifier.isPrivate(clazz.getModifiers()))
+		if (!Modifier.isPrivate(clazz.getModifiers()) && !Modifier.isFinal(clazz.getModifiers()))
 			enhancer.setSuperclass(clazz);
 		List<Class<?>> interfaceList = new ArrayList<Class<?>>(interfaces);
 		if (clazz.isInterface() && !interfaceList.contains(clazz))

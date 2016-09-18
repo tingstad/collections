@@ -65,12 +65,14 @@ public class PipeMap<T, U> extends PipeImpl<U> implements Iterator<U>, Iterable<
 
 	@Override
 	public U item() {
+		last = new PipeInvocation(this);
+		invocations.get().add(last);
 		if (proxy == null) {
 			ProxyFactory<U> proxyFactory = new ProxyFactory<U>(itemClass);
 			proxy = proxyFactory.getProxy(new Callback<U>() {
 
 				public Object intercept(Invocation<U> invocation) {
-					PipeImpl.addInvocation(invocation);
+					addInvocation(invocation);
 					return null;
 				}
 			});

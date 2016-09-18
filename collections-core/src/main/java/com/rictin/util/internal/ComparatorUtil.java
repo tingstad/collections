@@ -20,7 +20,7 @@ public class ComparatorUtil {
 			final boolean descending,
 			final boolean nullFirst,
 			final Invocation<T> invocation) {
-		final Class<?> returnType = invocation.getReturnType();
+		final Class<?> returnType = invocation.getFinalReturnType();
 		if (Void.TYPE.equals(returnType)) {
 			throw new RuntimeException("Method must return a value!");
 		}

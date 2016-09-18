@@ -60,7 +60,21 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 	public T getProxy(final Callback<T> callback) {
 		return getProxy(callback, false);
 	}
-	
+
+	public ProxyHolder<T> getProxyHolder(final Callback<T> callback) {
+		return new ProxyHolder<T>(
+				getProxyForProxyHolder(callback),
+				identity != null);
+	}
+
+	private T getProxyForProxyHolder(final Callback<T> callback) {
+		if (Modifier.isFinal(clazz.getModifiers()) || clazz.isPrimitive()) {
+			return identity;
+		}
+		T proxy = callNewProxy(callback, false /*preserveReturnedNull*/);
+		return proxy;
+	}
+
 	private T getProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
 		if (Modifier.isFinal(clazz.getModifiers())) {
 			T returnValue = (T) callback.intercept(new Invocation<T>(clazz));
@@ -68,26 +82,6 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 		}
 		T proxy = callNewProxy(callback, preserveReturnedNull);
 		return proxy;
-	}
-
-	private ProxyProvider<T> getProxyProvider() {
-		ProxyProvider<T> proxyProvider = null;
-		Class<?> c = null;
-		try {
-			c = Class.forName("com.rictin.util.internal.proxy.ProxyProviderImpl");
-		} catch (ClassNotFoundException e) {
-			proxyProvider = this;
-		}
-		if (proxyProvider == null) { //TODO: what?
-			try {
-				proxyProvider = (ProxyProvider<T>) c.newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return proxyProvider;
 	}
 
 	private T callNewProxy(final Callback<T> callback, final boolean preserveReturnedNull) {
@@ -117,6 +111,26 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 					}
 				});
 		return (T) prox;
+	}
+
+	private ProxyProvider<T> getProxyProvider() {
+		ProxyProvider<T> proxyProvider = null;
+		Class<?> c = null;
+		try {
+			c = Class.forName("com.rictin.util.internal.proxy.ProxyProviderImpl");
+		} catch (ClassNotFoundException e) {
+			proxyProvider = this;
+		}
+		if (proxyProvider == null) { //TODO: what?
+			try {
+				proxyProvider = (ProxyProvider<T>) c.newInstance();
+			} catch (InstantiationException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return proxyProvider;
 	}
 
 	private Object transitiveInterception(final Invocation<T> invocation) {

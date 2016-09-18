@@ -8,6 +8,7 @@ package com.rictin.test;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import com.rictin.util.Pipe;
 import com.rictin.util.pipe.Condition;
+import com.rictin.util.pipe.Order;
 import com.rictin.util.pipe.matcher.Num;
 
 public class PipeObjTest {
@@ -124,6 +126,30 @@ public class PipeObjTest {
 		Assert.assertEquals(1, odd.get(0).intValue());
 		Assert.assertEquals(3, odd.get(1).intValue());
 		Assert.assertEquals(5, odd.get(2).intValue());
+	}
+
+	@Test
+	public void testChainedCallsAndNoMethodCalls() {
+		List<BigInteger> numbers = asList(valueOf(1), valueOf(2), valueOf(5), valueOf(4), valueOf(3));
+		
+		List<BigInteger> list = Pipe.from(numbers)
+				.select(
+						Condition.where(Pipe.item(numbers)).equalTo(valueOf(1))
+						.or(Pipe.item(numbers).add(valueOf(0))).equalTo(valueOf(2))
+						.or(Pipe.item(numbers).add(valueOf(1)).subtract(valueOf(1))).noLessThan(valueOf(2))
+						)
+				.sort(
+						Order.by(Pipe.item(numbers).mod(valueOf(2)))
+						.thenBy(Pipe.item(numbers))
+						.descending()
+						)
+				.toList();
+
+		assertEquals(4, list.get(0).intValue());
+		assertEquals(2, list.get(1).intValue());
+		assertEquals(5, list.get(2).intValue());
+		assertEquals(3, list.get(3).intValue());
+		assertEquals(1, list.get(4).intValue());
 	}
 
 }

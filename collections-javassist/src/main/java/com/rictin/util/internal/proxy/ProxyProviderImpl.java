@@ -21,9 +21,6 @@ import org.objenesis.ObjenesisStd;
 public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 
 	public T newProxy(final Class<T> clazz, T identity, List<Class<?>> interfaces, final Interceptor interceptor) {
-		if (identity != null) {
-			return identity;
-		}
 		ProxyFactory factory = new ProxyFactory();
 
 		List<Class<?>> interfaceList = new ArrayList<Class<?>>(interfaces);
@@ -39,7 +36,7 @@ public class ProxyProviderImpl<T> implements ProxyProvider<T> {
 				interfaceList.add(clazz);
 			factory.setInterfaces(interfaceList.toArray(new Class[0]));
 		} else {
-			if (!Modifier.isPrivate(clazz.getModifiers()))
+			if (!Modifier.isPrivate(clazz.getModifiers()) && !Modifier.isFinal(clazz.getModifiers()))
 				factory.setSuperclass(clazz);
 			factory.setInterfaces(interfaceList.toArray(new Class[0]));
 		}

@@ -52,7 +52,14 @@ public class Invocation<T> {
 		}
 		return method.getReturnType();
 	}
-	
+
+	public Class<?> getFinalReturnType() {
+		if (transitiveInvocation != null) {
+			return transitiveInvocation.getFinalReturnType();
+		}
+		return getReturnType();
+	}
+
 	public Method getMethod() {
 		return method;
 	}
