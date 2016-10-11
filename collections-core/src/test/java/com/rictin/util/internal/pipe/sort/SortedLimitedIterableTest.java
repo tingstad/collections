@@ -63,9 +63,13 @@ public class SortedLimitedIterableTest {
 				},
 				1);
 
-		for (String s : sortedIterable);
+		List<String> list = new ArrayList<String>();
+		for (String s : sortedIterable) list.add(s);
 
-		Assert.assertEquals("put a1 + 5 compare + get a1 = 7", 7, comparisons[0]);
+		assertArrayEquals(new String[]{ "a1" }, list.toArray());
+
+		//TODO check Assert.assertEquals("put a1 + 5 compare + get a1 = 7", 7, comparisons[0]);
+		Assert.assertEquals(6, comparisons[0]);
 	}
 
 }

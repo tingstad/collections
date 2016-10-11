@@ -84,10 +84,10 @@ public class SortedIterable<T> implements Iterator<T>, Iterable<T> {
 	 * @see SortedLimitedIterable
 	 */
 	protected void removeLargest() {
-		Entry<T, List<T>> entry = sorted.lastEntry();
-		List<T> list = entry.getValue();
+		T lastKey = sorted.lastKey();
+		List<T> list = sorted.get(lastKey);
 		list.remove(list.size() - 1);
-		if (list.isEmpty()) sorted.remove(entry.getKey());
+		if (list.isEmpty()) sorted.remove(lastKey);
 	}
 
 }

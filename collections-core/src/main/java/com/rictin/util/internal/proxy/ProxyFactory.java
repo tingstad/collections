@@ -157,7 +157,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 	 * @return Object to return or null if real proxy should be used
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T createIdentityProxy(final Class<?> c) {
+	private T createIdentityProxy(final Class<?> c) {
 		if (String.class.equals(c)) {
 			return (T) "";
 		} else if (Integer.class.equals(c)) {
@@ -187,7 +187,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 		return argumentTypes;
 	}
 
-	private static <T> Object[] getArguments(Class<?>[] argumentTypes) {
+	private Object[] getArguments(Class<?>[] argumentTypes) {
 		Object[] arguments = new Object[argumentTypes.length];
 		for (int i = argumentTypes.length - 1; i >= 0; i--) {
 			try {
@@ -200,7 +200,7 @@ public class ProxyFactory<T> implements ProxyProvider<T> {
 		return arguments;
 	}
 
-	private static <T> Object newInstance(final Class<?> klass) {
+	private <T> Object newInstance(final Class<?> klass) {
 		if (klass.isPrimitive()) {
 			if (Boolean.TYPE.equals(klass)) {
 				return false;
