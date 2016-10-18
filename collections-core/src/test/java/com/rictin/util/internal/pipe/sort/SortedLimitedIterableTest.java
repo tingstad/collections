@@ -68,8 +68,9 @@ public class SortedLimitedIterableTest {
 
 		assertArrayEquals(new String[]{ "a1" }, list.toArray());
 
-		//TODO check Assert.assertEquals("put a1 + 5 compare + get a1 = 7", 7, comparisons[0]);
-		Assert.assertEquals(6, comparisons[0]);
+		// put a1 + 5 compare + get a1 = 7
+		// java5: 6
+		Assert.assertTrue(6 <= comparisons[0] && comparisons[0] <= 7);
 	}
 
 }
