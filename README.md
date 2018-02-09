@@ -13,15 +13,15 @@ int total = Lists.sum(persons).getAge();
 int lower = Lists.minimum(persons).getAge();
 
 List<Person> result = Pipe.from(list)
-		.select(
-				Condition.where(Pipe.item(list).getAge()).greaterThan(30)
-				.or(Pipe.item(list).getName()).startsWith("T")
-		)
-		.sort(
-				Order.by(Pipe.item(list).getName()).descending()
-				.thenBy(Pipe.item(list).getAge()).nullsFirst()
-		)
-		.first(3);
-		.toList();
+        .select(
+                Condition.where(Pipe.item(list).getAge()).greaterThan(30)
+                .or(Pipe.item(list).getName()).startsWith("T")
+        )
+        .sort(
+                Order.by(Pipe.item(list).getName()).descending()
+                .thenBy(Pipe.item(list).getAge()).nullsFirst()
+        )
+        .first(3);
+        .toList();
 ```
 
