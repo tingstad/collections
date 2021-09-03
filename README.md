@@ -1,5 +1,4 @@
-collections
-===========
+⚠️ Inactive project ⚠️
 
 Playing with a collections library which uses dynamic proxy objects 
 to avoid loops and anonymous classes for common operations.
